@@ -42,64 +42,93 @@ const AuroraGlobe: React.FC<AuroraGlobeProps> = ({ cities, onCitySelect }) => {
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
-    controls.minDistance = 5;
+    controls.minDistance = 15;
     controls.maxDistance = 50;
     controls.enablePan = false;
 
     // Earth Globe
+    const sphereGeometry = new THREE.SphereGeometry(10, 64, 64);
+    
+    // Inner solid sphere
+    const innerMaterial = new THREE.MeshStandardMaterial({ 
+      color: 0x0B0F13,
+      metalness: 0.1,
+      roughness: 0.9,
+    });
+    const innerEarth = new THREE.Mesh(sphereGeometry, innerMaterial);
+    scene.add(innerEarth);
+
+    // Outer wireframe sphere
+    const wireframeMaterial = new THREE.MeshBasicMaterial({
+      color: 0x00B2FF,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.1,
+    });
+    const wireframeEarth = new THREE.Mesh(sphereGeometry, wireframeMaterial);
+    wireframeEarth.scale.set(1.001, 1.001, 1.001);
+    innerEarth.add(wireframeEarth);
+
+    // Continents
     const textureLoader = new THREE.TextureLoader();
     const earthTextureUrl = PlaceHolderImages.find(img => img.id === 'earth-texture')?.imageUrl;
-    const earthTexture = textureLoader.load(earthTextureUrl || '');
-    const sphereGeometry = new THREE.SphereGeometry(10, 64, 64);
-    const sphereMaterial = new THREE.MeshStandardMaterial({ map: earthTexture, color: 0xaaaaaa, metalness: 0.3, roughness: 0.7 });
-    const earth = new THREE.Mesh(sphereGeometry, sphereMaterial);
-    scene.add(earth);
+    const earthTexture = textureLoader.load(earthTextureUrl || '', (texture) => {
+        const continentsMaterial = new THREE.MeshBasicMaterial({
+            map: texture,
+            color: 0x00B2FF,
+            transparent: true,
+            opacity: 0.2,
+            blending: THREE.AdditiveBlending,
+        });
+        const continents = new THREE.Mesh(sphereGeometry, continentsMaterial);
+        continents.scale.set(1.002, 1.002, 1.002);
+        innerEarth.add(continents);
+    });
 
     // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
     scene.add(ambientLight);
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+    const directionalLight = new THREE.DirectionalLight(0x00B2FF, 1);
     directionalLight.position.set(10, 10, 10);
     scene.add(directionalLight);
     
     // Starfield
     const starVertices = [];
-    for (let i = 0; i < 10000; i++) {
-        const x = THREE.MathUtils.randFloatSpread(2000);
-        const y = THREE.MathUtils.randFloatSpread(2000);
-        const z = THREE.MathUtils.randFloatSpread(2000);
+    for (let i = 0; i < 2000; i++) {
+        const x = THREE.MathUtils.randFloatSpread(1000);
+        const y = THREE.MathUtils.randFloatSpread(1000);
+        const z = THREE.MathUtils.randFloatSpread(1000);
         starVertices.push(x, y, z);
     }
     const starGeometry = new THREE.BufferGeometry();
     starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
-    const starMaterial = new THREE.PointsMaterial({ color: 0x555555, size: 0.7 });
+    const starMaterial = new THREE.PointsMaterial({ color: 0x555555, size: 0.3, transparent: true, opacity: 0.5 });
     const stars = new THREE.Points(starGeometry, starMaterial);
     scene.add(stars);
-
 
     // City Markers
     clickableObjects.current = [];
     cities.forEach(city => {
       const lat = city.coords.lat * (Math.PI / 180);
       const lon = -city.coords.lng * (Math.PI / 180);
-      const radius = 10;
+      const radius = 10.1;
       const x = radius * Math.cos(lat) * Math.sin(lon);
       const y = radius * Math.sin(lat);
       const z = radius * Math.cos(lat) * Math.cos(lon);
 
-      const markerGeometry = new THREE.SphereGeometry(0.15, 16, 16);
+      const markerGeometry = new THREE.SphereGeometry(0.1, 16, 16);
       const markerMaterial = new THREE.MeshBasicMaterial({ color: 0x00B2FF });
       const marker = new THREE.Mesh(markerGeometry, markerMaterial);
       marker.position.set(x, y, z);
       
-      const glowSize = 0.4;
+      const glowSize = 0.3;
       const glowGeometry = new THREE.SphereGeometry(glowSize, 16, 16);
-      const glowMaterial = new THREE.MeshBasicMaterial({ color: 0x00B2FF, transparent: true, opacity: 0.3 });
+      const glowMaterial = new THREE.MeshBasicMaterial({ color: 0x00B2FF, transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending });
       const glow = new THREE.Mesh(glowGeometry, glowMaterial);
       marker.add(glow);
 
       marker.userData = { city };
-      earth.add(marker);
+      innerEarth.add(marker);
       clickableObjects.current.push(marker);
     });
 
@@ -147,7 +176,7 @@ const AuroraGlobe: React.FC<AuroraGlobeProps> = ({ cities, onCitySelect }) => {
     const animate = () => {
       requestAnimationFrame(animate);
       controls.update();
-      earth.rotation.y += 0.0005;
+      innerEarth.rotation.y += 0.0005;
       stars.rotation.y += 0.0001;
       renderer.render(scene, camera);
     };

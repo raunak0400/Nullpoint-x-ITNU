@@ -3,8 +3,8 @@
     {
       "id": "earth-texture",
       "description": "A texture map of the Earth showing continents and oceans.",
-      "imageUrl": "https://images.unsplash.com/photo-1482059470115-0aadd6bf6834?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxlYXJ0aCUyMG1hcHxlbnwwfHx8fDE3NTk0NTA1MzB8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "earth map"
+      "imageUrl": "https://images.unsplash.com/photo-1614280996098-93665518b975?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx3b3JsZCUyMG1hcCUyMGNvbnRpbmVudCUyMG91dGxpbmV8ZW58MHx8fHwxNzE2NDEyNjAxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "world map outline"
     }
   ]
 }
