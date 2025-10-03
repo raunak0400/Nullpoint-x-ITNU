@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useRef, useEffect, memo } from 'react';
@@ -49,16 +50,20 @@ const AuroraGlobe: React.FC<AuroraGlobeProps> = ({ cities, onCitySelect }) => {
     // Earth Globe
     const sphereGeometry = new THREE.SphereGeometry(10, 64, 64);
     
-    // Inner solid sphere
-    const innerMaterial = new THREE.MeshStandardMaterial({ 
-      color: 0x0B0F13,
-      metalness: 0.1,
-      roughness: 0.9,
+    // Realistic Earth Material
+    const textureLoader = new THREE.TextureLoader();
+    const earthTextureUrl = PlaceHolderImages.find(img => img.id === 'earth-texture')?.imageUrl;
+    
+    const earthMaterial = new THREE.MeshStandardMaterial({
+        map: textureLoader.load(earthTextureUrl || ''),
+        metalness: 0.2,
+        roughness: 0.7,
     });
-    const innerEarth = new THREE.Mesh(sphereGeometry, innerMaterial);
-    scene.add(innerEarth);
-
-    // Outer wireframe sphere
+    
+    const earth = new THREE.Mesh(sphereGeometry, earthMaterial);
+    scene.add(earth);
+    
+    // Outer wireframe sphere for accent
     const wireframeMaterial = new THREE.MeshBasicMaterial({
       color: 0x00B2FF,
       wireframe: true,
@@ -67,29 +72,13 @@ const AuroraGlobe: React.FC<AuroraGlobeProps> = ({ cities, onCitySelect }) => {
     });
     const wireframeEarth = new THREE.Mesh(sphereGeometry, wireframeMaterial);
     wireframeEarth.scale.set(1.001, 1.001, 1.001);
-    innerEarth.add(wireframeEarth);
-
-    // Continents
-    const textureLoader = new THREE.TextureLoader();
-    const earthTextureUrl = PlaceHolderImages.find(img => img.id === 'earth-texture')?.imageUrl;
-    const earthTexture = textureLoader.load(earthTextureUrl || '', (texture) => {
-        const continentsMaterial = new THREE.MeshBasicMaterial({
-            map: texture,
-            color: 0x00B2FF,
-            transparent: true,
-            opacity: 0.2,
-            blending: THREE.AdditiveBlending,
-        });
-        const continents = new THREE.Mesh(sphereGeometry, continentsMaterial);
-        continents.scale.set(1.002, 1.002, 1.002);
-        innerEarth.add(continents);
-    });
-
+    earth.add(wireframeEarth);
+    
     // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
-    const directionalLight = new THREE.DirectionalLight(0x00B2FF, 1);
-    directionalLight.position.set(10, 10, 10);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(15, 10, 5);
     scene.add(directionalLight);
     
     // Starfield
@@ -128,7 +117,7 @@ const AuroraGlobe: React.FC<AuroraGlobeProps> = ({ cities, onCitySelect }) => {
       marker.add(glow);
 
       marker.userData = { city };
-      innerEarth.add(marker);
+      earth.add(marker);
       clickableObjects.current.push(marker);
     });
 
@@ -176,7 +165,7 @@ const AuroraGlobe: React.FC<AuroraGlobeProps> = ({ cities, onCitySelect }) => {
     const animate = () => {
       requestAnimationFrame(animate);
       controls.update();
-      innerEarth.rotation.y += 0.0005;
+      earth.rotation.y += 0.0005;
       stars.rotation.y += 0.0001;
       renderer.render(scene, camera);
     };
@@ -186,7 +175,9 @@ const AuroraGlobe: React.FC<AuroraGlobeProps> = ({ cities, onCitySelect }) => {
     return () => {
       window.removeEventListener('resize', onResize);
       currentMount.removeEventListener('click', onClick);
-      currentMount.removeChild(renderer.domElement);
+      if (renderer.domElement.parentElement === currentMount) {
+        currentMount.removeChild(renderer.domElement);
+      }
       renderer.dispose();
       scene.traverse(object => {
         if (object instanceof THREE.Mesh) {
