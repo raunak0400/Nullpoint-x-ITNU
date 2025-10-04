@@ -539,11 +539,17 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
 function Overview() {
   const [activeMetric, setActiveMetric] = useState<OverviewMetric>('Humidity');
   const [currentHour, setCurrentHour] = useState<number | null>(null);
+  const [animationKey, setAnimationKey] = useState(0);
 
   useEffect(() => {
     const date = new Date();
     setCurrentHour(date.getHours());
   }, []);
+
+  const handleSetMetric = (metric: OverviewMetric) => {
+    setActiveMetric(metric);
+    setAnimationKey(prevKey => prevKey + 1);
+  };
   
   const activeDataSet = overviewDataSets[activeMetric];
   const tabs = (Object.keys(overviewDataSets) as OverviewMetric[]);
@@ -598,7 +604,7 @@ function Overview() {
           {tabs.map((metric) => (
             <button
               key={metric}
-              onClick={() => setActiveMetric(metric)}
+              onClick={() => handleSetMetric(metric)}
               className={cn(
                 "relative rounded-full h-8 px-4 z-10 transition-colors",
                 activeMetric === metric ? "text-primary-foreground" : "text-foreground"
@@ -629,6 +635,16 @@ function Overview() {
                 <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
                 <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
               </linearGradient>
+              <clipPath id="clipPath">
+                <motion.rect
+                  key={animationKey}
+                  initial={{ width: 0 }}
+                  animate={{ width: '100%' }}
+                  transition={{ duration: 0.8, ease: 'easeInOut' }}
+                  width="100%"
+                  height="100%"
+                />
+              </clipPath>
             </defs>
             <XAxis dataKey="hour" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
             <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}${activeDataSet.unit}`} />
@@ -644,7 +660,15 @@ function Overview() {
               labelClassName="font-bold"
               formatter={(value: number) => [`${value}${activeDataSet.unit}`, activeMetric]}
             />
-            <Area type="monotone" dataKey="value" stroke="hsl(var(--primary))" strokeWidth={2} fill="url(#colorValue)" />
+            <g clipPath="url(#clipPath)">
+              <Area 
+                type="monotone" 
+                dataKey="value" 
+                stroke="hsl(var(--primary))" 
+                strokeWidth={2} 
+                fill="url(#colorValue)" 
+              />
+            </g>
 
             {currentHourX && currentHourY !== undefined && (
                <ReferenceDot 
