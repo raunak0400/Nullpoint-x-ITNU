@@ -1,10 +1,9 @@
 
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { GoogleMap, HeatmapLayer, useJsApiLoader } from '@react-google-maps/api';
-import Link from 'next/link';
-import { ArrowLeft, Layers, Thermometer, Wind } from 'lucide-react';
+import { Layers, Thermometer, Wind, Molecule, CloudCog, Sigma, Waves } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
@@ -255,6 +254,8 @@ const mapStyles = [
   }
 ];
 
+// This function generates placeholder data.
+// TODO: Replace this with an API call to your backend to fetch real satellite data.
 const generateHeatmapData = (intensity: number) => {
   const data = [];
   if (typeof window === 'undefined' || typeof window.google === 'undefined' || !window.google.maps.LatLng) return data;
@@ -266,11 +267,20 @@ const generateHeatmapData = (intensity: number) => {
   return data;
 };
 
-let pollutionData: any[] = [];
-let tempData: any[] = [];
-let windData: any[] = [];
+// This object will hold your heatmap data.
+// TODO: Populate these arrays with data fetched from your backend.
+const heatmapData: { [key: string]: any[] } = {
+  no2: [],
+  ch2o: [],
+  aerosol: [],
+  pm: [],
+  o3: [],
+};
+
 
 const libraries = ['visualization'] as const;
+
+type LayerName = keyof typeof heatmapData;
 
 export default function MapViewPage() {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
@@ -280,19 +290,28 @@ export default function MapViewPage() {
     libraries
   });
 
-  if (isLoaded && pollutionData.length === 0) {
-    pollutionData = generateHeatmapData(1.5);
-    tempData = generateHeatmapData(0.8);
-    windData = generateHeatmapData(0.5);
-  }
-
   const [map, setMap] = useState(null);
   const [showFilters, setShowFilters] = useState(true);
   const [activeLayers, setActiveLayers] = useState({
-    pollution: true,
-    temperature: false,
-    wind: false,
+    no2: true,
+    ch2o: false,
+    aerosol: false,
+    pm: false,
+    o3: false,
   });
+
+  // Effect to generate placeholder data once the map is loaded.
+  // TODO: Replace this effect with logic to fetch data from your backend.
+  useEffect(() => {
+    if (isLoaded) {
+      heatmapData.no2 = generateHeatmapData(1.5);
+      heatmapData.ch2o = generateHeatmapData(1.2);
+      heatmapData.aerosol = generateHeatmapData(2.0);
+      heatmapData.pm = generateHeatmapData(1.8);
+      heatmapData.o3 = generateHeatmapData(1.0);
+    }
+  }, [isLoaded]);
+
 
   const onLoad = useCallback(function callback(map: any) {
     setMap(map);
@@ -302,15 +321,30 @@ export default function MapViewPage() {
     setMap(null);
   }, []);
 
-  const handleLayerChange = (layer: keyof typeof activeLayers) => {
+  const handleLayerChange = (layer: LayerName) => {
     setActiveLayers(prev => ({ ...prev, [layer]: !prev[layer] }));
   };
   
-  const getGradient = (layer: keyof typeof activeLayers) => {
-    if (layer === 'pollution') return ['rgba(0, 255, 255, 0)', 'rgba(0, 255, 255, 1)', 'rgba(0, 127, 255, 1)', 'rgba(0, 0, 255, 1)', 'rgba(0, 0, 127, 1)', 'rgba(255, 0, 0, 1)'];
-    if (layer === 'temperature') return ['rgba(0, 255, 0, 0)', 'rgba(255, 255, 0, 1)', 'rgba(255, 0, 0, 1)'];
-    return ['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.5)', 'rgba(200, 200, 200, 1)'];
+  // Defines the color gradient for each heatmap layer.
+  // Customize these gradients to best represent your data.
+  const getGradient = (layer: LayerName) => {
+    switch(layer) {
+      case 'no2': return ['rgba(255, 255, 0, 0)', 'rgba(255, 165, 0, 1)', 'rgba(255, 0, 0, 1)'];
+      case 'ch2o': return ['rgba(173, 216, 230, 0)', 'rgba(0, 191, 255, 1)', 'rgba(0, 0, 255, 1)'];
+      case 'aerosol': return ['rgba(211, 211, 211, 0)', 'rgba(128, 128, 128, 1)', 'rgba(0, 0, 0, 1)'];
+      case 'pm': return ['rgba(255, 250, 205, 0)', 'rgba(255, 215, 0, 1)', 'rgba(184, 134, 11, 1)'];
+      case 'o3': return ['rgba(144, 238, 144, 0)', 'rgba(0, 255, 0, 1)', 'rgba(0, 100, 0, 1)'];
+      default: return [];
+    }
   }
+  
+  const layerConfig: { id: LayerName; label: string; icon: React.ReactNode; colorClass: string; }[] = [
+    { id: 'no2', label: 'NO₂', icon: <Molecule size={16} />, colorClass: 'text-yellow-400'},
+    { id: 'ch2o', label: 'CH₂O', icon: <CloudCog size={16} />, colorClass: 'text-blue-300' },
+    { id: 'aerosol', label: 'Aerosol Index', icon: <Sigma size={16} />, colorClass: 'text-gray-400' },
+    { id: 'pm', label: 'Particulate Matter', icon: <Layers size={16} />, colorClass: 'text-orange-300' },
+    { id: 'o3', label: 'Ozone', icon: <Waves size={16} />, colorClass: 'text-green-400' },
+  ];
 
 
   return (
@@ -322,8 +356,9 @@ export default function MapViewPage() {
           </Button>
         </div>
 
-        <div className="flex-1 relative">
-           {!apiKey && (
+        <div className="flex-1 relative bg-background">
+          {loadError && apiKey && <div className="absolute inset-0 flex items-center justify-center bg-red-900/50 text-white p-4 text-center">Error loading map. Please check your API key and network connection.</div>}
+          {!apiKey && (
             <div className="absolute inset-0 flex items-center justify-center bg-background/80 z-20 text-center p-4">
               <div>
                 <p>Google Maps API key is missing.</p>
@@ -340,12 +375,16 @@ export default function MapViewPage() {
               onUnmount={onUnmount}
               options={{ styles: mapStyles, disableDefaultUI: true, zoomControl: true, streetViewControl: false, mapTypeControl: false, fullscreenControl: false }}
             >
-              {activeLayers.pollution && <HeatmapLayer data={pollutionData} options={{ gradient: getGradient('pollution'), radius: 40 }} />}
-              {activeLayers.temperature && <HeatmapLayer data={tempData} options={{ gradient: getGradient('temperature'), radius: 50 }} />}
-              {activeLayers.wind && <HeatmapLayer data={windData} options={{ gradient: getGradient('wind'), radius: 30 }} />}
+              {Object.keys(activeLayers).map((key) => {
+                  const layerKey = key as LayerName;
+                  if (activeLayers[layerKey] && heatmapData[layerKey].length > 0) {
+                      return <HeatmapLayer key={layerKey} data={heatmapData[layerKey]} options={{ gradient: getGradient(layerKey), radius: 40 }} />
+                  }
+                  return null;
+              })}
             </GoogleMap>
           ) : apiKey ? (
-            <div className="w-full h-full flex items-center justify-center bg-background">
+            <div className="w-full h-full flex items-center justify-center">
               Loading Map...
             </div>
           ) : null}
@@ -358,29 +397,20 @@ export default function MapViewPage() {
                 exit={{ opacity: 0, x: 100 }}
                 className="absolute top-20 right-4 bg-card/70 backdrop-blur-md border border-white/10 rounded-2xl p-4 w-64 z-10"
               >
-                <h3 className="font-semibold mb-4">Map Layers</h3>
+                <h3 className="font-semibold mb-4">Satellite Data Layers</h3>
                 <div className="space-y-4">
-                  <div className="flex items-center space-x-2">
-                    <Checkbox id="pollution" checked={activeLayers.pollution} onCheckedChange={() => handleLayerChange('pollution')} />
-                    <Label htmlFor="pollution" className="flex items-center gap-2"><Layers size={16} className="text-primary"/> Air Pollution</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox id="temperature" checked={activeLayers.temperature} onCheckedChange={() => handleLayerChange('temperature')} />
-                    <Label htmlFor="temperature" className="flex items-center gap-2"><Thermometer size={16} className="text-red-400"/> Temperature</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox id="wind" checked={activeLayers.wind} onCheckedChange={() => handleLayerChange('wind')} />
-                    <Label htmlFor="wind" className="flex items-center gap-2"><Wind size={16} className="text-blue-300"/> Wind Speed</Label>
-                  </div>
+                  {layerConfig.map(({ id, label, icon, colorClass }) => (
+                    <div key={id} className="flex items-center space-x-2">
+                      <Checkbox id={id} checked={activeLayers[id]} onCheckedChange={() => handleLayerChange(id)} />
+                      <Label htmlFor={id} className={`flex items-center gap-2 ${colorClass}`}>{icon} {label}</Label>
+                    </div>
+                  ))}
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
-        {loadError && apiKey && <div className="absolute inset-0 flex items-center justify-center bg-red-900/50 text-white">Error loading map. Please check your API key and network connection.</div>}
       </div>
     </PageWrapper>
   );
 }
-
-    
