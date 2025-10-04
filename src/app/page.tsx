@@ -635,11 +635,10 @@ function Overview() {
                 <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
                 <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
               </linearGradient>
-              <clipPath id="clipPath">
+              <clipPath id={`clip-path-${animationKey}`}>
                 <motion.rect
-                  key={animationKey}
                   initial={{ width: 0 }}
-                  animate={{ width: '100%' }}
+                  animate={{ width: "100%" }}
                   transition={{ duration: 0.8, ease: 'easeInOut' }}
                   width="100%"
                   height="100%"
@@ -660,15 +659,14 @@ function Overview() {
               labelClassName="font-bold"
               formatter={(value: number) => [`${value}${activeDataSet.unit}`, activeMetric]}
             />
-            <g clipPath="url(#clipPath)">
-              <Area 
-                type="monotone" 
-                dataKey="value" 
-                stroke="hsl(var(--primary))" 
-                strokeWidth={2} 
-                fill="url(#colorValue)" 
-              />
-            </g>
+            <Area 
+              type="monotone" 
+              dataKey="value" 
+              stroke="hsl(var(--primary))" 
+              strokeWidth={2} 
+              fill="url(#colorValue)" 
+              clipPath={`url(#clip-path-${animationKey})`}
+            />
 
             {currentHourX && currentHourY !== undefined && (
                <ReferenceDot 
