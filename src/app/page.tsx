@@ -158,17 +158,17 @@ function Sidebar() {
 
 const TemperatureSwitch = ({ unit, setUnit }: { unit: TempUnit; setUnit: (unit: TempUnit) => void }) => {
   return (
-    <div className="relative flex w-[70px] cursor-pointer items-center rounded-full bg-card/50 p-1 backdrop-blur-sm border border-white/10">
+    <div className="relative flex w-[72px] h-10 cursor-pointer items-center rounded-full bg-card/50 p-1 backdrop-blur-sm border border-white/10">
       <div
         className={cn(
-          'absolute h-8 w-8 rounded-full bg-primary transition-transform',
-          unit === 'C' ? 'translate-x-0' : 'translate-x-[calc(100%-4px)]'
+          'absolute h-8 w-8 rounded-full bg-primary transition-transform duration-300 ease-in-out',
+          unit === 'C' ? 'translate-x-0' : 'translate-x-8'
         )}
       />
       <button
         onClick={() => setUnit('C')}
         className={cn(
-          'z-10 flex-1 text-center font-medium transition-colors',
+          'z-10 flex-1 h-8 text-center font-medium transition-colors',
           unit === 'C' ? 'text-primary-foreground' : 'text-muted-foreground'
         )}
       >
@@ -177,7 +177,7 @@ const TemperatureSwitch = ({ unit, setUnit }: { unit: TempUnit; setUnit: (unit: 
       <button
         onClick={() => setUnit('F')}
         className={cn(
-          'z-10 flex-1 text-center font-medium transition-colors',
+          'z-10 flex-1 h-8 text-center font-medium transition-colors',
           unit === 'F' ? 'text-primary-foreground' : 'text-muted-foreground'
         )}
       >
