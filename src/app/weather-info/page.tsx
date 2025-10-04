@@ -109,7 +109,7 @@ export default function WeatherInfoPage() {
               <CardTitle className="text-sm font-medium">Temperature</CardTitle>
               <Thermometer className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent className="flex flex-col justify-center h-full">
+            <CardContent className="flex flex-col justify-center h-full pb-0">
               <div className="text-8xl font-bold">
                 {data.temperature.value}
                 {data.temperature.unit}
@@ -127,7 +127,7 @@ export default function WeatherInfoPage() {
               <CardTitle className="text-sm font-medium">Air Quality (AQI)</CardTitle>
               <Gauge className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent className="flex flex-col justify-center h-full">
+            <CardContent className="flex flex-col justify-center h-full pb-0">
               <div className={`text-8xl font-bold ${getAQIColor(data.aqi.value)}`}>
                 {data.aqi.value}
               </div>
@@ -143,7 +143,7 @@ export default function WeatherInfoPage() {
               <CardTitle className="text-sm font-medium">UV Index</CardTitle>
               <Sun className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent>
+            <CardContent className="pb-4">
               <div className="text-5xl font-bold">{data.uvIndex.value}</div>
               <p className="text-xs text-muted-foreground mb-2">{data.uvIndex.level}</p>
               <Progress value={data.uvIndex.value * 10} indicatorClassName="bg-gradient-to-r from-green-400 via-yellow-400 to-red-500" />
