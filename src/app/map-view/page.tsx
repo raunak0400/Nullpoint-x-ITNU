@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { GoogleMap, useJsApiLoader, HeatmapLayer } from '@react-google-maps/api';
+import { GoogleMap, HeatmapLayer } from '@react-google-maps/api';
 import Link from 'next/link';
 import { ArrowLeft, Layers, Thermometer, Wind } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PageWrapper } from '@/components/layout/page-wrapper';
+import { useSharedState } from '@/components/layout/sidebar';
 
 const containerStyle = {
   width: '100%',
@@ -257,7 +258,7 @@ const mapStyles = [
 
 const generateHeatmapData = (intensity: number) => {
   const data = [];
-  if (typeof window.google === 'undefined') return data;
+  if (typeof window.google === 'undefined' || !window.google.maps.LatLng) return data;
   for (let i = 0; i < 100; i++) {
     const lat = 52.52 + (Math.random() - 0.5) * 0.5;
     const lng = 13.40 + (Math.random() - 0.5) * 1.0;
@@ -272,14 +273,10 @@ let windData: any[] = [];
 
 
 export default function MapViewPage() {
+  const { isMapLoaded, mapLoadError } = useSharedState();
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
-  const { isLoaded, loadError } = useJsApiLoader({
-    id: 'google-map-script-full',
-    googleMapsApiKey: apiKey,
-    libraries: ['visualization']
-  });
 
-  if (isLoaded && pollutionData.length === 0) {
+  if (isMapLoaded && pollutionData.length === 0) {
     pollutionData = generateHeatmapData(1.5);
     tempData = generateHeatmapData(0.8);
     windData = generateHeatmapData(0.5);
@@ -323,7 +320,7 @@ export default function MapViewPage() {
 
         <div className="flex-1 relative">
           {!apiKey && <div className="absolute inset-0 flex items-center justify-center bg-destructive/50 text-destructive-foreground z-20">Please add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to your .env file.</div>}
-          {isLoaded && apiKey ? (
+          {isMapLoaded && apiKey ? (
             <GoogleMap
               mapContainerStyle={containerStyle}
               center={center}
@@ -369,7 +366,7 @@ export default function MapViewPage() {
             )}
           </AnimatePresence>
         </div>
-        {loadError && apiKey && <div className="absolute inset-0 flex items-center justify-center bg-red-900/50 text-white">Error loading map. Please check your API key and network connection.</div>}
+        {mapLoadError && apiKey && <div className="absolute inset-0 flex items-center justify-center bg-red-900/50 text-white">Error loading map. Please check your API key and network connection.</div>}
       </div>
     </PageWrapper>
   );

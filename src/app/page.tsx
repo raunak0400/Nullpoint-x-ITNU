@@ -1,3 +1,4 @@
+
 'use client';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
@@ -613,13 +614,9 @@ const mapStyles = [
 
 
 function MapView() {
-  const { isLoaded, loadError } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""
-  });
-
+  const { isMapLoaded, mapLoadError } = useSharedState();
   const [map, setMap] = useState(null);
-
+  
   const onLoad = useCallback(function callback(map: any) {
     setMap(map);
   }, []);
@@ -628,11 +625,16 @@ function MapView() {
     setMap(null);
   }, []);
 
-  if (loadError) {
+  if (mapLoadError) {
     return <p className='text-red-500'>Error loading map</p>;
   }
+  
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
+  if (!apiKey) {
+     return <p className='text-red-500'>Google Maps API key is missing.</p>;
+  }
 
-  return isLoaded ? (
+  return isMapLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
       center={center}
