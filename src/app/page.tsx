@@ -93,7 +93,6 @@ export default function Home() {
             <InteractiveMap />
             <SmartTips />
             <Forecasts />
-            <Subscribe />
           </div>
         </div>
       </main>
@@ -453,25 +452,4 @@ function Forecasts() {
       </div>
     </Card>
   );
-}
-
-function Subscribe() {
-    return (
-        <Card className="p-0 text-center bg-cover bg-center relative overflow-hidden" data-ai-hint="abstract wave texture">
-             <div className="absolute inset-0 bg-cover bg-center rounded-[2rem]" style={{backgroundImage: "url('https://picsum.photos/seed/subscribe/600/400')"}}></div>
-            <div className="relative z-10 p-6">
-                <h3 className="text-2xl font-bold">Subscribe!</h3>
-                <p className="text-sm text-white/80 mt-2 mb-4">
-                    Stay ahead of the weather with our daily forecasts and updates! Get ready to embrace the elements and make the most of your day.
-                </p>
-                <Button className="w-full rounded-xl">
-                    Subscribe
-                    <span className="ml-2 bg-primary-foreground/20 rounded-full p-1">
-                        <ArrowRight className="text-primary-foreground" size={16}/>
-                    </span>
-                </Button>
-            </div>
-             <div className="absolute inset-0 bg-gradient-to-t from-card/80 via-card/70 to-transparent rounded-[2rem]"></div>
-        </Card>
-    );
 }
