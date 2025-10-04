@@ -41,6 +41,7 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from 'recharts';
+import { cn } from '@/lib/utils';
 
 const overviewData = [
   { month: 'Jan', value: 20 },
@@ -155,6 +156,38 @@ function Sidebar() {
   );
 }
 
+const TemperatureSwitch = ({ unit, setUnit }: { unit: TempUnit; setUnit: (unit: TempUnit) => void }) => {
+  return (
+    <div className="relative flex w-[70px] cursor-pointer items-center rounded-full bg-card/50 p-1 backdrop-blur-sm border border-white/10">
+      <div
+        className={cn(
+          'absolute h-8 w-8 rounded-full bg-primary transition-transform',
+          unit === 'C' ? 'translate-x-0' : 'translate-x-[calc(100%-4px)]'
+        )}
+      />
+      <button
+        onClick={() => setUnit('C')}
+        className={cn(
+          'z-10 flex-1 text-center font-medium transition-colors',
+          unit === 'C' ? 'text-primary-foreground' : 'text-muted-foreground'
+        )}
+      >
+        °C
+      </button>
+      <button
+        onClick={() => setUnit('F')}
+        className={cn(
+          'z-10 flex-1 text-center font-medium transition-colors',
+          unit === 'F' ? 'text-primary-foreground' : 'text-muted-foreground'
+        )}
+      >
+        °F
+      </button>
+    </div>
+  );
+};
+
+
 function Header({ unit, setUnit }: { unit: TempUnit; setUnit: (unit: TempUnit) => void }) {
   return (
     <header className="flex flex-wrap items-center justify-between gap-4">
@@ -167,10 +200,7 @@ function Header({ unit, setUnit }: { unit: TempUnit; setUnit: (unit: TempUnit) =
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
           <Input placeholder="Search city or postcode" className="bg-card/50 backdrop-blur-sm border-white/10 pl-10 w-48 md:w-64 rounded-full" />
         </div>
-        <div className="flex items-center bg-card/50 backdrop-blur-sm border border-white/10 rounded-full">
-            <Button variant={unit === 'C' ? "default" : "ghost"} className="rounded-full" onClick={() => setUnit('C')}>°C</Button>
-            <Button variant={unit === 'F' ? "default" : "ghost"} className="rounded-full" onClick={() => setUnit('F')}>°F</Button>
-        </div>
+        <TemperatureSwitch unit={unit} setUnit={setUnit} />
         <Avatar className="rounded-full">
           <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" />
           <AvatarFallback>U</AvatarFallback>
