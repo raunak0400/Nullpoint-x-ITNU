@@ -50,8 +50,8 @@ const weatherData = {
       feelsLike: 25,
     },
     aqi: {
-      value: 155,
-      quality: 'Unhealthy',
+      value: 31,
+      quality: 'Good',
     },
     uvIndex: {
       value: 5,
