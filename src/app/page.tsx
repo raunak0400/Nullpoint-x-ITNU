@@ -1,4 +1,5 @@
 
+
 'use client';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
@@ -49,6 +50,7 @@ import {
   YAxis,
   ResponsiveContainer,
   Tooltip,
+  ReferenceDot,
 } from 'recharts';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
@@ -91,14 +93,17 @@ const getIconForHour = (hour: number) => {
 };
   
 const generateHourlyForecast = (is24Hour: boolean) => {
+    const forecast = [];
     const now = new Date();
     const currentHour = now.getHours();
-    const forecast = [];
   
-    for (let i = currentHour; i <= 23; i++) {
-        const time = format(new Date().setHours(i), is24Hour ? 'HH:00' : 'ha').toLowerCase();
+    for (let i = 0; i < 24; i++) {
+        const hour = (currentHour + i) % 24;
+        const timeDate = new Date();
+        timeDate.setHours(hour);
+        const time = format(timeDate, is24Hour ? 'HH:00' : 'ha').toLowerCase();
         const temp = Math.floor(Math.random() * 10) + 15; // Random temp between 15-25
-        const icon = getIconForHour(i);
+        const icon = getIconForHour(hour);
         forecast.push({ time, temp, icon });
     }
   
@@ -534,8 +539,52 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
 
 function Overview() {
   const [activeMetric, setActiveMetric] = useState<OverviewMetric>('Humidity');
+  const [currentHour, setCurrentHour] = useState<number | null>(null);
+
+  useEffect(() => {
+    const date = new Date();
+    setCurrentHour(date.getHours());
+  }, []);
+  
   const activeDataSet = overviewDataSets[activeMetric];
   const tabs = (Object.keys(overviewDataSets) as OverviewMetric[]);
+  const currentHourX = currentHour !== null ? `${currentHour}:00` : undefined;
+  const currentHourData = currentHourX ? activeDataSet.data.find(d => d.hour === currentHourX) : undefined;
+  const currentHourY = currentHourData?.value;
+
+
+  const PulsatingDot = ({ cx, cy }: { cx?: number, cy?: number }) => {
+    if (cx === undefined || cy === undefined) return null;
+    return (
+      <g>
+        <style>
+          {`
+            @keyframes pulse {
+              0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(0, 178, 255, 0.7);
+              }
+              70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 10px rgba(0, 178, 255, 0);
+              }
+              100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(0, 178, 255, 0);
+              }
+            }
+            .pulse-dot {
+              animation: pulse 2s infinite;
+              transform-origin: center;
+              transform-box: fill-box;
+            }
+          `}
+        </style>
+        <circle cx={cx} cy={cy} r="6" fill="hsl(var(--primary))" stroke="white" strokeWidth="2" className="pulse-dot" />
+      </g>
+    );
+  };
+
 
   return (
     <Card className="h-full flex flex-col p-6">
@@ -592,6 +641,15 @@ function Overview() {
               formatter={(value: number) => [`${value}${activeDataSet.unit}`, activeMetric]}
             />
             <Area type="monotone" dataKey="value" stroke="hsl(var(--primary))" strokeWidth={2} fill="url(#colorValue)" />
+
+            {currentHourX && currentHourY !== undefined && (
+               <ReferenceDot 
+                x={currentHourX} 
+                y={currentHourY} 
+                ifOverflow="extendDomain" 
+                shape={<PulsatingDot />} 
+              />
+            )}
           </AreaChart>
         </ResponsiveContainer>
       </div>
