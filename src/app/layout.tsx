@@ -22,7 +22,7 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased bg-cover bg-center bg-fixed" style={{backgroundImage: "url('/globe-bg.jpg')"}} suppressHydrationWarning>
         <div className="absolute inset-0 bg-background/50 backdrop-blur-sm" />
-        <main className="relative z-10">
+        <main className="relative">
           {children}
         </main>
         <Toaster />
