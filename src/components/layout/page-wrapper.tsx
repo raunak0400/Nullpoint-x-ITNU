@@ -5,7 +5,6 @@ import { Header } from '@/components/layout/header';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Providers } from '@/components/layout/providers';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { CustomScrollbar } from '../custom-scrollbar';
 
 export function PageWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -19,7 +18,6 @@ export function PageWrapper({ children }: { children: React.ReactNode }) {
               {children}
             </div>
           </ScrollArea>
-          <CustomScrollbar />
         </div>
       </Providers>
     </ThemeProvider>
