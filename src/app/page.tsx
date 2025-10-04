@@ -123,7 +123,7 @@ type TempUnit = 'C' | 'F';
 
 function Card({ children, className }: { children: React.ReactNode, className?: string }) {
   return (
-    <div className={cn('bg-card/50 backdrop-blur-lg border border-white/10 rounded-[2rem]', className)}>
+    <div className={cn('bg-black/20 backdrop-blur-xl border border-white/10 rounded-[2rem]', className)}>
       {children}
     </div>
   );
@@ -173,7 +173,7 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
 
     if (hourlyForecast.length === 0) {
         return (
-            <div className="p-6 h-full flex flex-col relative overflow-hidden bg-card/50 backdrop-blur-lg border border-white/10 rounded-[2rem]">
+            <div className="p-6 h-full flex flex-col relative overflow-hidden bg-black/20 backdrop-blur-xl border border-white/10 rounded-[2rem]">
                 <div className="flex items-center justify-center h-full">Loading forecast...</div>
             </div>
         );
@@ -181,7 +181,7 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
 
     return (
       <Link href="/weather-info" className="block h-full group">
-        <div className="p-6 h-full flex flex-col relative overflow-hidden bg-card/50 backdrop-blur-lg border border-white/10 rounded-[2rem] group-hover:border-white/20 transition-all duration-300">
+        <div className="p-6 h-full flex flex-col relative overflow-hidden bg-black/20 backdrop-blur-xl border border-white/10 rounded-[2rem] group-hover:border-white/20 transition-all duration-300">
             <Image
                 src="https://images.unsplash.com/photo-1614959909713-128c622fad23?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjbG91ZHl8ZW58MHx8fHwxNzU5NjA0OTc3fDA&ixlib=rb-4.1.0&q=80&w=1080"
                 alt="Weather background"
@@ -451,7 +451,7 @@ function MapView() {
         style={{ borderRadius: '2rem', overflow: 'hidden' }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       >
-        <div className="bg-card/50 backdrop-blur-lg border border-white/10 rounded-[2rem] w-full h-full" style={{overflow: 'hidden'}}>
+        <div className="bg-black/20 backdrop-blur-xl border border-white/10 rounded-[2rem] w-full h-full" style={{overflow: 'hidden'}}>
           <Map />
         </div>
         {!isExpanded && (
@@ -481,6 +481,10 @@ function SmartTips({ location }: { location: { name: string }}) {
         const result = await explainForecastFactors({
           city: location.name,
           dateTime: new Date().toISOString(),
+          no2: overviewDataSets['NO₂'].average,
+          ch2o: overviewDataSets['CH₂O'].average,
+          aerosol: overviewDataSets['Aerosol'].average,
+          pm: overviewDataSets['PM'].average,
         });
         setTips(result);
       } catch (error) {

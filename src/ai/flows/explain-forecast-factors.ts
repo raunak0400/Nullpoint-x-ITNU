@@ -14,6 +14,10 @@ import {z} from 'genkit';
 const ExplainForecastFactorsInputSchema = z.object({
   city: z.string().describe('The city for which to explain the forecast factors.'),
   dateTime: z.string().describe('The date and time for which to explain the forecast factors.'),
+  no2: z.number().describe('The current average Nitrogen dioxide (NO₂) level in µg/m³.'),
+  ch2o: z.number().describe('The current average Formaldehyde (CH₂O) level in µg/m³.'),
+  aerosol: z.number().describe('The current average Aerosol Index.'),
+  pm: z.number().describe('The current average Particulate Matter (PM) level in µg/m³.'),
 });
 export type ExplainForecastFactorsInput = z.infer<typeof ExplainForecastFactorsInputSchema>;
 
@@ -31,7 +35,16 @@ const explainForecastFactorsPrompt = ai.definePrompt({
   name: 'explainForecastFactorsPrompt',
   input: {schema: ExplainForecastFactorsInputSchema},
   output: {schema: ExplainForecastFactorsOutputSchema},
-  prompt: `You are an expert air quality analyst. Provide a concise explanation of the key factors influencing the air quality forecast for {{city}} at {{dateTime}}. Also, provide actionable recommendations based on these factors.\n\nExplanation (3-4 sentences):\nRecommendations (1-2 bullet points):`,
+  prompt: `You are an expert air quality analyst. Based on the following data for {{city}} at {{dateTime}}, provide a concise explanation of the key factors influencing the air quality forecast and provide actionable recommendations.
+
+Current Air Quality Data:
+- Nitrogen dioxide (NO₂): {{no2}} µg/m³
+- Formaldehyde (CH₂O): {{ch2o}} µg/m³
+- Aerosol Index: {{aerosol}}
+- Particulate Matter (PM): {{pm}} µg/m³
+
+Explanation (3-4 sentences, focus on the most significant pollutants):
+Recommendations (1-2 bullet points based on the data):`,
 });
 
 const explainForecastFactorsFlow = ai.defineFlow(
