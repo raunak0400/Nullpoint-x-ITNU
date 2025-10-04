@@ -183,7 +183,7 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
       <Link href="/weather-info" className="block h-full group">
         <div className="p-6 h-full flex flex-col relative overflow-hidden bg-black/20 backdrop-blur-xl border border-white/10 rounded-[2rem] group-hover:border-white/20 transition-all duration-300">
             <Image
-                src="https://images.unsplash.com/photo-1596236924829-983e18a24558?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                src="https://images.unsplash.com/photo-1587474260584-136574528ed5?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt="Weather background"
                 fill
                 className="object-cover opacity-20 group-hover:opacity-30 transition-opacity duration-300"
@@ -510,10 +510,10 @@ function SmartTips({ location }: { location: { name: string }}) {
       </div>
       {loading ? (
         <div className="space-y-4">
-          <div className="h-4 bg-muted/50 rounded w-5/6" />
-          <div className="h-4 bg-muted/50 rounded w-full" />
-          <div className="h-4 bg-muted/50 rounded w-4/6" />
-          <div className="h-4 bg-muted/50 rounded w-1/2 mt-4" />
+          <div className="h-4 bg-muted/50 rounded w-5/6 animate-pulse" />
+          <div className="h-4 bg-muted/50 rounded w-full animate-pulse" />
+          <div className="h-4 bg-muted/50 rounded w-4/6 animate-pulse" />
+          <div className="h-4 bg-muted/50 rounded w-1/2 mt-4 animate-pulse" />
         </div>
       ) : (
         <div className="space-y-3 flex-1">
@@ -528,6 +528,8 @@ function SmartTips({ location }: { location: { name: string }}) {
     </Card>
   );
 }
+
+    
 
     
 
