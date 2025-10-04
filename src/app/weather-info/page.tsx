@@ -105,20 +105,6 @@ function WeatherInfoDashboard() {
   const displayTemp = unit === 'C' ? data.temperature.value : Math.round(celsiusToFahrenheit(data.temperature.value));
   const displayFeelsLike = unit === 'C' ? data.temperature.feelsLike : Math.round(celsiusToFahrenheit(data.temperature.feelsLike));
 
-  const getAQIColor = (aqi: number) => {
-    if (aqi <= 50) return 'text-green-400';
-    if (aqi <= 100) return 'text-yellow-400';
-    if (aqi <= 150) return 'text-orange-400';
-    return 'text-red-500';
-  };
-  
-  const getAQIProgressColor = (aqi: number) => {
-    if (aqi <= 50) return 'bg-green-400';
-    if (aqi <= 100) return 'bg-yellow-400';
-    if (aqi <= 150) return 'bg-orange-400';
-    return 'bg-red-500';
-  }
-
   const getWindInsight = (speedKmh: number) => {
     if (speedKmh < 5) return 'Calm';
     if (speedKmh < 20) return 'Light breeze';
@@ -130,8 +116,8 @@ function WeatherInfoDashboard() {
   const aqiPercentage = (data.aqi.value / 300) * 100;
 
   return (
-      <div className="grid grid-cols-1 md:grid-cols-2 md:grid-flow-row-dense gap-6">
-        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.1 }} className="md:row-span-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.1 }}>
           <Card className="h-full flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Temperature</CardTitle>
@@ -149,7 +135,7 @@ function WeatherInfoDashboard() {
           </Card>
         </motion.div>
 
-        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.2 }} className="md:row-span-2">
+        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.2 }}>
           <Card className="h-full flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Air Quality (AQI)</CardTitle>
@@ -163,7 +149,7 @@ function WeatherInfoDashboard() {
                 <div className="w-full px-4">
                   <div className="h-2 w-full rounded-full bg-secondary">
                     <div
-                      className={cn("h-full rounded-full", getAQIProgressColor(data.aqi.value))}
+                      className="h-full rounded-full bg-green-400"
                       style={{ width: `${aqiPercentage}%`}}
                     />
                   </div>
@@ -207,7 +193,7 @@ function WeatherInfoDashboard() {
           </Card>
         </motion.div>
 
-        <div className="grid grid-cols-2 gap-6">
+        <div className="md:col-span-2 grid grid-cols-2 lg:grid-cols-4 gap-6">
             <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.5 }}>
             <Card className="aspect-square flex flex-col">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -283,6 +269,3 @@ function WeatherInfoDashboard() {
       </div>
   );
 }
-
-    
-    
