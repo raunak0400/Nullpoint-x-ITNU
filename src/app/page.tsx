@@ -178,23 +178,33 @@ function Sidebar({ is24Hour, setIs24Hour }: { is24Hour: boolean; setIs24Hour: (i
 
   return (
     <>
-      <aside className="w-20 bg-card/50 backdrop-blur-sm border-r border-white/10 p-4 flex flex-col items-center justify-between rounded-r-[2rem]">
-        <div className="space-y-8">
-          
-          <nav className="space-y-6">
+      <aside className="w-64 bg-card/50 backdrop-blur-sm border-r border-white/10 p-6 flex flex-col justify-between rounded-r-[2rem]">
+        <div>
+          <div className="flex items-center gap-2 mb-12">
+            <GlobeIcon className="text-primary" size={32} />
+            <h1 className="text-2xl font-bold">AuroraAir</h1>
+          </div>
+          <nav className="space-y-2">
             {navItems.map((item) => (
               <Link key={item.label} href={item.href} passHref>
-                <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground data-[active=true]:text-foreground data-[active=true]:bg-primary/10 w-12 h-12 rounded-2xl" data-active={pathname === item.href} title={item.label}>
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-start text-muted-foreground hover:text-foreground data-[active=true]:text-foreground data-[active=true]:bg-primary/10 text-base py-6" 
+                  data-active={pathname === item.href}
+                  title={item.label}
+                >
                   {item.icon}
+                  <span>{item.label}</span>
                 </Button>
               </Link>
             ))}
           </nav>
         </div>
-        <div className="space-y-6">
+        <div className="space-y-2">
             {bottomNavItems.map((item, index) => (
-              <Button key={index} variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground w-12 h-12 rounded-2xl" title={item.label} onClick={item.action}>
+              <Button key={index} variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground text-base py-6" title={item.label} onClick={item.action}>
                 {item.icon}
+                <span>{item.label}</span>
               </Button>
             ))}
         </div>
