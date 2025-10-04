@@ -612,7 +612,7 @@ const mapStyles = [
   }
 ];
 
-const libraries = ['maps', 'visualization'] as const;
+const libraries = ['visualization'] as const;
 
 function MapView() {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
