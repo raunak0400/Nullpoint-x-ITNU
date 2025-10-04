@@ -470,14 +470,14 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
 
     if (hourlyForecast.length === 0) {
         return (
-            <Card className="p-6 h-full flex flex-col relative overflow-hidden">
+            <div className="p-6 h-full flex flex-col relative overflow-hidden bg-card/50 backdrop-blur-sm border border-white/10 rounded-[2rem]">
                 <div className="flex items-center justify-center h-full">Loading forecast...</div>
-            </Card>
+            </div>
         );
     }
 
     return (
-        <Card className="p-6 h-full flex flex-col relative overflow-hidden">
+        <div className="p-6 h-full flex flex-col relative overflow-hidden bg-card/50 backdrop-blur-sm border border-white/10 rounded-[2rem]">
             <Image
                 src="https://picsum.photos/seed/weather/1200/400"
                 alt="Weather background"
@@ -532,7 +532,7 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
                   </div>
               </div>
             </div>
-        </Card>
+        </div>
     );
 }
 
