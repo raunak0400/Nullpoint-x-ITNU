@@ -20,6 +20,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Legend,
 } from 'recharts';
 import { PageWrapper } from '@/components/layout/page-wrapper';
 
@@ -40,14 +41,48 @@ const Card = ({
 const generatePredictionData = () => {
   const data = [];
   const now = new Date();
-  for (let i = 0; i < 24; i++) {
-    const time = new Date(now.getTime() + i * 60 * 60 * 1000);
-    data.push({
-      time: time.getHours() + ':00',
-      aqi: Math.floor(Math.random() * (80 - 20 + 1)) + 20, // AQI between 20 and 80
-    });
+  const currentHour = now.getHours();
+  
+  // Generate 4 hours of past "actual" data and 20 hours of future "predicted" data
+  for (let i = -4; i < 20; i++) {
+    const hour = (currentHour + i + 24) % 24;
+    const time = hour + ':00';
+    const baseAqi = Math.floor(Math.random() * (50 - 30 + 1)) + 30;
+    
+    if (i < 0) {
+      // Past data
+      data.push({
+        time: time,
+        actual: baseAqi + Math.floor(Math.random() * 5),
+      });
+    } else if (i === 0) {
+      // Current hour, connect the lines
+      const actualValue = baseAqi + Math.floor(Math.random() * 5);
+       data.push({
+        time: time,
+        actual: actualValue,
+        predicted: actualValue,
+      });
+    }
+    else {
+      // Future data
+      data.push({
+        time: time,
+        predicted: baseAqi + Math.floor(Math.random() * 10 - 5),
+      });
+    }
   }
-  return data;
+
+  // Ensure data is sorted by time for recharts
+  const sortedData = data.sort((a, b) => {
+    const hourA = parseInt(a.time.split(':')[0]);
+    const hourB = parseInt(b.time.split(':')[0]);
+    if (hourA < (currentHour-4+24)%24 && hourB >= (currentHour-4+24)%24) return 1;
+    if (hourA >= (currentHour-4+24)%24 && hourB < (currentHour-4+24)%24) return -1;
+    return hourA - hourB;
+  });
+
+  return sortedData;
 };
 
 export default function FutureAirPredictionPage() {
@@ -109,7 +144,9 @@ export default function FutureAirPredictionPage() {
                       borderRadius: '1rem',
                     }}
                   />
-                  <Line type="monotone" dataKey="aqi" stroke="hsl(var(--primary))" strokeWidth={2} fill="url(#colorAqi)" />
+                  <Legend />
+                  <Line name="Actual" type="monotone" dataKey="actual" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
+                  <Line name="Predicted" type="monotone" dataKey="predicted" stroke="hsl(var(--primary))" strokeWidth={2} strokeDasharray="5 5" dot={false} />
                 </LineChart>
               </ResponsiveContainer>
             </motion.div>
