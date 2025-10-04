@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Search } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { useSharedState, locations } from './sidebar';
@@ -163,10 +162,6 @@ export function Header() {
           )}
         </div>
         <TemperatureSwitch unit={unit} setUnit={setUnit} />
-        <Avatar className="rounded-full">
-          <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" />
-          <AvatarFallback>U</AvatarFallback>
-        </Avatar>
       </div>
     </header>
   );
