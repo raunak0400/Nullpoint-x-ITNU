@@ -955,58 +955,61 @@ function MapView() {
   );
 }
 
+function ExpandedMap({ setIsExpanded }: { setIsExpanded: (isExpanded: boolean) => void }) {
+  return (
+    <motion.div
+      layoutId="map-card"
+      className="fixed inset-0 bg-card/80 backdrop-blur-lg z-50"
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <div className="w-full h-full" style={{ borderRadius: 'inherit' }}>
+        <MapView />
+      </div>
+      <Button
+        size="icon"
+        variant="ghost"
+        className="absolute top-4 right-4 bg-black/30 backdrop-blur-sm hover:bg-black/50 text-white rounded-xl z-50"
+        onClick={() => setIsExpanded(false)}
+      >
+        <X size={20} />
+      </Button>
+    </motion.div>
+  );
+}
+
 function InteractiveMap() {
   const [isExpanded, setIsExpanded] = useState(false);
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  const cardVariants = {
-    initial: {
-      borderRadius: '2rem',
-    },
-    expanded: {
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      width: '100vw',
-      height: '100vh',
-      borderRadius: '0px',
-      zIndex: 50,
-    },
-    collapsed: {
-      position: 'relative',
-      width: '100%',
-      height: '100%',
-      borderRadius: '2rem',
-      zIndex: 1,
-    }
-  };
 
   return (
+    <>
+      <AnimatePresence>
+        {isExpanded && <ExpandedMap setIsExpanded={setIsExpanded} />}
+      </AnimatePresence>
+      
       <motion.div
-        ref={cardRef}
-        className={cn(
-          "bg-card/50 backdrop-blur-lg border border-white/10",
-          !isExpanded && "rounded-[2rem] p-0 relative h-full overflow-hidden"
-        )}
-        variants={cardVariants}
-        animate={isExpanded ? "expanded" : "collapsed"}
+        layoutId="map-card"
+        className="relative h-full bg-card/50 backdrop-blur-lg border border-white/10 rounded-[2rem] overflow-hidden"
+        style={{ borderRadius: '2rem' }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        style={!isExpanded ? { position: 'relative', width: '100%', height: '100%' } : {}}
       >
         <div style={{ borderRadius: 'inherit', width: '100%', height: '100%', overflow: 'hidden' }}>
           <MapView />
         </div>
-        <Button 
-          size="icon" 
-          variant="ghost" 
-          className="absolute top-4 right-4 bg-black/30 backdrop-blur-sm hover:bg-black/50 text-white rounded-xl z-50"
-          onClick={() => setIsExpanded(!isExpanded)}
-        >
-          {isExpanded ? <X size={20}/> : <Expand size={20} />}
-        </Button>
+        {!isExpanded && (
+          <Button
+            size="icon"
+            variant="ghost"
+            className="absolute top-4 right-4 bg-black/30 backdrop-blur-sm hover:bg-black/50 text-white rounded-xl z-10"
+            onClick={() => setIsExpanded(true)}
+          >
+            <Expand size={20} />
+          </Button>
+        )}
       </motion.div>
+    </>
   );
 }
+
 
 function SmartTips({ location }: { location: { name: string }}) {
   const [tips, setTips] = useState({ explanation: 'Loading...', recommendations: 'Loading...' });
@@ -1062,7 +1065,3 @@ function SmartTips({ location }: { location: { name: string }}) {
     </Card>
   );
 }
-
-    
-
-    
