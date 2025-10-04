@@ -53,11 +53,11 @@ export function Header() {
 
   const pageTitles: { [key: string]: { title: string, description: string } } = {
     '/': { title: 'Hi, Nullpoint', description: '' },
-    '/weather-info': { title: 'Weather Info', description: `Detailed view for ${selectedLocation.name}` },
-    '/future-air-prediction': { title: 'Future Air Prediction', description: 'AI-powered 24-hour AQI forecast' },
-    '/air-alerts': { title: 'Air Alerts', description: `Current advisories for ${selectedLocation.name}` },
-    '/map-view': { title: 'Interactive Map View', description: `Data layers for ${selectedLocation.name}` },
-    '/past-air-data': { title: 'Past Air Data', description: `Historical pollutant levels in ${selectedLocation.name}` },
+    '/weather-info': { title: 'Weather Info', description: `Detailed view for ${selectedLocation.name}, ${selectedLocation.country}` },
+    '/future-air-prediction': { title: 'Future Air Prediction', description: `AI-powered 24-hour AQI forecast for ${selectedLocation.name}, ${selectedLocation.country}` },
+    '/air-alerts': { title: 'Air Alerts', description: `Current advisories for ${selectedLocation.name}, ${selectedLocation.country}` },
+    '/map-view': { title: 'Interactive Map View', description: `Data layers for ${selectedLocation.name}, ${selectedLocation.country}` },
+    '/past-air-data': { title: 'Past Air Data', description: `Historical pollutant levels in ${selectedLocation.name}, ${selectedLocation.country}` },
   };
 
   useEffect(() => {
@@ -166,3 +166,5 @@ export function Header() {
     </header>
   );
 }
+
+    

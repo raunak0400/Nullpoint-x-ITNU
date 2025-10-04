@@ -193,8 +193,8 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
                 <div className="flex items-center gap-4">
                     <CloudSun size={64} className="text-primary" />
                     <div>
-                        <h2 className="text-4xl font-bold">{location.name}</h2>
-                        <p className="text-muted-foreground">{location.country}</p>
+                        <h2 className="text-4xl font-bold">{location.country}</h2>
+                        <p className="text-muted-foreground">{location.name}</p>
                     </div>
                 </div>
                 <div className="flex gap-x-4 gap-y-2 mt-4 sm:mt-0 flex-wrap items-center">
@@ -528,5 +528,7 @@ function SmartTips({ location }: { location: { name: string }}) {
     </Card>
   );
 }
+
+    
 
     
