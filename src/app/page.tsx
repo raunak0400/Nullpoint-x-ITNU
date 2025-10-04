@@ -12,16 +12,21 @@ import {
   Globe,
   Grip,
   HelpCircle,
+  History,
+  Map as MapIcon,
   MapPin,
   Moon,
   Search,
   Settings,
+  Siren,
   Sun,
   Sunrise,
   Sunset,
   Thermometer,
+  TrendingUp,
   User,
   Wind,
+  Gauge,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -110,11 +115,12 @@ export default function Home() {
 
 function Sidebar() {
   const navItems = [
-    { icon: <Grip />, label: 'Dashboard' },
-    { icon: <MapPin />, label: 'Map' },
-    { icon: <BarChart2 />, label: 'Analytics' },
-    { icon: <Calendar />, label: 'Calendar' },
-    { icon: <Globe />, label: 'Globe' },
+    { icon: <Gauge />, label: 'Live Air Quality' },
+    { icon: <CloudSun />, label: 'Weather Info' },
+    { icon: <TrendingUp />, label: 'Future Air Prediction' },
+    { icon: <Siren />, label: 'Air Alerts' },
+    { icon: <MapIcon />, label: 'Easy Map View' },
+    { icon: <History />, label: 'Past Air Data' },
   ];
 
   const bottomNavItems = [
@@ -129,7 +135,7 @@ function Sidebar() {
         <div className="text-primary font-bold text-2xl">g.</div>
         <nav className="space-y-6">
           {navItems.map((item, index) => (
-            <Button key={index} variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground data-[active=true]:text-foreground data-[active=true]:bg-primary/10 w-12 h-12" data-active={index === 0}>
+            <Button key={index} variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground data-[active=true]:text-foreground data-[active=true]:bg-primary/10 w-12 h-12" data-active={index === 0} title={item.label}>
               {item.icon}
             </Button>
           ))}
@@ -137,7 +143,7 @@ function Sidebar() {
       </div>
       <div className="space-y-6">
           {bottomNavItems.map((item, index) => (
-            <Button key={index} variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground w-12 h-12">
+            <Button key={index} variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground w-12 h-12" title={item.label}>
               {item.icon}
             </Button>
           ))}
