@@ -610,7 +610,7 @@ export function Map({ showFilters: initialShowFilters = false }: { showFilters?:
   const mapOptions = {
     styles: getMapStyle(),
     disableDefaultUI: true,
-    zoomControl: true,
+    zoomControl: false,
     streetViewControl: false,
     mapTypeControl: false,
     fullscreenControl: false,
