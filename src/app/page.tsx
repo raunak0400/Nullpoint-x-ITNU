@@ -77,7 +77,7 @@ function Card({ children, className }: { children: React.ReactNode, className?: 
 
 export default function Home() {
   return (
-    <div className="bg-background text-foreground min-h-screen flex font-body">
+    <div className="min-h-screen flex font-body">
       <Sidebar />
       <main className="flex-1 p-4 md:p-6 lg:p-8 space-y-6">
         <Header />
@@ -199,7 +199,7 @@ function CurrentWeather() {
             </div>
             <div className="flex overflow-x-auto gap-2 pb-2 -mx-2 px-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                 {hourlyForecast.map((hour, i) => (
-                    <div key={i} className="flex flex-col items-center justify-between p-3 rounded-3xl bg-background/50 border border-white/10 min-w-[60px] h-32">
+                    <div key={i} className="flex flex-col items-center justify-between p-3 rounded-3xl bg-card/50 backdrop-blur-sm border border-white/10 min-w-[60px] h-32">
                         <p className="text-sm text-muted-foreground">{hour.time}</p>
                         <div className="text-primary">{hour.icon}</div>
                         <p className="text-lg font-bold">{hour.temp}°</p>
@@ -215,7 +215,7 @@ function Overview() {
     <Card>
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-xl font-semibold">Overview</h3>
-        <div className="flex items-center gap-1 bg-background/50 border border-white/10 rounded-full p-1 text-sm">
+        <div className="flex items-center gap-1 bg-card/50 backdrop-blur-sm border border-white/10 rounded-full p-1 text-sm">
           <Button variant="ghost" size="sm" className="rounded-full bg-primary text-primary-foreground h-8 px-4">Humidity</Button>
           <Button variant="ghost" size="sm" className="rounded-full h-8 px-4">UV Index</Button>
           <Button variant="ghost" size="sm" className="rounded-full h-8 px-4">Rainfall</Button>
@@ -305,14 +305,14 @@ function Forecasts() {
     <Card>
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-xl font-semibold">Forecasts</h3>
-        <div className="flex items-center gap-1 bg-background/50 border border-white/10 rounded-full p-1 text-sm">
+        <div className="flex items-center gap-1 bg-card/50 backdrop-blur-sm border border-white/10 rounded-full p-1 text-sm">
           <Button variant="ghost" size="sm" className="rounded-full bg-primary text-primary-foreground h-8 px-4">3 days</Button>
           <Button variant="ghost" size="sm" className="rounded-full h-8 px-4">10 days</Button>
         </div>
       </div>
       <div className="space-y-3">
         {dailyForecasts.map((day, i) => (
-          <div key={i} className="flex items-center justify-between p-3 rounded-2xl bg-background/50 border border-white/10">
+          <div key={i} className="flex items-center justify-between p-3 rounded-2xl bg-card/50 backdrop-blur-sm border border-white/10">
             <div className="flex items-center gap-3">
               <div className="text-primary">{day.icon}</div>
               <p className="font-semibold">+{day.high}°<span className="text-muted-foreground">/{day.low}°</span></p>
@@ -345,3 +345,5 @@ function Subscribe() {
         </Card>
     );
 }
+
+    
