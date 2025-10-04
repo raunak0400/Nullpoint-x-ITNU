@@ -7,7 +7,13 @@ import {
   DialogContent,
   DialogTrigger,
   DialogClose,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
 } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+
 
 import {
   AppWindow,
@@ -66,13 +72,13 @@ const getIconForHour = (hour: number) => {
     return <Moon size={24} />;
 };
   
-const generateHourlyForecast = () => {
+const generateHourlyForecast = (is24Hour: boolean) => {
     const now = new Date();
     const currentHour = now.getHours();
     const forecast = [];
   
     for (let i = currentHour; i <= 23; i++) {
-        const time = format(new Date().setHours(i), 'ha').toLowerCase();
+        const time = format(new Date().setHours(i), is24Hour ? 'HH:00' : 'ha').toLowerCase();
         const temp = Math.floor(Math.random() * 10) + 15; // Random temp between 15-25
         const icon = getIconForHour(i);
         forecast.push({ time, temp, icon });
@@ -101,15 +107,16 @@ const celsiusToFahrenheit = (c: number) => (c * 9/5) + 32;
 
 export default function Home() {
   const [unit, setUnit] = useState<TempUnit>('C');
+  const [is24Hour, setIs24Hour] = useState(true);
 
   return (
     <div className="h-screen flex font-body overflow-hidden">
-      <Sidebar />
+      <Sidebar is24Hour={is24Hour} setIs24Hour={setIs24Hour} />
       <main className="flex-1 flex flex-col p-4 md:p-6 lg:p-8 gap-6">
-        <Header unit={unit} setUnit={setUnit} />
+        <Header unit={unit} setUnit={setUnit} is24Hour={is24Hour} />
         <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 grid-rows-3 lg:grid-rows-2 gap-6">
           <div className="lg:col-span-2 row-span-1">
-            <CurrentWeather unit={unit} />
+            <CurrentWeather unit={unit} is24Hour={is24Hour} />
           </div>
           <div className="row-span-1">
             <InteractiveMap />
@@ -126,7 +133,9 @@ export default function Home() {
   );
 }
 
-function Sidebar() {
+function Sidebar({ is24Hour, setIs24Hour }: { is24Hour: boolean; setIs24Hour: (is24Hour: boolean) => void; }) {
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  
   const navItems = [
     { icon: <Gauge />, label: 'Live Air Quality' },
     { icon: <CloudSun />, label: 'Weather Info' },
@@ -137,32 +146,65 @@ function Sidebar() {
   ];
 
   const bottomNavItems = [
-    { icon: <HelpCircle />, label: 'Help' },
-    { icon: <Settings />, label: 'Settings' },
-    { icon: <AppWindow />, label: 'App' },
+    { icon: <HelpCircle />, label: 'Help', action: () => {} },
+    { icon: <Settings />, label: 'Settings', action: () => setIsSettingsOpen(true) },
+    { icon: <AppWindow />, label: 'App', action: () => {} },
   ];
 
   return (
-    <aside className="w-20 bg-card/50 backdrop-blur-sm border-r border-white/10 p-4 flex flex-col items-center justify-between rounded-r-[2rem]">
-      <div className="space-y-8">
-        
-        <nav className="space-y-6">
-          {navItems.map((item, index) => (
-            <Button key={index} variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground data-[active=true]:text-foreground data-[active=true]:bg-primary/10 w-12 h-12 rounded-2xl" data-active={index === 0} title={item.label}>
-              {item.icon}
-            </Button>
-          ))}
-        </nav>
-      </div>
-      <div className="space-y-6">
-          {bottomNavItems.map((item, index) => (
-            <Button key={index} variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground w-12 h-12 rounded-2xl" title={item.label}>
-              {item.icon}
-            </Button>
-          ))}
-      </div>
-    </aside>
+    <>
+      <aside className="w-20 bg-card/50 backdrop-blur-sm border-r border-white/10 p-4 flex flex-col items-center justify-between rounded-r-[2rem]">
+        <div className="space-y-8">
+          
+          <nav className="space-y-6">
+            {navItems.map((item, index) => (
+              <Button key={index} variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground data-[active=true]:text-foreground data-[active=true]:bg-primary/10 w-12 h-12 rounded-2xl" data-active={index === 0} title={item.label}>
+                {item.icon}
+              </Button>
+            ))}
+          </nav>
+        </div>
+        <div className="space-y-6">
+            {bottomNavItems.map((item, index) => (
+              <Button key={index} variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground w-12 h-12 rounded-2xl" title={item.label} onClick={item.action}>
+                {item.icon}
+              </Button>
+            ))}
+        </div>
+      </aside>
+      <SettingsDialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen} is24Hour={is24Hour} setIs24Hour={setIs24Hour} />
+    </>
   );
+}
+
+function SettingsDialog({ open, onOpenChange, is24Hour, setIs24Hour }: { open: boolean, onOpenChange: (open: boolean) => void, is24Hour: boolean, setIs24Hour: (is24Hour: boolean) => void }) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Settings</DialogTitle>
+          <DialogDescription>
+            Customize your experience.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="py-4">
+          <div className="flex items-center justify-between">
+            <Label htmlFor="time-format" className="flex flex-col gap-1">
+              <span>24-Hour Time</span>
+              <span className="font-normal text-muted-foreground">
+                Display time in 24-hour format.
+              </span>
+            </Label>
+            <Switch
+              id="time-format"
+              checked={is24Hour}
+              onCheckedChange={setIs24Hour}
+            />
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
 }
 
 const TemperatureSwitch = ({ unit, setUnit }: { unit: TempUnit; setUnit: (unit: TempUnit) => void }) => {
@@ -197,7 +239,7 @@ const TemperatureSwitch = ({ unit, setUnit }: { unit: TempUnit; setUnit: (unit: 
 };
 
 
-function Header({ unit, setUnit }: { unit: TempUnit; setUnit: (unit: TempUnit) => void }) {
+function Header({ unit, setUnit, is24Hour }: { unit: TempUnit; setUnit: (unit: TempUnit) => void; is24Hour: boolean }) {
   const [now, setNow] = useState(new Date());
 
   useEffect(() => {
@@ -218,11 +260,12 @@ function Header({ unit, setUnit }: { unit: TempUnit; setUnit: (unit: TempUnit) =
   const formattedTime = new Intl.DateTimeFormat('en-GB', {
     hour: '2-digit',
     minute: '2-digit',
-    hour12: false,
+    hour12: !is24Hour,
     timeZone: 'Asia/Kolkata',
   }).format(now);
 
-  const [hours, minutes] = formattedTime.split(':');
+  const [timePart, ampmPart] = formattedTime.split(' ');
+  const [hours, minutes] = timePart.split(':');
 
   return (
     <header className="flex flex-wrap items-center justify-between gap-4">
@@ -236,6 +279,7 @@ function Header({ unit, setUnit }: { unit: TempUnit; setUnit: (unit: TempUnit) =
             <span className="animate-pulse duration-1000 ease-in-out">:</span>
             {minutes}
           </span>
+          {ampmPart && <span className='ml-1'>{ampmPart}</span>}
         </p>
       </div>
       <div className="flex items-center gap-2 md:gap-4 flex-wrap">
@@ -254,10 +298,10 @@ function Header({ unit, setUnit }: { unit: TempUnit; setUnit: (unit: TempUnit) =
 }
 
 
-function CurrentWeather({ unit }: { unit: TempUnit }) {
+function CurrentWeather({ unit, is24Hour }: { unit: TempUnit; is24Hour: boolean }) {
     const currentTemp = 20;
     const displayTemp = unit === 'C' ? currentTemp : celsiusToFahrenheit(currentTemp);
-    const hourlyForecast = generateHourlyForecast();
+    const hourlyForecast = generateHourlyForecast(is24Hour);
 
     return (
         <Card className="p-6 h-full flex flex-col relative overflow-hidden">
@@ -306,7 +350,7 @@ function CurrentWeather({ unit }: { unit: TempUnit }) {
               >
                   <div className="flex gap-2 pb-2">
                     {hourlyForecast.map((hour, i) => (
-                        <div key={i} className="flex flex-col items-center justify-between p-3 rounded-2xl bg-background/30 backdrop-blur-sm border border-white/10 min-w-[60px] h-32">
+                        <div key={i} className="flex flex-col items-center justify-between p-3 rounded-2xl bg-background/30 backdrop-blur-sm border border-white/10 min-w-[70px] h-32">
                             <p className="text-sm text-muted-foreground">{hour.time}</p>
                             <div className="text-muted-foreground">{hour.icon}</div>
                             <p className="text-lg font-bold">{Math.round(unit === 'C' ? hour.temp : celsiusToFahrenheit(hour.temp))}°</p>
@@ -550,3 +594,5 @@ function SmartTips() {
     </Card>
   );
 }
+
+    
