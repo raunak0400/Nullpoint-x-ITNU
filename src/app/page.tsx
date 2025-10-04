@@ -183,7 +183,7 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
       <Link href="/weather-info" className="block h-full group">
         <div className="p-6 h-full flex flex-col relative overflow-hidden bg-black/20 backdrop-blur-xl border border-white/10 rounded-[2rem] group-hover:border-white/20 transition-all duration-300">
             <Image
-                src="https://images.unsplash.com/photo-1571457403686-45e398766082?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjbG91ZHklMjBzdW5ueXxlbnwwfHx8fDE3NTk2MDk0ODJ8MA&ixlib=rb-4.1.0&q=80&w=1080"
+                src="https://images.unsplash.com/photo-1500740516770-92bd004b996e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjbG91ZHl8ZW58MHx8fHwxNzU5NjA0OTc3fDA&ixlib=rb-4.1.0&q=80&w=1080"
                 alt="Weather background"
                 fill
                 className="object-cover opacity-20 group-hover:opacity-30 transition-opacity duration-300"
