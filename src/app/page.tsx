@@ -963,7 +963,7 @@ function ExpandedMap({ setIsExpanded }: { setIsExpanded: (isExpanded: boolean) =
       style={{ borderRadius: '2rem' }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
     >
-      <div className="w-full h-full" style={{ borderRadius: 'inherit' }}>
+      <div className="w-full h-full" style={{ borderRadius: 'inherit', overflow: 'hidden' }}>
         <MapView />
       </div>
       <Button
@@ -989,11 +989,11 @@ function InteractiveMap() {
       
       <motion.div
         layoutId="map-card"
-        className="relative h-full bg-card/50 backdrop-blur-lg border border-white/10 rounded-[2rem] overflow-hidden"
+        className="relative h-full"
         style={{ borderRadius: '2rem' }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       >
-        <div style={{ borderRadius: 'inherit', width: '100%', height: '100%', overflow: 'hidden' }}>
+        <div className="bg-card/50 backdrop-blur-lg border border-white/10 rounded-[2rem] w-full h-full" style={{overflow: 'hidden'}}>
           <MapView />
         </div>
         {!isExpanded && (
