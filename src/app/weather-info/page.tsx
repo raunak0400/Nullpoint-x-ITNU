@@ -183,13 +183,13 @@ function WeatherInfoDashboard() {
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="flex items-center gap-2 text-sm font-medium"><Wind className="h-4 w-4 text-muted-foreground" />Wind</CardTitle>
             </CardHeader>
-            <CardContent className="flex flex-col items-center justify-center gap-2 h-full">
+            <CardContent className="flex flex-row items-center justify-center gap-4 h-full">
               <WindCompass
                 speed={data.wind.speed}
                 unit={data.wind.unit}
                 direction={data.wind.direction}
               />
-              <div className="text-center">
+              <div className="text-left">
                 <p className="font-bold">{getWindInsight(data.wind.speed)}</p>
                 <p className="text-sm text-muted-foreground">
                   {data.wind.speed} {data.wind.unit} {data.wind.direction}
