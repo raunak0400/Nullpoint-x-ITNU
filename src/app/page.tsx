@@ -659,14 +659,16 @@ function Overview() {
               labelClassName="font-bold"
               formatter={(value: number) => [`${value}${activeDataSet.unit}`, activeMetric]}
             />
-            <Area 
-              type="monotone" 
-              dataKey="value" 
-              stroke="hsl(var(--primary))" 
-              strokeWidth={2} 
-              fill="url(#colorValue)" 
-              clipPath={`url(#clip-path-${animationKey})`}
-            />
+            <g clipPath={`url(#clip-path-${animationKey})`}>
+              <Area 
+                key={animationKey}
+                type="monotone" 
+                dataKey="value" 
+                stroke="hsl(var(--primary))" 
+                strokeWidth={2} 
+                fill="url(#colorValue)"
+              />
+            </g>
 
             {currentHourX && currentHourY !== undefined && (
                <ReferenceDot 
@@ -1075,3 +1077,5 @@ function SmartTips({ location }: { location: { name: string }}) {
     </Card>
   );
 }
+
+    
