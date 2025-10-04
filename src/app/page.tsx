@@ -612,13 +612,14 @@ const mapStyles = [
   }
 ];
 
+const libraries = ['maps', 'visualization'] as const;
 
 function MapView() {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: apiKey,
-    libraries: ['maps']
+    libraries,
   });
 
   const [map, setMap] = useState(null);
@@ -776,3 +777,5 @@ function SmartTips({ location }: { location: { name: string }}) {
     </Card>
   );
 }
+
+    

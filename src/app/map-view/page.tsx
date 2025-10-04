@@ -275,7 +275,7 @@ const libraries = ['visualization'] as const;
 export default function MapViewPage() {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
   const { isLoaded, loadError } = useJsApiLoader({
-    id: 'google-map-script-full',
+    id: 'google-map-script',
     googleMapsApiKey: apiKey,
     libraries
   });
@@ -382,3 +382,5 @@ export default function MapViewPage() {
     </PageWrapper>
   );
 }
+
+    
