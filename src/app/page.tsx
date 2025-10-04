@@ -1,4 +1,3 @@
-
 'use client';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
@@ -477,12 +476,13 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
     }
 
     return (
-        <div className="p-6 h-full flex flex-col relative overflow-hidden bg-card/50 backdrop-blur-lg border border-white/10 rounded-[2rem]">
+      <Link href="/weather-info" className="block h-full group">
+        <div className="p-6 h-full flex flex-col relative overflow-hidden bg-card/50 backdrop-blur-lg border border-white/10 rounded-[2rem] group-hover:border-white/20 transition-all duration-300">
             <Image
                 src="https://picsum.photos/seed/weather/1200/400"
                 alt="Weather background"
                 fill
-                className="object-cover opacity-20"
+                className="object-cover opacity-20 group-hover:opacity-30 transition-opacity duration-300"
                 data-ai-hint="weather condition"
             />
             <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start mb-4">
@@ -533,6 +533,7 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
               </div>
             </div>
         </div>
+      </Link>
     );
 }
 
