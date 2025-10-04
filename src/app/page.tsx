@@ -1,5 +1,6 @@
 
 'use client';
+import { useState } from 'react';
 
 import {
   AppWindow,
@@ -138,6 +139,8 @@ function Sidebar() {
 }
 
 function Header() {
+  const [unit, setUnit] = useState<'C' | 'F'>('C');
+
   return (
     <header className="flex flex-wrap items-center justify-between gap-4">
       <div>
@@ -151,8 +154,8 @@ function Header() {
         </div>
         <Button variant="ghost">ENG</Button>
         <div className="flex items-center bg-card/50 backdrop-blur-sm border border-white/10 rounded-full">
-            <Button variant="ghost" className="rounded-full bg-primary text-primary-foreground">°C</Button>
-            <Button variant="ghost" className="rounded-full">°F</Button>
+            <Button variant={unit === 'C' ? "default" : "ghost"} className="rounded-full" onClick={() => setUnit('C')}>°C</Button>
+            <Button variant={unit === 'F' ? "default" : "ghost"} className="rounded-full" onClick={() => setUnit('F')}>°F</Button>
         </div>
         <Avatar className="rounded-full">
           <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" />
@@ -345,5 +348,3 @@ function Subscribe() {
         </Card>
     );
 }
-
-    
