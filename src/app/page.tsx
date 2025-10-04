@@ -121,7 +121,7 @@ type TempUnit = 'C' | 'F';
 
 function Card({ children, className }: { children: React.ReactNode, className?: string }) {
   return (
-    <div className={cn('bg-card/50 backdrop-blur-sm border border-white/10 rounded-[2rem]', className)}>
+    <div className={cn('bg-card/50 backdrop-blur-lg border border-white/10 rounded-[2rem]', className)}>
       {children}
     </div>
   );
@@ -470,14 +470,14 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
 
     if (hourlyForecast.length === 0) {
         return (
-            <div className="p-6 h-full flex flex-col relative overflow-hidden bg-card/50 backdrop-blur-sm border border-white/10 rounded-[2rem]">
+            <div className="p-6 h-full flex flex-col relative overflow-hidden bg-card/50 backdrop-blur-lg border border-white/10 rounded-[2rem]">
                 <div className="flex items-center justify-center h-full">Loading forecast...</div>
             </div>
         );
     }
 
     return (
-        <div className="p-6 h-full flex flex-col relative overflow-hidden bg-card/50 backdrop-blur-sm border border-white/10 rounded-[2rem]">
+        <div className="p-6 h-full flex flex-col relative overflow-hidden bg-card/50 backdrop-blur-lg border border-white/10 rounded-[2rem]">
             <Image
                 src="https://picsum.photos/seed/weather/1200/400"
                 alt="Weather background"
@@ -523,7 +523,7 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
               >
                   <div className="flex gap-2 pb-2">
                     {hourlyForecast.map((hour, i) => (
-                        <div key={i} className="flex flex-col items-center justify-between p-3 rounded-2xl bg-background/30 backdrop-blur-sm border border-white/10 min-w-[70px] h-32">
+                        <div key={i} className="flex flex-col items-center justify-between p-3 rounded-2xl bg-background/30 backdrop-blur-lg border border-white/10 min-w-[70px] h-32">
                             <p className="text-sm text-muted-foreground">{hour.time}</p>
                             <div className="text-muted-foreground">{hour.icon}</div>
                             <p className="text-lg font-bold">{Math.round(unit === 'C' ? hour.temp : celsiusToFahrenheit(hour.temp))}°</p>
@@ -985,7 +985,7 @@ function InteractiveMap() {
       <motion.div
         ref={cardRef}
         className={cn(
-          "bg-card/50 backdrop-blur-sm border border-white/10",
+          "bg-card/50 backdrop-blur-lg border border-white/10",
           !isExpanded && "rounded-[2rem] p-0 relative h-full overflow-hidden"
         )}
         variants={cardVariants}
@@ -1062,5 +1062,7 @@ function SmartTips({ location }: { location: { name: string }}) {
     </Card>
   );
 }
+
+    
 
     
