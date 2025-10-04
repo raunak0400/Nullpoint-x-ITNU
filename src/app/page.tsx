@@ -59,19 +59,27 @@ const overviewData = [
   { month: 'Dec', value: 25 },
 ];
 
-const hourlyForecast = [
-  { time: '09 am', temp: 17, icon: <CloudSun size={24} /> },
-  { time: '10 am', temp: 21, icon: <Sun size={24} /> },
-  { time: '11 am', temp: 21, icon: <Sun size={24} /> },
-  { time: '12 pm', temp: 24, icon: <Sun size={24} /> },
-  { time: '01 pm', temp: 24, icon: <Sun size={24} /> },
-  { time: '02 pm', temp: 26, icon: <Sun size={24} /> },
-  { time: '03 pm', temp: 24, icon: <CloudSun size={24} /> },
-  { time: '04 pm', temp: 22, icon: <Cloud size={24} /> },
-  { time: '05 pm', temp: 21, icon: <Cloud size={24} /> },
-  { time: '06 pm', temp: 21, icon: <Moon size={24} /> },
-  { time: '07 pm', temp: 19, icon: <Moon size={24} /> },
-];
+const getIconForHour = (hour: number) => {
+    if (hour >= 6 && hour < 12) return <CloudSun size={24} />;
+    if (hour >= 12 && hour < 18) return <Sun size={24} />;
+    if (hour >= 18 && hour < 20) return <Cloud size={24} />;
+    return <Moon size={24} />;
+};
+  
+const generateHourlyForecast = () => {
+    const now = new Date();
+    const currentHour = now.getHours();
+    const forecast = [];
+  
+    for (let i = currentHour; i <= 23; i++) {
+        const time = format(new Date().setHours(i), 'ha').toLowerCase();
+        const temp = Math.floor(Math.random() * 10) + 15; // Random temp between 15-25
+        const icon = getIconForHour(i);
+        forecast.push({ time, temp, icon });
+    }
+  
+    return forecast;
+};
 
 const dailyForecasts = [
   { day: 'Tue', date: '16 May', high: 22, low: 17, icon: <CloudSun size={20} /> },
@@ -249,6 +257,7 @@ function Header({ unit, setUnit }: { unit: TempUnit; setUnit: (unit: TempUnit) =
 function CurrentWeather({ unit }: { unit: TempUnit }) {
     const currentTemp = 20;
     const displayTemp = unit === 'C' ? currentTemp : celsiusToFahrenheit(currentTemp);
+    const hourlyForecast = generateHourlyForecast();
 
     return (
         <Card className="p-6 h-full flex flex-col relative overflow-hidden">
