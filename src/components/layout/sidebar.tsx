@@ -62,7 +62,7 @@ export const useSharedState = () => {
 }
 
 const NavItem = ({ item, pathname }: { item: { href: string; label: string; icon: React.ReactNode }; pathname: string }) => (
-  <TooltipProvider>
+  <TooltipProvider delayDuration={100}>
     <Tooltip>
       <TooltipTrigger asChild>
         <Link href={item.href} passHref>
@@ -84,7 +84,7 @@ const NavItem = ({ item, pathname }: { item: { href: string; label: string; icon
 );
 
 const BottomNavItem = ({ item }: { item: { label: string; icon: React.ReactNode; action: () => void } }) => (
-  <TooltipProvider>
+  <TooltipProvider delayDuration={100}>
     <Tooltip>
       <TooltipTrigger asChild>
         <Button variant="ghost" className="w-full justify-center text-muted-foreground hover:text-foreground text-base h-16" title={item.label} onClick={item.action}>
