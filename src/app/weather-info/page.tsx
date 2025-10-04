@@ -109,7 +109,7 @@ export default function WeatherInfoPage() {
               <CardTitle className="text-sm font-medium">Temperature</CardTitle>
               <Thermometer className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent className="flex flex-col justify-center h-full pb-0">
+            <CardContent className="pb-4 flex flex-col justify-center h-full">
               <div className="text-8xl font-bold">
                 {data.temperature.value}
                 {data.temperature.unit}
@@ -127,12 +127,12 @@ export default function WeatherInfoPage() {
               <CardTitle className="text-sm font-medium">Air Quality (AQI)</CardTitle>
               <Gauge className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent className="flex flex-col justify-center h-full pb-0">
-              <div className={`text-8xl font-bold ${getAQIColor(data.aqi.value)}`}>
-                {data.aqi.value}
-              </div>
-              <p className="text-lg text-muted-foreground mb-4">{data.aqi.quality}</p>
-              <Progress value={data.aqi.value} indicatorClassName={getAQIProgressColor(data.aqi.value)} />
+            <CardContent className="pb-4 flex flex-col justify-center h-full">
+                <div className={`text-8xl font-bold ${getAQIColor(data.aqi.value)}`}>
+                  {data.aqi.value}
+                </div>
+                <p className="text-lg text-muted-foreground mb-4">{data.aqi.quality}</p>
+                <Progress value={data.aqi.value} indicatorClassName={getAQIProgressColor(data.aqi.value)} />
             </CardContent>
           </Card>
         </motion.div>
