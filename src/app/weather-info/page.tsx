@@ -13,6 +13,7 @@ import {
   Thermometer,
   Gauge,
   Cloud,
+  HelpCircle,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -126,6 +127,8 @@ function WeatherInfoDashboard() {
     return 'Very strong wind';
   };
 
+  const aqiPercentage = (data.aqi.value / 300) * 100;
+
   return (
       <div className="grid grid-cols-1 md:grid-cols-2 md:grid-flow-row-dense gap-6">
         <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.1 }} className="md:row-span-2">
@@ -150,15 +153,20 @@ function WeatherInfoDashboard() {
           <Card className="h-full flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Air Quality (AQI)</CardTitle>
-              <Gauge className="h-4 w-4 text-muted-foreground" />
+              <HelpCircle className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent className="flex-1 flex flex-col items-center justify-center">
-                <div className={`text-8xl font-bold ${getAQIColor(data.aqi.value)}`}>
+                <div className="text-8xl font-bold text-green-400">
                   {data.aqi.value}
                 </div>
                 <p className="text-lg text-muted-foreground mb-4">{data.aqi.quality}</p>
                 <div className="w-full px-4">
-                  <Progress value={data.aqi.value} max={300} indicatorClassName={getAQIProgressColor(data.aqi.value)} />
+                  <div className="h-2 w-full rounded-full bg-secondary">
+                    <div
+                      className={cn("h-full rounded-full", getAQIProgressColor(data.aqi.value))}
+                      style={{ width: `${aqiPercentage}%`}}
+                    />
+                  </div>
                 </div>
             </CardContent>
           </Card>
@@ -178,8 +186,8 @@ function WeatherInfoDashboard() {
           </Card>
         </motion.div>
 
-        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.4 }}>
-          <Card className="flex flex-col">
+        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.4 }} className="flex flex-col">
+          <Card className="flex-1 flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="flex items-center gap-2 text-sm font-medium"><Wind className="h-4 w-4 text-muted-foreground" />Wind</CardTitle>
             </CardHeader>
@@ -276,4 +284,5 @@ function WeatherInfoDashboard() {
   );
 }
 
+    
     
