@@ -437,7 +437,7 @@ function Header({ unit, setUnit, is24Hour, selectedLocation, setSelectedLocation
       </div>
       <div className="flex items-center gap-2 md:gap-4 flex-wrap">
         <div className="relative flex items-center">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground z-10" size={20} />
+           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground z-10" size={20} />
           <Input 
             placeholder="Search city or postcode" 
             className="bg-card/50 backdrop-blur-sm border-white/10 pl-10 w-48 md:w-64 rounded-full" 
@@ -555,24 +555,34 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
 function Overview() {
   const [activeMetric, setActiveMetric] = useState<OverviewMetric>('Humidity');
   const activeDataSet = overviewDataSets[activeMetric];
+  const tabs = (Object.keys(overviewDataSets) as OverviewMetric[]);
 
   return (
     <Card className="h-full flex flex-col p-6">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-xl font-semibold">Overview</h3>
-        <div className="flex items-center gap-1 bg-card/50 backdrop-blur-sm border border-white/10 rounded-full p-1 text-sm">
-          {(Object.keys(overviewDataSets) as OverviewMetric[]).map((metric) => (
-            <Button 
+        <div className="relative flex items-center gap-1 bg-card/50 backdrop-blur-sm border border-white/10 rounded-full p-1 text-sm">
+          {tabs.map((metric) => (
+            <button
               key={metric}
-              variant="ghost" 
-              size="sm" 
-              className="rounded-full h-8 px-4 data-[active=true]:bg-primary data-[active=true]:text-primary-foreground"
-              data-active={activeMetric === metric}
               onClick={() => setActiveMetric(metric)}
+              className={cn(
+                "relative rounded-full h-8 px-4 z-10 transition-colors",
+                activeMetric === metric ? "text-primary-foreground" : "text-foreground"
+              )}
             >
               {metric}
-            </Button>
+            </button>
           ))}
+           <motion.span
+            layoutId="overview-active-tab"
+            className="absolute h-8 rounded-full bg-primary z-0"
+            style={{
+              width: `${100/tabs.length}%`,
+              left: `${tabs.indexOf(activeMetric) * (100/tabs.length)}%`
+            }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          />
         </div>
       </div>
       <div className="text-right mb-2">
