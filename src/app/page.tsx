@@ -1,5 +1,6 @@
+
 'use client';
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useContext } from 'react';
 import Image from 'next/image';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import {
@@ -13,7 +14,8 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Separator } from '@/components/ui/separator';
 
 import {
   AppWindow,
@@ -49,6 +51,7 @@ import {
 } from 'recharts';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
+import { useTheme } from '@/components/theme-provider';
 
 const overviewData = [
   { month: 'Jan', value: 20 },
@@ -178,6 +181,8 @@ function Sidebar({ is24Hour, setIs24Hour }: { is24Hour: boolean; setIs24Hour: (i
 }
 
 function SettingsDialog({ open, onOpenChange, is24Hour, setIs24Hour }: { open: boolean, onOpenChange: (open: boolean) => void, is24Hour: boolean, setIs24Hour: (is24Hour: boolean) => void }) {
+  const { theme, setTheme } = useTheme();
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -187,7 +192,83 @@ function SettingsDialog({ open, onOpenChange, is24Hour, setIs24Hour }: { open: b
             Customize your experience.
           </DialogDescription>
         </DialogHeader>
-        <div className="py-4">
+        <div className="py-4 space-y-6">
+          <div>
+            <Label className="text-base">Appearance</Label>
+            <RadioGroup
+              defaultValue={theme}
+              onValueChange={setTheme}
+              className="grid max-w-md grid-cols-3 gap-8 pt-2"
+            >
+              <Label className="[&:has([data-state=checked])>div]:border-primary">
+                <RadioGroupItem value="light" className="sr-only" />
+                <div className="items-center rounded-md border-2 border-muted p-1 hover:border-accent">
+                  <div className="space-y-2 rounded-sm bg-[#ecedef] p-2">
+                    <div className="space-y-2 rounded-md bg-white p-2 shadow-sm">
+                      <div className="h-2 w-[80px] rounded-lg bg-[#ecedef]" />
+                      <div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
+                    </div>
+                    <div className="flex items-center space-x-2 rounded-md bg-white p-2 shadow-sm">
+                      <div className="h-4 w-4 rounded-full bg-[#ecedef]" />
+                      <div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
+                    </div>
+                    <div className="flex items-center space-x-2 rounded-md bg-white p-2 shadow-sm">
+                      <div className="h-4 w-4 rounded-full bg-[#ecedef]" />
+                      <div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
+                    </div>
+                  </div>
+                </div>
+                <span className="block w-full p-2 text-center font-normal">
+                  Light
+                </span>
+              </Label>
+              <Label className="[&:has([data-state=checked])>div]:border-primary">
+                <RadioGroupItem value="dark" className="sr-only" />
+                <div className="items-center rounded-md border-2 border-muted bg-popover p-1 hover:border-accent">
+                  <div className="space-y-2 rounded-sm bg-slate-950 p-2">
+                    <div className="space-y-2 rounded-md bg-slate-800 p-2 shadow-sm">
+                      <div className="h-2 w-[80px] rounded-lg bg-slate-400" />
+                      <div className="h-2 w-[100px] rounded-lg bg-slate-400" />
+                    </div>
+                    <div className="flex items-center space-x-2 rounded-md bg-slate-800 p-2 shadow-sm">
+                      <div className="h-4 w-4 rounded-full bg-slate-400" />
+                      <div className="h-2 w-[100px] rounded-lg bg-slate-400" />
+                    </div>
+                    <div className="flex items-center space-x-2 rounded-md bg-slate-800 p-2 shadow-sm">
+                      <div className="h-4 w-4 rounded-full bg-slate-400" />
+                      <div className="h-2 w-[100px] rounded-lg bg-slate-400" />
+                    </div>
+                  </div>
+                </div>
+                <span className="block w-full p-2 text-center font-normal">
+                  Dark
+                </span>
+              </Label>
+               <Label className="[&:has([data-state=checked])>div]:border-primary">
+                <RadioGroupItem value="default" className="sr-only" />
+                <div className="items-center rounded-md border-2 border-muted bg-popover p-1 hover:border-accent">
+                  <div className="space-y-2 rounded-sm bg-[#0D0F13] p-2">
+                    <div className="space-y-2 rounded-md bg-[#212326] p-2 shadow-sm">
+                      <div className="h-2 w-[80px] rounded-lg bg-muted" />
+                      <div className="h-2 w-[100px] rounded-lg bg-muted" />
+                    </div>
+                    <div className="flex items-center space-x-2 rounded-md bg-[#212326] p-2 shadow-sm">
+                      <div className="h-4 w-4 rounded-full bg-muted" />
+                      <div className="h-2 w-[100px] rounded-lg bg-muted" />
+                    </div>
+                    <div className="flex items-center space-x-2 rounded-md bg-[#212326] p-2 shadow-sm">
+                      <div className="h-4 w-4 rounded-full bg-muted" />
+                      <div className="h-2 w-[100px] rounded-lg bg-muted" />
+                    </div>
+                  </div>
+                </div>
+                <span className="block w-full p-2 text-center font-normal">
+                  Default
+                </span>
+              </Label>
+            </RadioGroup>
+          </div>
+          <Separator />
           <div className="flex items-center justify-between">
             <Label htmlFor="time-format" className="flex flex-col gap-1">
               <span>24-Hour Time</span>
