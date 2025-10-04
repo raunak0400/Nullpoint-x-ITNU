@@ -154,7 +154,6 @@ function Header() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
           <Input placeholder="Search city or postcode" className="bg-card/50 backdrop-blur-sm border-white/10 pl-10 w-48 md:w-64 rounded-full" />
         </div>
-        <Button variant="ghost">ENG</Button>
         <div className="flex items-center bg-card/50 backdrop-blur-sm border border-white/10 rounded-full">
             <Button variant={unit === 'C' ? "default" : "ghost"} className="rounded-full" onClick={() => setUnit('C')}>°C</Button>
             <Button variant={unit === 'F' ? "default" : "ghost"} className="rounded-full" onClick={() => setUnit('F')}>°F</Button>
