@@ -60,44 +60,24 @@ import { explainForecastFactors } from '@/ai/flows/explain-forecast-factors';
 
 const overviewDataSets = {
   Humidity: {
-    data: [
-      { month: 'Jan', value: 20 }, { month: 'Feb', value: 30 }, { month: 'Mar', value: 45 },
-      { month: 'Apr', value: 40 }, { month: 'May', value: 60 }, { month: 'Jun', value: 80 },
-      { month: 'Jul', value: 75 }, { month: 'Aug', value: 70 }, { month: 'Sep', value: 55 },
-      { month: 'Oct', value: 45 }, { month: 'Nov', value: 30 }, { month: 'Dec', value: 25 },
-    ],
+    data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: Math.floor(Math.random() * 40) + 30 })),
     unit: '%',
     average: 52
   },
   'UV Index': {
-    data: [
-      { month: 'Jan', value: 1 }, { month: 'Feb', value: 2 }, { month: 'Mar', value: 3 },
-      { month: 'Apr', value: 5 }, { month: 'May', value: 7 }, { month: 'Jun', value: 9 },
-      { month: 'Jul', value: 8 }, { month: 'Aug', value: 7 }, { month: 'Sep', value: 5 },
-      { month: 'Oct', value: 3 }, { month: 'Nov', value: 2 }, { month: 'Dec', value: 1 },
-    ],
+    data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: Math.max(0, Math.round(5 * Math.sin((i / 24) * Math.PI * 2 - Math.PI / 2) + 1)) })),
     unit: '',
-    average: 4
+    average: 2
   },
   Rainfall: {
-    data: [
-      { month: 'Jan', value: 40 }, { month: 'Feb', value: 35 }, { month: 'Mar', value: 50 },
-      { month: 'Apr', value: 60 }, { month: 'May', value: 55 }, { month: 'Jun', value: 70 },
-      { month: 'Jul', value: 80 }, { month: 'Aug', value: 75 }, { month: 'Sep', value: 65 },
-      { month: 'Oct', value: 50 }, { month: 'Nov', value: 45 }, { month: 'Dec', value: 40 },
-    ],
+    data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: Math.max(0, Math.floor(Math.random() * 5) - 3) })),
     unit: 'mm',
-    average: 55
+    average: 1
   },
   Pressure: {
-    data: [
-      { month: 'Jan', value: 1012 }, { month: 'Feb', value: 1010 }, { month: 'Mar', value: 1008 },
-      { month: 'Apr', value: 1006 }, { month: 'May', value: 1004 }, { month: 'Jun', value: 1002 },
-      { month: 'Jul', value: 1000 }, { month: 'Aug', value: 1002 }, { month: 'Sep', value: 1004 },
-      { month: 'Oct', value: 1006 }, { month: 'Nov', value: 1008 }, { month: 'Dec', value: 1010 },
-    ],
+    data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: 1012 + Math.floor(Math.random() * 10) - 5 })),
     unit: 'hPa',
-    average: 1006
+    average: 1012
   },
 };
 
@@ -597,7 +577,7 @@ function Overview() {
                 <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+            <XAxis dataKey="hour" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
             <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}${activeDataSet.unit}`} />
             <Tooltip
               contentStyle={{
