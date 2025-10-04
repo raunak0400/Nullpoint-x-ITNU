@@ -3,6 +3,12 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogClose,
+} from '@/components/ui/dialog';
 
 import {
   AppWindow,
@@ -22,6 +28,8 @@ import {
   Smile,
   Sun,
   Gauge,
+  Expand,
+  X,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -356,51 +364,71 @@ const mapStyles = [
 ];
 
 
-function InteractiveMap() {
+function MapView({ isExpanded }: { isExpanded: boolean }) {
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""
-  })
+  });
 
-  const [map, setMap] = useState(null)
+  const [map, setMap] = useState(null);
 
   const onLoad = useCallback(function callback(map: any) {
-    setMap(map)
-  }, [])
+    setMap(map);
+  }, []);
 
   const onUnmount = useCallback(function callback(map: any) {
-    setMap(null)
-  }, [])
+    setMap(null);
+  }, []);
 
   if (loadError) {
-    return <Card className="h-64 flex items-center justify-center p-0 overflow-hidden"><p className='text-red-500'>Error loading map</p></Card>;
+    return <p className='text-red-500'>Error loading map</p>;
   }
+
+  return isLoaded ? (
+    <GoogleMap
+      mapContainerStyle={{
+        width: '100%',
+        height: '100%',
+        borderRadius: isExpanded ? '0' : '2rem',
+      }}
+      center={center}
+      zoom={10}
+      onLoad={onLoad}
+      onUnmount={onUnmount}
+      options={{
+        styles: mapStyles,
+        disableDefaultUI: true,
+        zoomControl: true,
+      }}
+    >
+      {/* Child components, such as markers, info windows, etc. */}
+    </GoogleMap>
+  ) : (
+    <div className='flex items-center justify-center h-full'>Loading Map...</div>
+  );
+}
+
+function InteractiveMap() {
+  const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <Card className="relative h-64 p-0 overflow-hidden">
-      {isLoaded ? (
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          center={center}
-          zoom={10}
-          onLoad={onLoad}
-          onUnmount={onUnmount}
-          options={{
-            styles: mapStyles,
-            disableDefaultUI: true,
-            zoomControl: true,
-          }}
-        >
-          { /* Child components, such as markers, info windows, etc. */ }
-        </GoogleMap>
-      ) : (
-        <div className='flex items-center justify-center h-full'>Loading Map...</div>
-      )}
-       <div className="absolute top-4 right-4">
-          <Button size="icon" variant="ghost" className="bg-black/30 backdrop-blur-sm hover:bg-black/50 text-white rounded-xl">
-            <GlobeIcon size={20}/>
+      <MapView isExpanded={false} />
+      <Dialog open={isExpanded} onOpenChange={setIsExpanded}>
+        <DialogTrigger asChild>
+          <Button size="icon" variant="ghost" className="absolute top-4 right-4 bg-black/30 backdrop-blur-sm hover:bg-black/50 text-white rounded-xl">
+            <Expand size={20} />
           </Button>
-      </div>
+        </DialogTrigger>
+        <DialogContent className="p-0 border-0 max-w-none w-screen h-screen">
+          <MapView isExpanded={true} />
+          <DialogClose asChild>
+            <Button size="icon" variant="ghost" className="absolute top-4 right-4 bg-black/30 backdrop-blur-sm hover:bg-black/50 text-white rounded-xl">
+              <X size={20}/>
+            </Button>
+          </DialogClose>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }
