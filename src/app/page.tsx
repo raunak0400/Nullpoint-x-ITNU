@@ -1,5 +1,4 @@
 
-
 'use client';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
@@ -414,7 +413,7 @@ function Header({ unit, setUnit, is24Hour, selectedLocation, setSelectedLocation
           <span className="mx-2">|</span>
           <span>
             {hours}
-            <span className="animate-pulse duration-1000 ease-in-out">:</span>
+            <span className="animate-colon-pulse">:</span>
             {minutes}
           </span>
           {ampmPart && <span className='ml-1'>{ampmPart}</span>}
