@@ -50,8 +50,8 @@ const weatherData = {
       feelsLike: 25,
     },
     aqi: {
-      value: 45,
-      quality: 'Good',
+      value: 155,
+      quality: 'Unhealthy',
     },
     uvIndex: {
       value: 5,
@@ -158,7 +158,7 @@ function WeatherInfoDashboard() {
                 </div>
                 <p className="text-lg text-muted-foreground mb-4">{data.aqi.quality}</p>
                 <div className="w-full px-4">
-                  <Progress value={data.aqi.value} indicatorClassName={getAQIProgressColor(data.aqi.value)} />
+                  <Progress value={data.aqi.value} max={300} indicatorClassName={getAQIProgressColor(data.aqi.value)} />
                 </div>
             </CardContent>
           </Card>
@@ -173,7 +173,7 @@ function WeatherInfoDashboard() {
             <CardContent>
               <div className="text-5xl font-bold">{data.uvIndex.value}</div>
               <p className="text-xs text-muted-foreground mb-2">{data.uvIndex.level}</p>
-              <Progress value={data.uvIndex.value * 10} indicatorClassName="bg-gradient-to-r from-green-400 via-yellow-400 to-red-500" />
+              <Progress value={data.uvIndex.value} max={11} indicatorClassName="bg-gradient-to-r from-green-400 via-yellow-400 to-red-500" />
             </CardContent>
           </Card>
         </motion.div>
