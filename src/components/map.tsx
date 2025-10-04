@@ -17,7 +17,7 @@ const containerStyle = {
 
 const center = {
   lat: 28.6139,
-  lng: 77.2090,
+  lng: 77.209,
 };
 
 const defaultDarkMapStyles = [
