@@ -1,4 +1,3 @@
-
 'use client';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
@@ -616,7 +615,7 @@ const mapStyles = [
 function MapView() {
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
+    googleMapsApiKey: "YOUR_API_KEY",
     libraries: ['maps']
   });
 
@@ -634,7 +633,7 @@ function MapView() {
     return <p className='text-red-500'>Error loading map</p>;
   }
   
-  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
+  const apiKey = "YOUR_API_KEY";
   if (!apiKey) {
      return <p className='text-red-500'>Google Maps API key is missing.</p>;
   }
