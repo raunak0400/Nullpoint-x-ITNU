@@ -246,9 +246,8 @@ function Overview() {
   const [currentHour, setCurrentHour] = useState<number | null>(null);
 
   useEffect(() => {
-    // const date = new Date();
-    // setCurrentHour(date.getHours());
-    setCurrentHour(9);
+    const date = new Date();
+    setCurrentHour(date.getHours());
   }, []);
 
   const handleSetMetric = (metric: OverviewMetric) => {
