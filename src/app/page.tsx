@@ -80,7 +80,7 @@ const dailyForecasts = [
 
 function Card({ children, className }: { children: React.ReactNode, className?: string }) {
   return (
-    <div className={`bg-card/50 backdrop-blur-sm border border-white/10 rounded-[2rem] p-6 ${className}`}>
+    <div className={`bg-card/50 backdrop-blur-sm border border-white/10 rounded-[2rem] ${className}`}>
       {children}
     </div>
   );
@@ -88,19 +88,22 @@ function Card({ children, className }: { children: React.ReactNode, className?: 
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex font-body">
+    <div className="h-screen flex font-body overflow-hidden">
       <Sidebar />
-      <main className="flex-1 p-4 md:p-6 lg:p-8 space-y-6">
+      <main className="flex-1 flex flex-col p-4 md:p-6 lg:p-8 gap-6">
         <Header />
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
+        <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 grid-rows-3 lg:grid-rows-2 gap-6">
+          <div className="lg:col-span-2 row-span-1">
             <CurrentWeather />
-            <Overview />
           </div>
-          <div className="space-y-6">
+          <div className="row-span-1">
             <InteractiveMap />
-            <SmartTips />
-            <Forecasts />
+          </div>
+          <div className="lg:col-span-1 row-span-1">
+             <SmartTips />
+          </div>
+          <div className="lg:col-span-2 row-span-1">
+            <Overview />
           </div>
         </div>
       </main>
@@ -177,8 +180,8 @@ function Header() {
 
 function CurrentWeather() {
     return (
-        <Card className="p-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start mb-6">
+        <Card className="p-6 h-full flex flex-col">
+            <div className="flex flex-col sm:flex-row justify-between items-start mb-4">
                 <div className="flex items-center gap-4">
                     <CloudSun size={64} className="text-primary" />
                     <div>
@@ -186,29 +189,29 @@ function CurrentWeather() {
                         <p className="text-muted-foreground">Germany</p>
                     </div>
                 </div>
-                <div className="flex gap-x-6 gap-y-2 mt-4 sm:mt-0 flex-wrap items-center">
+                <div className="flex gap-x-4 gap-y-2 mt-4 sm:mt-0 flex-wrap items-center">
                     <div className="flex items-center gap-2 text-green-400">
-                        <Smile size={32} />
+                        <Smile size={24} />
                         <div>
-                            <p className="text-xl font-bold">Good</p>
+                            <p className="font-bold">Good</p>
                             <p className="text-xs">Air Mood</p>
                         </div>
                     </div>
                     <div className="text-center sm:text-left">
-                        <p className="text-2xl font-bold">+20°</p>
+                        <p className="text-xl font-bold">+20°</p>
                         <p className="text-xs text-muted-foreground">Temperature</p>
                     </div>
                     <div className="text-center sm:text-left">
-                        <p className="text-2xl font-bold">24%</p>
+                        <p className="text-xl font-bold">24%</p>
                         <p className="text-xs text-muted-foreground">Humidity</p>
                     </div>
                     <div className="text-center sm:text-left">
-                        <p className="text-2xl font-bold">13<span className="text-base">km/h</span></p>
+                        <p className="text-xl font-bold">13<span className="text-sm">km/h</span></p>
                         <p className="text-xs text-muted-foreground">Wind speed</p>
                     </div>
                 </div>
             </div>
-            <div className="relative">
+            <div className="relative mt-auto">
               <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-card to-transparent pointer-events-none z-10"></div>
               <div className="flex overflow-x-auto gap-2 pb-2 -mx-2 px-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                   {hourlyForecast.map((hour, i) => (
@@ -227,7 +230,7 @@ function CurrentWeather() {
 
 function Overview() {
   return (
-    <Card>
+    <Card className="h-full flex flex-col p-6">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-xl font-semibold">Overview</h3>
         <div className="flex items-center gap-1 bg-card/50 backdrop-blur-sm border border-white/10 rounded-full p-1 text-sm">
@@ -240,7 +243,7 @@ function Overview() {
       <div className="text-right mb-2">
         <span className="text-sm bg-primary/10 text-primary py-1 px-3 rounded-full">Average 65%</span>
       </div>
-      <div className="h-64">
+      <div className="flex-1 h-full">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={overviewData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
             <defs>
@@ -412,7 +415,7 @@ function InteractiveMap() {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <Card className="relative h-64 p-0 overflow-hidden">
+    <Card className="relative h-full p-0 overflow-hidden">
       <MapView isExpanded={false} />
       <Dialog open={isExpanded} onOpenChange={setIsExpanded}>
         <DialogTrigger asChild>
@@ -435,7 +438,7 @@ function InteractiveMap() {
 
 function SmartTips() {
   return (
-    <Card>
+    <Card className="h-full flex flex-col p-6">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-xl font-semibold flex items-center gap-2">
           <Lightbulb className="text-primary" />
@@ -443,7 +446,7 @@ function SmartTips() {
         </h3>
         <Button variant="ghost" size="sm" className="rounded-full">More</Button>
       </div>
-      <div className="space-y-3">
+      <div className="space-y-3 flex-1">
         <p className="text-muted-foreground">
           Air quality is poor. It's recommended to stay indoors and use an air purifier if available.
         </p>
@@ -456,32 +459,5 @@ function SmartTips() {
     </Card>
   );
 }
-
-function Forecasts() {
-  return (
-    <Card>
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-xl font-semibold">Forecasts</h3>
-        <div className="flex items-center gap-1 bg-card/50 backdrop-blur-sm border border-white/10 rounded-full p-1 text-sm">
-          <Button variant="ghost" size="sm" className="rounded-full bg-primary text-primary-foreground h-8 px-4">3 days</Button>
-          <Button variant="ghost" size="sm" className="rounded-full h-8 px-4">10 days</Button>
-        </div>
-      </div>
-      <div className="space-y-3">
-        {dailyForecasts.map((day, i) => (
-          <div key={i} className="flex items-center justify-between p-3 rounded-2xl bg-card/50 backdrop-blur-sm border border-white/10">
-            <div className="flex items-center gap-3">
-              <div className="text-primary">{day.icon}</div>
-              <p className="font-semibold">+{day.high}°<span className="text-muted-foreground">/{day.low}°</span></p>
-            </div>
-            <p className="text-muted-foreground">{day.date}</p>
-          </div>
-        ))}
-      </div>
-    </Card>
-  );
-}
-
-    
 
     
