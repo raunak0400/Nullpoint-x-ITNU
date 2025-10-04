@@ -1,7 +1,8 @@
 
 'use client';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
+import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 
 import {
   AppWindow,
@@ -89,7 +90,7 @@ export default function Home() {
             <Overview />
           </div>
           <div className="space-y-6">
-            <Map />
+            <InteractiveMap />
             <SmartTips />
             <Forecasts />
             <Subscribe />
@@ -264,27 +265,143 @@ function Overview() {
   );
 }
 
-function Map() {
+const containerStyle = {
+  width: '100%',
+  height: '100%',
+  borderRadius: '2rem',
+};
+
+const center = {
+  lat: 52.52,
+  lng: 13.40,
+};
+
+const mapStyles = [
+  { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
+  { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
+  { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
+  {
+    featureType: "administrative.locality",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#d59563" }],
+  },
+  {
+    featureType: "poi",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#d59563" }],
+  },
+  {
+    featureType: "poi.park",
+    elementType: "geometry",
+    stylers: [{ color: "#263c3f" }],
+  },
+  {
+    featureType: "poi.park",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#6b9a76" }],
+  },
+  {
+    featureType: "road",
+    elementType: "geometry",
+    stylers: [{ color: "#38414e" }],
+  },
+  {
+    featureType: "road",
+    elementType: "geometry.stroke",
+    stylers: [{ color: "#212a37" }],
+  },
+  {
+    featureType: "road",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#9ca5b3" }],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "geometry",
+    stylers: [{ color: "#746855" }],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "geometry.stroke",
+    stylers: [{ color: "#1f2835" }],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#f3d19c" }],
+  },
+  {
+    featureType: "transit",
+    elementType: "geometry",
+    stylers: [{ color: "#2f3948" }],
+  },
+  {
+    featureType: "transit.station",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#d59563" }],
+  },
+  {
+    featureType: "water",
+    elementType: "geometry",
+    stylers: [{ color: "#17263c" }],
+  },
+  {
+    featureType: "water",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#515c6d" }],
+  },
+  {
+    featureType: "water",
+    elementType: "labels.text.stroke",
+    stylers: [{ color: "#17263c" }],
+  },
+];
+
+
+function InteractiveMap() {
+  const { isLoaded, loadError } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""
+  })
+
+  const [map, setMap] = useState(null)
+
+  const onLoad = useCallback(function callback(map: any) {
+    setMap(map)
+  }, [])
+
+  const onUnmount = useCallback(function callback(map: any) {
+    setMap(null)
+  }, [])
+
+  if (loadError) {
+    return <Card className="h-64 flex items-center justify-center"><p className='text-red-500'>Error loading map</p></Card>;
+  }
+
   return (
     <Card className="relative h-64 p-0 border-0 overflow-hidden">
-      <Image 
-        src="https://picsum.photos/seed/map/600/400" 
-        alt="Map" 
-        fill
-        className="object-cover rounded-[2rem]"
-        data-ai-hint="world map dark"
-      />
-      <div className="absolute top-4 right-4">
+      {isLoaded ? (
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={center}
+          zoom={10}
+          onLoad={onLoad}
+          onUnmount={onUnmount}
+          options={{
+            styles: mapStyles,
+            disableDefaultUI: true,
+            zoomControl: true,
+          }}
+        >
+          { /* Child components, such as markers, info windows, etc. */ }
+        </GoogleMap>
+      ) : (
+        <div className='flex items-center justify-center h-full'>Loading Map...</div>
+      )}
+       <div className="absolute top-4 right-4">
           <Button size="icon" variant="ghost" className="bg-black/30 backdrop-blur-sm hover:bg-black/50 text-white rounded-xl">
             <GlobeIcon size={20}/>
           </Button>
-      </div>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        <div className="bg-black/50 backdrop-blur-sm p-3 rounded-2xl text-center text-white border border-white/10">
-            <p className="font-semibold">Berlin, Germany</p>
-            <p className="text-sm">20° mostly cloudy</p>
-            <p className="text-sm">24% humidity</p>
-        </div>
       </div>
     </Card>
   );
