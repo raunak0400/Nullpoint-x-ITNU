@@ -3,7 +3,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { GoogleMap, HeatmapLayer, useJsApiLoader } from '@react-google-maps/api';
-import { Layers, Thermometer, Wind, Molecule, CloudCog, Sigma, Waves } from 'lucide-react';
+import { Layers, Beaker, CloudCog, Sigma, Waves } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
@@ -339,7 +339,7 @@ export default function MapViewPage() {
   }
   
   const layerConfig: { id: LayerName; label: string; icon: React.ReactNode; colorClass: string; }[] = [
-    { id: 'no2', label: 'NO₂', icon: <Molecule size={16} />, colorClass: 'text-yellow-400'},
+    { id: 'no2', label: 'NO₂', icon: <Beaker size={16} />, colorClass: 'text-yellow-400'},
     { id: 'ch2o', label: 'CH₂O', icon: <CloudCog size={16} />, colorClass: 'text-blue-300' },
     { id: 'aerosol', label: 'Aerosol Index', icon: <Sigma size={16} />, colorClass: 'text-gray-400' },
     { id: 'pm', label: 'Particulate Matter', icon: <Layers size={16} />, colorClass: 'text-orange-300' },
@@ -414,3 +414,5 @@ export default function MapViewPage() {
     </PageWrapper>
   );
 }
+
+    
