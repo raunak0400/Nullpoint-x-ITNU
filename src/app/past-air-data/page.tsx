@@ -119,16 +119,16 @@ export default function PastAirDataPage() {
                 <AreaChart data={data}>
                    <defs>
                     <linearGradient id="colorPM25" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="var(--color-chart-1)" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="var(--color-chart-1)" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="hsl(var(--chart-1))" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="hsl(var(--chart-1))" stopOpacity={0}/>
                     </linearGradient>
                      <linearGradient id="colorO3" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="var(--color-chart-2)" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="var(--color-chart-2)" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="hsl(var(--chart-2))" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="hsl(var(--chart-2))" stopOpacity={0}/>
                     </linearGradient>
                      <linearGradient id="colorNO2" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="var(--color-chart-3)" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="var(--color-chart-3)" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="hsl(var(--chart-3))" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="hsl(var(--chart-3))" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
                   <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" fontSize={12} />
@@ -141,9 +141,9 @@ export default function PastAirDataPage() {
                     }}
                   />
                   <Legend wrapperStyle={{ paddingTop: '20px' }}/>
-                  <Area type="monotone" dataKey="PM25" name="PM2.5" stroke="var(--color-chart-1)" fillOpacity={1} fill="url(#colorPM25)" />
-                  <Area type="monotone" dataKey="O3" name="Ozone" stroke="var(--color-chart-2)" fillOpacity={1} fill="url(#colorO3)" />
-                  <Area type="monotone" dataKey="NO2" name="Nitrogen Dioxide" stroke="var(--color-chart-3)" fillOpacity={1} fill="url(#colorNO2)" />
+                  <Area type="monotone" dataKey="PM25" name="PM2.5" stroke="hsl(var(--chart-1))" fillOpacity={1} fill="url(#colorPM25)" />
+                  <Area type="monotone" dataKey="O3" name="Ozone" stroke="hsl(var(--chart-2))" fillOpacity={1} fill="url(#colorO3)" />
+                  <Area type="monotone" dataKey="NO2" name="Nitrogen Dioxide" stroke="hsl(var(--chart-3))" fillOpacity={1} fill="url(#colorNO2)" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
