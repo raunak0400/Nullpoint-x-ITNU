@@ -539,7 +539,6 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
 function Overview() {
   const [activeMetric, setActiveMetric] = useState<OverviewMetric>('Humidity');
   const [currentHour, setCurrentHour] = useState<number | null>(null);
-  const [animationKey, setAnimationKey] = useState(0);
 
   useEffect(() => {
     const date = new Date();
@@ -548,7 +547,6 @@ function Overview() {
 
   const handleSetMetric = (metric: OverviewMetric) => {
     setActiveMetric(metric);
-    setAnimationKey(prevKey => prevKey + 1);
   };
   
   const activeDataSet = overviewDataSets[activeMetric];
@@ -635,15 +633,6 @@ function Overview() {
                 <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
                 <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
               </linearGradient>
-              <clipPath id={`clip-path-${animationKey}`}>
-                <motion.rect
-                  width="100%"
-                  height="100%"
-                  initial={{ transform: "translateX(-100%)" }}
-                  animate={{ transform: "translateX(0%)" }}
-                  transition={{ duration: 0.8, ease: "easeInOut" }}
-                />
-              </clipPath>
             </defs>
             <XAxis dataKey="hour" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
             <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}${activeDataSet.unit}`} />
@@ -659,16 +648,13 @@ function Overview() {
               labelClassName="font-bold"
               formatter={(value: number) => [`${value}${activeDataSet.unit}`, activeMetric]}
             />
-            <g clipPath={`url(#clip-path-${animationKey})`}>
-              <Area
-                key={animationKey}
-                type="monotone"
-                dataKey="value"
-                stroke="hsl(var(--primary))"
-                strokeWidth={2}
-                fill="url(#colorValue)"
-              />
-            </g>
+            <Area
+              type="monotone"
+              dataKey="value"
+              stroke="hsl(var(--primary))"
+              strokeWidth={2}
+              fill="url(#colorValue)"
+            />
             {currentHourX && currentHourY !== undefined && (
                <ReferenceDot
                 x={currentHourX}
