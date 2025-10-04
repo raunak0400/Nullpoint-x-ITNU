@@ -65,22 +65,26 @@ const overviewDataSets = {
   Humidity: {
     data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: Math.floor(Math.random() * 40) + 30 })),
     unit: '%',
-    average: 52
+    average: 52,
+    color: "hsl(var(--chart-1))"
   },
   'UV Index': {
     data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: Math.max(0, Math.round(5 * Math.sin((i / 24) * Math.PI * 2 - Math.PI / 2) + 1)) })),
     unit: '',
-    average: 2
+    average: 2,
+    color: "hsl(var(--chart-3))"
   },
   Rainfall: {
     data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: Math.max(0, Math.floor(Math.random() * 5) - 3) })),
     unit: 'mm',
-    average: 1
+    average: 1,
+    color: "hsl(var(--chart-5))"
   },
   Pressure: {
     data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: 1012 + Math.floor(Math.random() * 10) - 5 })),
     unit: 'hPa',
-    average: 1012
+    average: 1012,
+    color: "hsl(var(--chart-2))"
   },
 };
 
@@ -267,6 +271,7 @@ function Overview() {
 
   const PulsatingDot = ({ cx, cy }: { cx?: number, cy?: number }) => {
     if (cx === undefined || cy === undefined) return null;
+    const color = activeDataSet.color;
     return (
       <g>
         <style>
@@ -288,14 +293,14 @@ function Overview() {
             }
           `}
         </style>
-        <circle cx={cx} cy={cy} r="6" fill="hsl(var(--primary))" stroke="white" strokeWidth="2" />
+        <circle cx={cx} cy={cy} r="6" fill={color} stroke="white" strokeWidth="2" />
         <circle
           className="ripple-circle"
           cx={cx}
           cy={cy}
           r="6"
           fill="transparent"
-          stroke="hsl(var(--primary))"
+          stroke={color}
           strokeWidth="2"
         />
       </g>
@@ -321,29 +326,35 @@ function Overview() {
           ))}
           <motion.span
             layoutId="overview-active-tab"
-            className="absolute h-8 rounded-full bg-primary z-0"
+            className="absolute h-8 rounded-full z-0"
             style={{
               width: `${100/tabs.length}%`,
-              left: `${tabs.indexOf(activeMetric) * (100/tabs.length)}%`
+              left: `${tabs.indexOf(activeMetric) * (100/tabs.length)}%`,
+              backgroundColor: activeDataSet.color,
             }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
           />
         </div>
       </div>
       <div className="text-right mb-2">
-        <span className="text-sm bg-primary/10 text-primary py-1 px-3 rounded-full">Average {activeDataSet.average}{activeDataSet.unit}</span>
+        <span 
+          className="text-sm py-1 px-3 rounded-full text-primary-foreground"
+          style={{ backgroundColor: activeDataSet.color }}
+        >
+          Average {activeDataSet.average}{activeDataSet.unit}
+        </span>
       </div>
       <div className="flex-1 h-full">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={processedData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
             <defs>
               <linearGradient id="colorPast" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                <stop offset="5%" stopColor={activeDataSet.color} stopOpacity={0.3} />
+                <stop offset="95%" stopColor={activeDataSet.color} stopOpacity={0} />
               </linearGradient>
               <linearGradient id="colorFuture" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.1} />
-                <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                <stop offset="5%" stopColor={activeDataSet.color} stopOpacity={0.1} />
+                <stop offset="95%" stopColor={activeDataSet.color} stopOpacity={0} />
               </linearGradient>
             </defs>
             <XAxis dataKey="hour" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
@@ -364,7 +375,7 @@ function Overview() {
               type="monotone"
               dataKey="past"
               name={activeMetric}
-              stroke="hsl(var(--primary))"
+              stroke={activeDataSet.color}
               strokeWidth={2}
               fill="url(#colorPast)"
             />
@@ -372,7 +383,7 @@ function Overview() {
               type="monotone"
               dataKey="future"
               name={activeMetric}
-              stroke="hsl(var(--primary))"
+              stroke={activeDataSet.color}
               strokeWidth={2}
               strokeDasharray="4 4"
               fill="url(#colorFuture)"
