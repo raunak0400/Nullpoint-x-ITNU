@@ -439,7 +439,7 @@ function Header({ unit, setUnit, is24Hour, selectedLocation, setSelectedLocation
       </div>
       <div className="flex items-center gap-2 md:gap-4 flex-wrap">
         <div className="relative flex items-center">
-          <Search className="absolute left-3 text-foreground/50" size={20} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground z-10" size={20} />
           <Input 
             placeholder="Search city or postcode" 
             className="bg-card/50 backdrop-blur-sm border-white/10 pl-10 w-48 md:w-64 rounded-full" 
