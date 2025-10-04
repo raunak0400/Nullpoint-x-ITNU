@@ -636,6 +636,7 @@ export function Map({ showFilters: initialShowFilters = false }: { showFilters?:
         {isLoaded && apiKey ? (
           <GoogleMap
             mapContainerStyle={containerStyle}
+            mapContainerClassName="custom-map-container"
             center={center}
             zoom={11}
             onLoad={onLoad}
@@ -680,3 +681,5 @@ export function Map({ showFilters: initialShowFilters = false }: { showFilters?:
     </div>
   );
 }
+
+    

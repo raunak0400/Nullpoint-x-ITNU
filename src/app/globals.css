@@ -118,3 +118,11 @@
   }
 }
 
+@layer components {
+  .custom-map-container .gmnoprint,
+  .custom-map-container .gm-style-cc {
+    display: none !important;
+  }
+}
+
+    
