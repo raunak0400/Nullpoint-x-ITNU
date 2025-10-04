@@ -216,7 +216,7 @@ function CurrentWeather() {
                     </div>
                 </div>
             </div>
-            <div className="flex overflow-x-auto gap-2 pb-2 -mx-2 px-2">
+            <div className="flex overflow-x-auto gap-2 pb-2 -mx-2 px-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                 {hourlyForecast.map((hour, i) => (
                     <div key={i} className="flex flex-col items-center justify-between p-3 rounded-lg bg-background/50 border border-white/10 min-w-[60px] h-32">
                         <p className="text-sm text-muted-foreground">{hour.time}</p>
