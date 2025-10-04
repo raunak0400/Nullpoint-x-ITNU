@@ -165,12 +165,12 @@ function WeatherInfoDashboard() {
         </motion.div>
 
         <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.3 }}>
-          <Card className="aspect-square flex flex-col">
+          <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">UV Index</CardTitle>
               <Sun className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent className="flex-1 flex flex-col justify-center items-center">
+            <CardContent className="flex flex-col justify-center items-center pt-6">
               <div className="text-5xl font-bold">{data.uvIndex.value}</div>
               <p className="text-xs text-muted-foreground mb-2">{data.uvIndex.level}</p>
               <Progress value={data.uvIndex.value} max={11} indicatorClassName="bg-gradient-to-r from-green-400 via-yellow-400 to-red-500" className="w-full" />
@@ -179,7 +179,7 @@ function WeatherInfoDashboard() {
         </motion.div>
 
         <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.4 }}>
-          <Card className="flex flex-col aspect-square">
+          <Card className="flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="flex items-center gap-2 text-sm font-medium"><Wind className="h-4 w-4 text-muted-foreground" />Wind</CardTitle>
             </CardHeader>
@@ -199,77 +199,81 @@ function WeatherInfoDashboard() {
           </Card>
         </motion.div>
 
-        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.5 }}>
-          <Card className="aspect-square flex flex-col">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Humidity</CardTitle>
-              <Droplets className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent className="flex-1 flex flex-col items-center justify-center">
-              <div className="text-5xl font-bold">
-                {data.humidity.value}
-                <span className="text-3xl">{data.humidity.unit}</span>
-              </div>
-              <p className="text-xs text-muted-foreground text-center">
-                The dew point is 15°C right now.
-              </p>
-            </CardContent>
-          </Card>
-        </motion.div>
+        <div className="grid grid-cols-2 gap-6">
+            <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.5 }}>
+            <Card className="aspect-square flex flex-col">
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium">Humidity</CardTitle>
+                <Droplets className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent className="flex-1 flex flex-col items-center justify-center">
+                <div className="text-5xl font-bold">
+                    {data.humidity.value}
+                    <span className="text-3xl">{data.humidity.unit}</span>
+                </div>
+                <p className="text-xs text-muted-foreground text-center">
+                    The dew point is 15°C right now.
+                </p>
+                </CardContent>
+            </Card>
+            </motion.div>
 
-        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.6 }}>
-          <Card className="aspect-square flex flex-col">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Visibility</CardTitle>
-              <Eye className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent className="flex-1 flex flex-col items-center justify-center">
-              <div className="text-5xl font-bold">
-                {data.visibility.value}
-                <span className="text-3xl ml-1">{data.visibility.unit}</span>
-              </div>
-              <p className="text-xs text-muted-foreground text-center">
-                It’s perfectly clear right now.
-              </p>
-            </CardContent>
-          </Card>
-        </motion.div>
+            <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.6 }}>
+            <Card className="aspect-square flex flex-col">
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium">Visibility</CardTitle>
+                <Eye className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent className="flex-1 flex flex-col items-center justify-center">
+                <div className="text-5xl font-bold">
+                    {data.visibility.value}
+                    <span className="text-3xl ml-1">{data.visibility.unit}</span>
+                </div>
+                <p className="text-xs text-muted-foreground text-center">
+                    It’s perfectly clear right now.
+                </p>
+                </CardContent>
+            </Card>
+            </motion.div>
         
-        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.7 }}>
-          <Card className="aspect-square flex flex-col">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Pressure</CardTitle>
-              <Gauge className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent className="flex-1 flex flex-col items-center justify-center">
-              <div className="text-3xl font-bold">
-                {data.pressure.value}
-                <span className="text-xl ml-1">{data.pressure.unit}</span>
-              </div>
-              <p className="text-xs text-muted-foreground text-center">
-                Trending steady.
-              </p>
-            </CardContent>
-          </Card>
-        </motion.div>
+            <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.7 }}>
+            <Card className="aspect-square flex flex-col">
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium">Pressure</CardTitle>
+                <Gauge className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent className="flex-1 flex flex-col items-center justify-center">
+                <div className="text-3xl font-bold">
+                    {data.pressure.value}
+                    <span className="text-xl ml-1">{data.pressure.unit}</span>
+                </div>
+                <p className="text-xs text-muted-foreground text-center">
+                    Trending steady.
+                </p>
+                </CardContent>
+            </Card>
+            </motion.div>
 
-        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.8 }}>
-          <Card className="aspect-square flex flex-col">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Precipitation</CardTitle>
-              <Cloud className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent className="flex-1 flex flex-col items-center justify-center">
-              <div className="text-3xl font-bold">
-                {data.precipitation.value}
-                <span className="text-xl ml-1">{data.precipitation.unit}</span>
-              </div>
-              <p className="text-xs text-muted-foreground text-center">
-                {data.precipitation.description}
-              </p>
-            </CardContent>
-          </Card>
-        </motion.div>
+            <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.8 }}>
+            <Card className="aspect-square flex flex-col">
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium">Precipitation</CardTitle>
+                <Cloud className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent className="flex-1 flex flex-col items-center justify-center">
+                <div className="text-3xl font-bold">
+                    {data.precipitation.value}
+                    <span className="text-xl ml-1">{data.precipitation.unit}</span>
+                </div>
+                <p className="text-xs text-muted-foreground text-center">
+                    {data.precipitation.description}
+                </p>
+                </CardContent>
+            </Card>
+            </motion.div>
+        </div>
       </div>
   );
 }
+
+    
