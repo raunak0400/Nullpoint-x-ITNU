@@ -16,8 +16,8 @@ const containerStyle = {
 };
 
 const center = {
-  lat: 52.52,
-  lng: 13.40,
+  lat: 28.6139,
+  lng: 77.2090,
 };
 
 const defaultDarkMapStyles = [
@@ -518,8 +518,8 @@ const generateHeatmapData = (intensity: number) => {
   const data = [];
   if (typeof window === 'undefined' || typeof window.google === 'undefined' || !window.google.maps.LatLng) return data;
   for (let i = 0; i < 100; i++) {
-    const lat = 52.52 + (Math.random() - 0.5) * 0.5;
-    const lng = 13.40 + (Math.random() - 0.5) * 1.0;
+    const lat = center.lat + (Math.random() - 0.5) * 1.5;
+    const lng = center.lng + (Math.random() - 0.5) * 1.5;
     data.push({ location: new window.google.maps.LatLng(lat, lng), weight: Math.random() * intensity });
   }
   return data;
@@ -638,7 +638,7 @@ export function Map({ showFilters: initialShowFilters = false }: { showFilters?:
             mapContainerStyle={containerStyle}
             mapContainerClassName="custom-map-container"
             center={center}
-            zoom={11}
+            zoom={10}
             onLoad={onLoad}
             onUnmount={onUnmount}
             options={mapOptions}

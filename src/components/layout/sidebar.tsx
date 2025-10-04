@@ -35,11 +35,11 @@ import {
 type TempUnit = 'C' | 'F';
 
 export const locations = [
-  { name: 'Berlin', country: 'Germany' },
-  { name: 'New York', country: 'USA' },
-  { name: 'Tokyo', country: 'Japan' },
-  { name: 'London', country: 'UK' },
-  { name: 'Paris', country: 'France' },
+  { name: 'New Delhi', country: 'India' },
+  { name: 'Mumbai', country: 'India' },
+  { name: 'Bangalore', country: 'India' },
+  { name: 'Kolkata', country: 'India' },
+  { name: 'Chennai', country: 'India' },
 ];
 
 type SharedState = {

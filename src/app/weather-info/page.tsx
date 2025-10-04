@@ -44,39 +44,39 @@ const Card = ({
 );
 
 const weatherData = {
-  berlin: {
+  newDelhi: {
     temperature: {
-      value: 22,
+      value: 35,
       unit: '°C',
-      feelsLike: 25,
+      feelsLike: 38,
     },
     aqi: {
-      value: 31,
-      quality: 'Good',
+      value: 152,
+      quality: 'Unhealthy',
     },
     uvIndex: {
-      value: 5,
-      level: 'Moderate',
+      value: 9,
+      level: 'Very High',
     },
     wind: {
-      speed: 15,
+      speed: 8,
       unit: 'km/h',
-      direction: 'NW',
+      direction: 'W',
     },
     humidity: {
-      value: 60,
+      value: 70,
       unit: '%',
     },
     visibility: {
-      value: 10,
+      value: 4,
       unit: 'km',
     },
     pressure: {
-      value: 1012,
+      value: 1002,
       unit: 'hPa',
     },
     precipitation: {
-      value: 2,
+      value: 5,
       unit: 'mm',
       description: 'in last 24h',
     },
@@ -99,8 +99,9 @@ export default function WeatherInfoPage() {
 }
 
 function WeatherInfoDashboard() {
-  const { unit } = useSharedState();
-  const data = weatherData.berlin;
+  const { unit, selectedLocation } = useSharedState();
+  // A real app would fetch this data dynamically based on selectedLocation
+  const data = weatherData.newDelhi; 
 
   const displayTemp = unit === 'C' ? data.temperature.value : Math.round(celsiusToFahrenheit(data.temperature.value));
   const displayFeelsLike = unit === 'C' ? data.temperature.feelsLike : Math.round(celsiusToFahrenheit(data.temperature.feelsLike));
@@ -113,6 +114,16 @@ function WeatherInfoDashboard() {
     return 'Very strong wind';
   };
 
+  const getAqiConfig = (aqi: number) => {
+    if (aqi <= 50) return { color: 'text-green-400', bgColor: 'bg-green-400' };
+    if (aqi <= 100) return { color: 'text-yellow-400', bgColor: 'bg-yellow-400' };
+    if (aqi <= 150) return { color: 'text-orange-400', bgColor: 'bg-orange-400' };
+    if (aqi <= 200) return { color: 'text-red-500', bgColor: 'bg-red-500' };
+    if (aqi <= 300) return { color: 'text-purple-500', bgColor: 'bg-purple-500' };
+    return { color: 'text-maroon-500', bgColor: 'bg-maroon-500' }; // For very unhealthy
+  };
+
+  const aqiConfig = getAqiConfig(data.aqi.value);
   const aqiPercentage = (data.aqi.value / 300) * 100;
 
   return (
@@ -142,14 +153,14 @@ function WeatherInfoDashboard() {
               <HelpCircle className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent className="flex-1 flex flex-col items-center justify-center">
-                <div className="text-8xl font-bold text-green-400">
+                <div className={cn("text-8xl font-bold", aqiConfig.color)}>
                   {data.aqi.value}
                 </div>
                 <p className="text-lg text-muted-foreground mb-4">{data.aqi.quality}</p>
                 <div className="w-full px-4">
                   <div className="h-2 w-full rounded-full bg-muted/50">
                     <div
-                      className="h-full rounded-full bg-green-400"
+                      className={cn("h-full rounded-full", aqiConfig.bgColor)}
                       style={{ width: `${aqiPercentage}%`}}
                     />
                   </div>
@@ -206,7 +217,7 @@ function WeatherInfoDashboard() {
                     <span className="text-3xl">{data.humidity.unit}</span>
                 </div>
                 <p className="text-xs text-muted-foreground text-center">
-                    The dew point is 15°C right now.
+                    The dew point is 27°C right now.
                 </p>
                 </CardContent>
             </Card>
@@ -224,7 +235,7 @@ function WeatherInfoDashboard() {
                     <span className="text-3xl ml-1">{data.visibility.unit}</span>
                 </div>
                 <p className="text-xs text-muted-foreground text-center">
-                    It’s perfectly clear right now.
+                    Haze is affecting visibility.
                 </p>
                 </CardContent>
             </Card>

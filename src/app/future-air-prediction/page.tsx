@@ -23,6 +23,7 @@ import {
   Legend,
 } from 'recharts';
 import { PageWrapper } from '@/components/layout/page-wrapper';
+import { useSharedState } from '@/components/layout/sidebar';
 
 const Card = ({
   children,
@@ -88,6 +89,7 @@ const generatePredictionData = () => {
 export default function FutureAirPredictionPage() {
   const [predictionData, setPredictionData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const { selectedLocation } = useSharedState();
 
   const handlePredict = () => {
     setLoading(true);
@@ -103,7 +105,7 @@ export default function FutureAirPredictionPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <BrainCircuit className="text-primary" />
-            <span>AQI Prediction for Berlin</span>
+            <span>AQI Prediction for {selectedLocation.name}</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
