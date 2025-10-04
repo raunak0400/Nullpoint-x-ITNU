@@ -42,6 +42,7 @@ import {
   Tooltip,
 } from 'recharts';
 import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
 
 const overviewData = [
   { month: 'Jan', value: 20 },
@@ -189,11 +190,31 @@ const TemperatureSwitch = ({ unit, setUnit }: { unit: TempUnit; setUnit: (unit: 
 
 
 function Header({ unit, setUnit }: { unit: TempUnit; setUnit: (unit: TempUnit) => void }) {
+  const [now, setNow] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setNow(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+  
+  const formattedDate = format(now, 'E, d MMM, yyyy');
+  const formattedTime = format(now, 'HH:mm');
+
   return (
     <header className="flex flex-wrap items-center justify-between gap-4">
       <div>
         <h1 className="text-2xl font-semibold">Hi, Nullpoint</h1>
-        <p className="text-muted-foreground">Mon, 15 May, 2023</p>
+        <p className="text-muted-foreground flex items-center">
+          <span>{formattedDate}</span>
+          <span className="mx-2">|</span>
+          <span suppressHydrationWarning>
+            {format(now, 'HH')}
+            <span className="animate-pulse duration-1000 ease-in-out">:</span>
+            {format(now, 'mm')}
+          </span>
+        </p>
       </div>
       <div className="flex items-center gap-2 md:gap-4 flex-wrap">
         <div className="relative">
@@ -257,7 +278,7 @@ function CurrentWeather({ unit }: { unit: TempUnit }) {
             <div className="relative mt-auto z-10">
               <div className="overflow-x-auto -mx-6 px-6 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
                 style={{
-                  maskImage: 'linear-gradient(to right, transparent, black 5%, black 95%, transparent)'
+                  maskImage: 'linear-gradient(to right, transparent, hsl(var(--card)) 5%, hsl(var(--card)) 95%, transparent)'
                 }}
               >
                   <div className="flex gap-2 pb-2">
