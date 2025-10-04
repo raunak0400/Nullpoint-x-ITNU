@@ -112,7 +112,6 @@ export function Sidebar() {
   ];
 
   const bottomNavItems = [
-    { icon: <HelpCircle size={28} />, label: 'Help', action: () => {} },
     { icon: <Settings size={28} />, label: 'Settings', action: () => setIsSettingsOpen(true) },
     { icon: <AppWindow size={28} />, label: 'App', action: () => {} },
   ];
