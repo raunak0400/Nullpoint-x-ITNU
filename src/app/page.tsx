@@ -180,23 +180,23 @@ function CurrentWeather() {
                 </div>
                 <div className="flex gap-x-6 gap-y-2 mt-4 sm:mt-0 flex-wrap items-center">
                     <div className="flex items-center gap-2 text-green-400">
-                        <Smile size={48} />
+                        <Smile size={32} />
                         <div>
-                            <p className="text-2xl font-bold">Good</p>
-                            <p className="text-sm">Air Mood</p>
+                            <p className="text-xl font-bold">Good</p>
+                            <p className="text-xs">Air Mood</p>
                         </div>
                     </div>
                     <div className="text-center sm:text-left">
-                        <p className="text-4xl font-bold">+20°</p>
-                        <p className="text-muted-foreground">Temperature</p>
+                        <p className="text-2xl font-bold">+20°</p>
+                        <p className="text-xs text-muted-foreground">Temperature</p>
                     </div>
                     <div className="text-center sm:text-left">
-                        <p className="text-4xl font-bold">24%</p>
-                        <p className="text-muted-foreground">Humidity</p>
+                        <p className="text-2xl font-bold">24%</p>
+                        <p className="text-xs text-muted-foreground">Humidity</p>
                     </div>
                     <div className="text-center sm:text-left">
-                        <p className="text-4xl font-bold">13<span className="text-xl">km/h</span></p>
-                        <p className="text-muted-foreground">Wind speed</p>
+                        <p className="text-2xl font-bold">13<span className="text-base">km/h</span></p>
+                        <p className="text-xs text-muted-foreground">Wind speed</p>
                     </div>
                 </div>
             </div>
