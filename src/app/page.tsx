@@ -83,7 +83,7 @@ type TempUnit = 'C' | 'F';
 
 function Card({ children, className }: { children: React.ReactNode, className?: string }) {
   return (
-    <div className={`bg-card/50 backdrop-blur-sm border border-white/10 rounded-[2rem] ${className}`}>
+    <div className={cn('bg-card/50 backdrop-blur-sm border border-white/10 rounded-[2rem]', className)}>
       {children}
     </div>
   );
@@ -163,7 +163,7 @@ const TemperatureSwitch = ({ unit, setUnit }: { unit: TempUnit; setUnit: (unit: 
       <div
         className={cn(
           'absolute h-8 w-8 rounded-full bg-primary transition-transform duration-300 ease-in-out',
-          unit === 'C' ? 'translate-x-[0.125rem]' : 'translate-x-[2.125rem]'
+          unit === 'C' ? 'translate-x-[2px]' : 'translate-x-[34px]'
         )}
       />
       <button
@@ -199,20 +199,34 @@ function Header({ unit, setUnit }: { unit: TempUnit; setUnit: (unit: TempUnit) =
     return () => clearInterval(timer);
   }, []);
   
-  const formattedDate = format(now, 'E, d MMM, yyyy');
-  const formattedTime = format(now, 'HH:mm');
+  const formattedDate = new Intl.DateTimeFormat('en-GB', {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'Asia/Kolkata',
+  }).format(now);
+  
+  const formattedTime = new Intl.DateTimeFormat('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZone: 'Asia/Kolkata',
+  }).format(now);
+
+  const [hours, minutes] = formattedTime.split(':');
 
   return (
     <header className="flex flex-wrap items-center justify-between gap-4">
       <div>
         <h1 className="text-2xl font-semibold">Hi, Nullpoint</h1>
-        <p className="text-muted-foreground flex items-center">
+        <p className="text-muted-foreground flex items-center" suppressHydrationWarning>
           <span>{formattedDate}</span>
           <span className="mx-2">|</span>
-          <span suppressHydrationWarning>
-            {format(now, 'HH')}
+          <span>
+            {hours}
             <span className="animate-pulse duration-1000 ease-in-out">:</span>
-            {format(now, 'mm')}
+            {minutes}
           </span>
         </p>
       </div>
