@@ -358,7 +358,7 @@ function Overview() {
                 border: '1px solid hsla(0, 0%, 100%, 0.1)'
               }}
               labelClassName="font-bold"
-              formatter={(value: number, name: string) => [`${value}${activeDataSet.unit}`, name === 'past' ? activeMetric : `${activeMetric} (Future)`]}
+              formatter={(value: number, name: string, props) => [`${value}${activeDataSet.unit}`, props.dataKey === 'past' ? activeMetric : `${activeMetric} (Future)`]}
             />
             <Area
               type="monotone"
