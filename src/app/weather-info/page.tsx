@@ -179,11 +179,11 @@ function WeatherInfoDashboard() {
         </motion.div>
 
         <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.4 }}>
-          <Card className="min-h-[170px]">
+          <Card className="min-h-[170px] flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="flex items-center gap-2 text-sm font-medium"><Wind className="h-4 w-4 text-muted-foreground" />Wind</CardTitle>
             </CardHeader>
-            <CardContent className="flex flex-row items-center justify-center gap-4 h-full">
+            <CardContent className="flex-1 flex flex-row items-center justify-center gap-4">
               <WindCompass
                 speed={data.wind.speed}
                 unit={data.wind.unit}
