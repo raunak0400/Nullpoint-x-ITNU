@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, createContext, useContext } from 'react';
@@ -120,7 +119,7 @@ export function Sidebar() {
   
   return (
     <>
-      <aside className="w-24 bg-card/50 backdrop-blur-sm border-r border-white/10 p-4 flex flex-col justify-between rounded-r-[2rem]">
+      <aside className="w-24 bg-card/50 backdrop-blur-sm border-r border-white/10 p-4 flex flex-col justify-between rounded-r-[2rem] z-50">
         <div>
           <div className="flex items-center justify-center mb-12 h-10">
             <GlobeIcon className="text-primary" size={32} />
