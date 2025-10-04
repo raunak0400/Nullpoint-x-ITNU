@@ -5,6 +5,7 @@ import {
   AppWindow,
   ArrowRight,
   BarChart2,
+  Brain,
   Calendar,
   Cloud,
   CloudSun,
@@ -121,6 +122,7 @@ function Sidebar() {
     { icon: <Siren />, label: 'Air Alerts' },
     { icon: <MapIcon />, label: 'Easy Map View' },
     { icon: <History />, label: 'Past Air Data' },
+    { icon: <Brain />, label: 'Smart Tips' },
   ];
 
   const bottomNavItems = [
