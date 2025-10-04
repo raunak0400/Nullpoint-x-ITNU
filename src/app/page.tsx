@@ -798,7 +798,6 @@ function MapView({ isExpanded }: { isExpanded: boolean }) {
       options={{
         styles: mapStyles,
         disableDefaultUI: true,
-        zoomControl: false,
       }}
     >
       {/* Child components, such as markers, info windows, etc. */}
@@ -856,3 +855,5 @@ function SmartTips() {
     </Card>
   );
 }
+
+    
