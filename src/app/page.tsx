@@ -162,7 +162,7 @@ const TemperatureSwitch = ({ unit, setUnit }: { unit: TempUnit; setUnit: (unit: 
       <div
         className={cn(
           'absolute h-8 w-8 rounded-full bg-primary transition-transform duration-300 ease-in-out',
-          unit === 'C' ? 'translate-x-0' : 'translate-x-8'
+          unit === 'C' ? 'translate-x-[0.125rem]' : 'translate-x-[2.125rem]'
         )}
       />
       <button
