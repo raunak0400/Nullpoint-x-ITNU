@@ -683,5 +683,3 @@ export function Map({ showFilters: initialShowFilters = false }: { showFilters?:
     </div>
   );
 }
-
-    
