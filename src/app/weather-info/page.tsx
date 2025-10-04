@@ -22,6 +22,7 @@ import {
   CardContent,
 } from '@/components/ui/card';
 import { PageWrapper } from '@/components/layout/page-wrapper';
+import { Progress } from '@/components/ui/progress';
 
 const Card = ({
   children,
@@ -91,18 +92,25 @@ export default function WeatherInfoPage() {
     if (aqi <= 150) return 'text-orange-400';
     return 'text-red-500';
   };
+  
+  const getAQIProgressColor = (aqi: number) => {
+    if (aqi <= 50) return 'bg-green-400';
+    if (aqi <= 100) return 'bg-yellow-400';
+    if (aqi <= 150) return 'bg-orange-400';
+    return 'bg-red-500';
+  }
 
   return (
     <PageWrapper>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.1 }}>
-          <Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 md:grid-flow-row-dense gap-6">
+        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.1 }} className="md:row-span-2">
+          <Card className="h-full">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Temperature</CardTitle>
               <Thermometer className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent>
-              <div className="text-5xl font-bold">
+            <CardContent className="flex flex-col justify-center h-full">
+              <div className="text-8xl font-bold">
                 {data.temperature.value}
                 {data.temperature.unit}
               </div>
@@ -113,17 +121,18 @@ export default function WeatherInfoPage() {
           </Card>
         </motion.div>
 
-        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.2 }}>
-          <Card>
+        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.2 }} className="md:row-span-2">
+          <Card className="h-full">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Air Quality (AQI)</CardTitle>
               <Gauge className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent>
-              <div className={`text-5xl font-bold ${getAQIColor(data.aqi.value)}`}>
+            <CardContent className="flex flex-col justify-center h-full">
+              <div className={`text-8xl font-bold ${getAQIColor(data.aqi.value)}`}>
                 {data.aqi.value}
               </div>
-              <p className="text-xs text-muted-foreground">{data.aqi.quality}</p>
+              <p className="text-lg text-muted-foreground mb-4">{data.aqi.quality}</p>
+              <Progress value={data.aqi.value} indicatorClassName={getAQIProgressColor(data.aqi.value)} />
             </CardContent>
           </Card>
         </motion.div>
@@ -136,7 +145,8 @@ export default function WeatherInfoPage() {
             </CardHeader>
             <CardContent>
               <div className="text-5xl font-bold">{data.uvIndex.value}</div>
-              <p className="text-xs text-muted-foreground">{data.uvIndex.level}</p>
+              <p className="text-xs text-muted-foreground mb-2">{data.uvIndex.level}</p>
+              <Progress value={data.uvIndex.value * 10} indicatorClassName="bg-gradient-to-r from-green-400 via-yellow-400 to-red-500" />
             </CardContent>
           </Card>
         </motion.div>
