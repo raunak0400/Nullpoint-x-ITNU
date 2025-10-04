@@ -979,3 +979,5 @@ function SmartTips({ location }: { location: { name: string }}) {
     </Card>
   );
 }
+
+    
