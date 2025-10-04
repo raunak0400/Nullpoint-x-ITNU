@@ -180,8 +180,15 @@ function Header() {
 
 function CurrentWeather() {
     return (
-        <Card className="p-6 h-full flex flex-col">
-            <div className="flex flex-col sm:flex-row justify-between items-start mb-4">
+        <Card className="p-6 h-full flex flex-col relative overflow-hidden">
+            <Image
+                src="https://picsum.photos/seed/weather/1200/400"
+                alt="Weather background"
+                fill
+                className="object-cover opacity-20"
+                data-ai-hint="weather condition"
+            />
+            <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start mb-4">
                 <div className="flex items-center gap-4">
                     <CloudSun size={64} className="text-primary" />
                     <div>
@@ -191,38 +198,42 @@ function CurrentWeather() {
                 </div>
                 <div className="flex gap-x-4 gap-y-2 mt-4 sm:mt-0 flex-wrap items-center">
                     <div className="flex items-center gap-2 text-green-400">
-                        <Smile size={24} />
+                        <Smile size={20} />
                         <div>
-                            <p className="font-bold">Good</p>
-                            <p className="text-xs">Air Mood</p>
+                            <p className="font-semibold text-sm">Good</p>
+                            <p className="text-xs text-muted-foreground">Air Mood</p>
                         </div>
                     </div>
-                    <div className="text-center sm:text-left">
-                        <p className="text-xl font-bold">+20°</p>
-                        <p className="text-xs text-muted-foreground">Temperature</p>
+                    <div className="text-left">
+                        <p className="font-semibold text-sm">+20°</p>
+                        <p className="text-xs text-muted-foreground">Temp</p>
                     </div>
-                    <div className="text-center sm:text-left">
-                        <p className="text-xl font-bold">24%</p>
+                    <div className="text-left">
+                        <p className="font-semibold text-sm">24%</p>
                         <p className="text-xs text-muted-foreground">Humidity</p>
                     </div>
-                    <div className="text-center sm:text-left">
-                        <p className="text-xl font-bold">13<span className="text-sm">km/h</span></p>
-                        <p className="text-xs text-muted-foreground">Wind speed</p>
+                    <div className="text-left">
+                        <p className="font-semibold text-sm">13<span className="text-xs">km/h</span></p>
+                        <p className="text-xs text-muted-foreground">Wind</p>
                     </div>
                 </div>
             </div>
-            <div className="relative mt-auto">
-              <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-card to-transparent pointer-events-none z-10"></div>
-              <div className="flex overflow-x-auto gap-2 pb-2 -mx-2 px-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-                  {hourlyForecast.map((hour, i) => (
-                      <div key={i} className="flex flex-col items-center justify-between p-3 rounded-3xl bg-background/50 backdrop-blur-sm border border-white/10 min-w-[60px] h-32">
-                          <p className="text-sm text-muted-foreground">{hour.time}</p>
-                          <div className="text-muted-foreground">{hour.icon}</div>
-                          <p className="text-lg font-bold">{hour.temp}°</p>
-                      </div>
-                  ))}
+            <div className="relative mt-auto z-10">
+              <div className="overflow-x-auto -mx-6 px-6 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+                style={{
+                  maskImage: 'linear-gradient(to right, transparent, black 5%, black 95%, transparent)'
+                }}
+              >
+                  <div className="flex gap-2 pb-2">
+                    {hourlyForecast.map((hour, i) => (
+                        <div key={i} className="flex flex-col items-center justify-between p-3 rounded-2xl bg-background/30 backdrop-blur-sm border border-white/10 min-w-[60px] h-32">
+                            <p className="text-sm text-muted-foreground">{hour.time}</p>
+                            <div className="text-muted-foreground">{hour.icon}</div>
+                            <p className="text-lg font-bold">{hour.temp}°</p>
+                        </div>
+                    ))}
+                  </div>
               </div>
-              <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-card to-transparent pointer-events-none z-10"></div>
             </div>
         </Card>
     );
