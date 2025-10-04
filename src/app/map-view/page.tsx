@@ -256,10 +256,11 @@ const mapStyles = [
 
 const generateHeatmapData = (intensity: number) => {
   const data = [];
+  if (typeof window.google === 'undefined') return data;
   for (let i = 0; i < 100; i++) {
     const lat = 52.52 + (Math.random() - 0.5) * 0.5;
     const lng = 13.40 + (Math.random() - 0.5) * 1.0;
-    data.push({ location: new google.maps.LatLng(lat, lng), weight: Math.random() * intensity });
+    data.push({ location: new window.google.maps.LatLng(lat, lng), weight: Math.random() * intensity });
   }
   return data;
 };
@@ -270,9 +271,10 @@ let windData: any[] = [];
 
 
 export default function MapViewPage() {
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script-full',
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
+    googleMapsApiKey: apiKey,
     libraries: ['visualization']
   });
 
@@ -319,9 +321,9 @@ export default function MapViewPage() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-xl font-bold text-foreground">Easy Map View</h1>
+            <h1 className="text-xl font-bold text-foreground">Interactive Map View</h1>
             <p className="text-sm text-muted-foreground">
-              Interactive data layers for Berlin
+              Data layers for Berlin
             </p>
           </div>
         </div>
@@ -331,7 +333,8 @@ export default function MapViewPage() {
       </header>
 
       <div className="flex-1 relative">
-        {isLoaded ? (
+        {!apiKey && <div className="absolute inset-0 flex items-center justify-center bg-destructive/50 text-destructive-foreground z-20">Please add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to your .env file.</div>}
+        {isLoaded && apiKey ? (
           <GoogleMap
             mapContainerStyle={containerStyle}
             center={center}
@@ -378,7 +381,7 @@ export default function MapViewPage() {
         </AnimatePresence>
       </div>
 
-      {loadError && <div className="absolute inset-0 flex items-center justify-center bg-red-900/50 text-white">Error loading map. Please check your API key and network connection.</div>}
+      {loadError && apiKey && <div className="absolute inset-0 flex items-center justify-center bg-red-900/50 text-white">Error loading map. Please check your API key and network connection.</div>}
     </div>
   );
 }
