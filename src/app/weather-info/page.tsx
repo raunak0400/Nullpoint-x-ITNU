@@ -90,6 +90,14 @@ const cardVariants = {
 const celsiusToFahrenheit = (c: number) => (c * 9/5) + 32;
 
 export default function WeatherInfoPage() {
+    return (
+        <PageWrapper>
+            <WeatherInfoDashboard />
+        </PageWrapper>
+    )
+}
+
+function WeatherInfoDashboard() {
   const { unit } = useSharedState();
   const data = weatherData.berlin;
 
@@ -110,8 +118,15 @@ export default function WeatherInfoPage() {
     return 'bg-red-500';
   }
 
+  const getWindInsight = (speedKmh: number) => {
+    if (speedKmh < 5) return 'Calm';
+    if (speedKmh < 20) return 'Light breeze';
+    if (speedKmh < 40) return 'Moderate wind';
+    if (speedKmh < 60) return 'Strong wind';
+    return 'Very strong wind';
+  };
+
   return (
-    <PageWrapper>
       <div className="grid grid-cols-1 md:grid-cols-2 md:grid-flow-row-dense gap-6">
         <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.1 }} className="md:row-span-2">
           <Card className="h-full flex flex-col">
@@ -142,7 +157,9 @@ export default function WeatherInfoPage() {
                   {data.aqi.value}
                 </div>
                 <p className="text-lg text-muted-foreground mb-4">{data.aqi.quality}</p>
-                <Progress value={data.aqi.value} indicatorClassName={getAQIProgressColor(data.aqi.value)} className="w-full" />
+                <div className="w-full px-4">
+                  <Progress value={data.aqi.value} indicatorClassName={getAQIProgressColor(data.aqi.value)} />
+                </div>
             </CardContent>
           </Card>
         </motion.div>
@@ -156,7 +173,7 @@ export default function WeatherInfoPage() {
             <CardContent>
               <div className="text-5xl font-bold">{data.uvIndex.value}</div>
               <p className="text-xs text-muted-foreground mb-2">{data.uvIndex.level}</p>
-              <Progress value={data.uvIndex.value * 10} indicatorClassName="bg-gradient-to-r from-green-400 via-yellow-400 to-red-500" className="w-full" />
+              <Progress value={data.uvIndex.value * 10} indicatorClassName="bg-gradient-to-r from-green-400 via-yellow-400 to-red-500" />
             </CardContent>
           </Card>
         </motion.div>
@@ -164,17 +181,15 @@ export default function WeatherInfoPage() {
         <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.4 }}>
           <Card className="min-h-[170px]">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Wind</CardTitle>
-              <Wind className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="flex items-center gap-2 text-sm font-medium"><Wind className="h-4 w-4 text-muted-foreground" />Wind</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-center h-full">
-                <WindCompass
-                  speed={data.wind.speed}
-                  unit={data.wind.unit}
-                  direction={data.wind.direction}
-                />
+            <CardContent className="flex flex-col justify-center h-full">
+              <div className="text-3xl font-bold text-center">
+                {getWindInsight(data.wind.speed)}
               </div>
+              <p className="text-center text-sm text-muted-foreground">
+                {data.wind.speed} {data.wind.unit} {data.wind.direction}
+              </p>
             </CardContent>
           </Card>
         </motion.div>
@@ -251,6 +266,5 @@ export default function WeatherInfoPage() {
           </Card>
         </motion.div>
       </div>
-    </PageWrapper>
   );
 }
