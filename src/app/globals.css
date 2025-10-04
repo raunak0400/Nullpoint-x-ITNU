@@ -118,17 +118,3 @@
   }
 }
 
-/* Custom Scrollbar */
-@layer utilities {
-  .scrollbar-custom {
-    &::-webkit-scrollbar {
-      width: 16px;
-    }
-    &::-webkit-scrollbar-track {
-      @apply bg-transparent;
-    }
-    &::-webkit-scrollbar-thumb {
-      @apply bg-primary rounded-full border-4 border-solid border-background;
-    }
-  }
-}
