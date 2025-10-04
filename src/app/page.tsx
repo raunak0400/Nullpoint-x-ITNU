@@ -246,8 +246,15 @@ function Overview() {
   const [currentHour, setCurrentHour] = useState<number | null>(null);
 
   useEffect(() => {
-    const date = new Date();
-    setCurrentHour(date.getHours());
+    const updateHour = () => {
+      const date = new Date();
+      setCurrentHour(date.getHours());
+    };
+
+    updateHour();
+    const timer = setInterval(updateHour, 60000); // Update every minute
+
+    return () => clearInterval(timer);
   }, []);
 
   const handleSetMetric = (metric: OverviewMetric) => {
@@ -517,3 +524,5 @@ function SmartTips({ location }: { location: { name: string }}) {
     </Card>
   );
 }
+
+    
