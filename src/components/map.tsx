@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTheme } from '@/components/theme-provider';
 
 const containerStyle = {
   width: '100%',
@@ -19,7 +20,7 @@ const center = {
   lng: 13.40,
 };
 
-const mapStyles = [
+const darkMapStyles = [
   {
     "elementType": "geometry",
     "stylers": [{ "color": "#1d2c4d" }]
@@ -149,6 +150,183 @@ const mapStyles = [
   }
 ];
 
+const lightMapStyles = [
+    {
+        "featureType": "water",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#e9e9e9"
+            },
+            {
+                "lightness": 17
+            }
+        ]
+    },
+    {
+        "featureType": "landscape",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#f5f5f5"
+            },
+            {
+                "lightness": 20
+            }
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "color": "#ffffff"
+            },
+            {
+                "lightness": 17
+            }
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "elementType": "geometry.stroke",
+        "stylers": [
+            {
+                "color": "#ffffff"
+            },
+            {
+                "lightness": 29
+            },
+            {
+                "weight": 0.2
+            }
+        ]
+    },
+    {
+        "featureType": "road.arterial",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#ffffff"
+            },
+            {
+                "lightness": 18
+            }
+        ]
+    },
+    {
+        "featureType": "road.local",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#ffffff"
+            },
+            {
+                "lightness": 16
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#f5f5f5"
+            },
+            {
+                "lightness": 21
+            }
+        ]
+    },
+    {
+        "featureType": "poi.park",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#dedede"
+            },
+            {
+                "lightness": 21
+            }
+        ]
+    },
+    {
+        "elementType": "labels.text.stroke",
+        "stylers": [
+            {
+                "visibility": "on"
+            },
+            {
+                "color": "#ffffff"
+            },
+            {
+                "lightness": 16
+            }
+        ]
+    },
+    {
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "saturation": 36
+            },
+            {
+                "color": "#333333"
+            },
+            {
+                "lightness": 40
+            }
+        ]
+    },
+    {
+        "elementType": "labels.icon",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "transit",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#f2f2f2"
+            },
+            {
+                "lightness": 19
+            }
+        ]
+    },
+    {
+        "featureType": "administrative",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "color": "#fefefe"
+            },
+            {
+                "lightness": 20
+            }
+        ]
+    },
+    {
+        "featureType": "administrative",
+        "elementType": "geometry.stroke",
+        "stylers": [
+            {
+                "color": "#fefefe"
+            },
+            {
+                "lightness": 17
+            },
+            {
+                "weight": 1.2
+            }
+        ]
+    }
+];
+
 const generateHeatmapData = (intensity: number) => {
   const data = [];
   if (typeof window === 'undefined' || typeof window.google === 'undefined' || !window.google.maps.LatLng) return data;
@@ -173,6 +351,7 @@ const libraries = ['visualization'] as const;
 type LayerName = keyof typeof heatmapData;
 
 export function Map({ showFilters: initialShowFilters = false }: { showFilters?: boolean }) {
+  const { theme } = useTheme();
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
@@ -231,6 +410,15 @@ export function Map({ showFilters: initialShowFilters = false }: { showFilters?:
     { id: 'o3', label: 'Ozone', icon: <Waves size={16} />, colorClass: 'text-green-400' },
   ];
 
+  const mapOptions = {
+    styles: theme === 'light' ? lightMapStyles : darkMapStyles,
+    disableDefaultUI: true,
+    zoomControl: true,
+    streetViewControl: false,
+    mapTypeControl: false,
+    fullscreenControl: false,
+  };
+
   return (
     <div className="h-full w-full flex flex-col relative bg-background">
       {initialShowFilters && (
@@ -258,7 +446,7 @@ export function Map({ showFilters: initialShowFilters = false }: { showFilters?:
             zoom={11}
             onLoad={onLoad}
             onUnmount={onUnmount}
-            options={{ styles: mapStyles, disableDefaultUI: true, zoomControl: true, streetViewControl: false, mapTypeControl: false, fullscreenControl: false }}
+            options={mapOptions}
           >
             {Object.keys(activeLayers).map((key) => {
                 const layerKey = key as LayerName;
