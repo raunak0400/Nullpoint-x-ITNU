@@ -2,7 +2,6 @@
 'use client';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import {
   Dialog,
   DialogContent,
@@ -60,6 +59,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { explainForecastFactors } from '@/ai/flows/explain-forecast-factors';
 import { useSharedState } from '@/components/layout/sidebar';
 import { PageWrapper } from '@/components/layout/page-wrapper';
+import { Map } from '@/components/map';
 
 const overviewDataSets = {
   Humidity: {
@@ -140,7 +140,7 @@ function DashboardContent() {
           <CurrentWeather unit={unit} is24Hour={is24Hour} location={selectedLocation} />
         </div>
         <div className="row-span-1">
-          <InteractiveMap />
+          <MapView />
         </div>
         <div className="lg:col-span-1 row-span-1">
            <SmartTips location={selectedLocation} />
@@ -367,305 +367,6 @@ function Overview() {
   );
 }
 
-const containerStyle = {
-  width: '100%',
-  height: '100%',
-  borderRadius: 'inherit',
-};
-
-const center = {
-  lat: 52.52,
-  lng: 13.40,
-};
-
-const mapStyles = [
-  {
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#1d2c4d"
-      }
-    ]
-  },
-  {
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#8ec3b9"
-      }
-    ]
-  },
-  {
-    "elementType": "labels.text.stroke",
-    "stylers": [
-      {
-        "color": "#1a3646"
-      }
-    ]
-  },
-  {
-    "featureType": "administrative.country",
-    "elementType": "geometry.stroke",
-    "stylers": [
-      {
-        "color": "#4b6878"
-      }
-    ]
-  },
-  {
-    "featureType": "administrative.land_parcel",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#64779e"
-      }
-    ]
-  },
-  {
-    "featureType": "administrative.province",
-    "elementType": "geometry.stroke",
-    "stylers": [
-      {
-        "color": "#4b6878"
-      }
-    ]
-  },
-  {
-    "featureType": "landscape.man_made",
-    "elementType": "geometry.stroke",
-    "stylers": [
-      {
-        "color": "#334e87"
-      }
-    ]
-  },
-  {
-    "featureType": "landscape.natural",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#023e58"
-      }
-    ]
-  },
-  {
-    "featureType": "poi",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#283d6a"
-      }
-    ]
-  },
-  {
-    "featureType": "poi",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#6f9ba5"
-      }
-    ]
-  },
-  {
-    "featureType": "poi",
-    "elementType": "labels.text.stroke",
-    "stylers": [
-      {
-        "color": "#1d2c4d"
-      }
-    ]
-  },
-  {
-    "featureType": "poi.park",
-    "elementType": "geometry.fill",
-    "stylers": [
-      {
-        "color": "#023e58"
-      }
-    ]
-  },
-  {
-    "featureType": "poi.park",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#3C7680"
-      }
-    ]
-  },
-  {
-    "featureType": "road",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#304a7d"
-      }
-    ]
-  },
-  {
-    "featureType": "road",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#98a5be"
-      }
-    ]
-  },
-  {
-    "featureType": "road",
-    "elementType": "labels.text.stroke",
-    "stylers": [
-      {
-        "color": "#1d2c4d"
-      }
-    ]
-  },
-  {
-    "featureType": "road.highway",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#2c6675"
-      }
-    ]
-  },
-  {
-    "featureType": "road.highway",
-    "elementType": "geometry.stroke",
-    "stylers": [
-      {
-        "color": "#255763"
-      }
-    ]
-  },
-  {
-    "featureType": "road.highway",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#b0d5ce"
-      }
-    ]
-  },
-  {
-    "featureType": "road.highway",
-    "elementType": "labels.text.stroke",
-    "stylers": [
-      {
-        "color": "#023e58"
-      }
-    ]
-  },
-  {
-    "featureType": "transit",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#98a5be"
-      }
-    ]
-  },
-  {
-    "featureType": "transit",
-    "elementType": "labels.text.stroke",
-    "stylers": [
-      {
-        "color": "#1d2c4d"
-      }
-    ]
-  },
-  {
-    "featureType": "transit.line",
-    "elementType": "geometry.fill",
-    "stylers": [
-      {
-        "color": "#283d6a"
-      }
-    ]
-  },
-  {
-    "featureType": "transit.station",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#3a4762"
-      }
-    ]
-  },
-  {
-    "featureType": "water",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#0e1626"
-      }
-    ]
-  },
-  {
-    "featureType": "water",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#4e6d70"
-      }
-    ]
-  }
-];
-
-const libraries = ['visualization'] as const;
-
-function MapView() {
-  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
-  const { isLoaded, loadError } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: apiKey,
-    libraries,
-  });
-
-  const [map, setMap] = useState(null);
-  
-  const onLoad = useCallback(function callback(map: any) {
-    setMap(map);
-  }, []);
-
-  const onUnmount = useCallback(function callback(map: any) {
-    setMap(null);
-  }, []);
-
-  if (!apiKey) {
-     return (
-      <div className="flex items-center justify-center h-full text-center text-muted-foreground p-4">
-        <div>
-          <p>Google Maps API key is missing.</p>
-          <p className="text-xs">Please add <code className="bg-muted/50 p-1 rounded-sm">NEXT_PUBLIC_GOOGLE_MAPS_API_KEY</code> to your <code className="bg-muted/50 p-1 rounded-sm">.env.local</code> file.</p>
-        </div>
-      </div>
-     );
-  }
-
-  if (loadError) {
-    return <p className='flex items-center justify-center h-full text-red-500'>Error loading map. Check the API key.</p>;
-  }
-  
-  return isLoaded ? (
-    <GoogleMap
-      mapContainerStyle={containerStyle}
-      center={center}
-      zoom={10}
-      onLoad={onLoad}
-      onUnmount={onUnmount}
-      options={{
-        styles: mapStyles,
-        disableDefaultUI: true,
-      }}
-    >
-      {/* Child components, such as markers, info windows, etc. */}
-    </GoogleMap>
-  ) : (
-    <div className='flex items-center justify-center h-full'>Loading Map...</div>
-  );
-}
-
 function ExpandedMap({ setIsExpanded }: { setIsExpanded: (isExpanded: boolean) => void }) {
   return (
     <motion.div
@@ -675,7 +376,7 @@ function ExpandedMap({ setIsExpanded }: { setIsExpanded: (isExpanded: boolean) =
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="w-full h-full" style={{ borderRadius: 'inherit', overflow: 'hidden' }}>
-        <MapView />
+        <Map showFilters={true}/>
       </div>
       <Button
         size="icon"
@@ -689,7 +390,7 @@ function ExpandedMap({ setIsExpanded }: { setIsExpanded: (isExpanded: boolean) =
   );
 }
 
-function InteractiveMap() {
+function MapView() {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
@@ -705,7 +406,7 @@ function InteractiveMap() {
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       >
         <div className="bg-card/50 backdrop-blur-lg border border-white/10 rounded-[2rem] w-full h-full" style={{overflow: 'hidden'}}>
-          <MapView />
+          <Map />
         </div>
         {!isExpanded && (
           <Button
@@ -777,5 +478,3 @@ function SmartTips({ location }: { location: { name: string }}) {
     </Card>
   );
 }
-
-    
