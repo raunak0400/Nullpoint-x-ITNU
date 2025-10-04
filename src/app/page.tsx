@@ -145,7 +145,7 @@ function Header() {
   return (
     <header className="flex flex-wrap items-center justify-between gap-4">
       <div>
-        <h1 className="text-2xl font-semibold">Hi, Elizabeth</h1>
+        <h1 className="text-2xl font-semibold">Hi, Nullpoint</h1>
         <p className="text-muted-foreground">Mon, 15 May, 2023</p>
       </div>
       <div className="flex items-center gap-2 md:gap-4 flex-wrap">
@@ -266,7 +266,6 @@ function Overview() {
 const containerStyle = {
   width: '100%',
   height: '100%',
-  borderRadius: '2rem',
 };
 
 const center = {
@@ -373,7 +372,7 @@ function InteractiveMap() {
   }, [])
 
   if (loadError) {
-    return <Card className="h-64 flex items-center justify-center"><p className='text-red-500'>Error loading map</p></Card>;
+    return <Card className="h-64 flex items-center justify-center p-0 border-0 overflow-hidden"><p className='text-red-500'>Error loading map</p></Card>;
   }
 
   return (
