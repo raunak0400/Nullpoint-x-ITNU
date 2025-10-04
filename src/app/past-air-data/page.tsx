@@ -152,9 +152,9 @@ export default function PastAirDataPage() {
                     }}
                   />
                   <Legend wrapperStyle={{ paddingTop: '20px' }}/>
-                  <Area type="monotone" dataKey="PM25" stroke="var(--color-chart-1)" fillOpacity={1} fill="url(#colorPM25)" />
-                  <Area type="monotone" dataKey="O3" stroke="var(--color-chart-2)" fillOpacity={1} fill="url(#colorO3)" />
-                  <Area type="monotone" dataKey="NO2" stroke="var(--color-chart-3)" fillOpacity={1} fill="url(#colorNO2)" />
+                  <Area type="monotone" dataKey="PM25" name="PM2.5" stroke="var(--color-chart-1)" fillOpacity={1} fill="url(#colorPM25)" />
+                  <Area type="monotone" dataKey="O3" name="Ozone" stroke="var(--color-chart-2)" fillOpacity={1} fill="url(#colorO3)" />
+                  <Area type="monotone" dataKey="NO2" name="Nitrogen Dioxide" stroke="var(--color-chart-3)" fillOpacity={1} fill="url(#colorNO2)" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
