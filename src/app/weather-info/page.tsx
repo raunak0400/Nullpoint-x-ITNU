@@ -25,6 +25,7 @@ import { PageWrapper } from '@/components/layout/page-wrapper';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import { WindCompass } from '@/components/wind-compass';
+import { useSharedState } from '@/components/layout/sidebar';
 
 
 const Card = ({
@@ -86,8 +87,14 @@ const cardVariants = {
   visible: { opacity: 1, y: 0 },
 };
 
+const celsiusToFahrenheit = (c: number) => (c * 9/5) + 32;
+
 export default function WeatherInfoPage() {
+  const { unit } = useSharedState();
   const data = weatherData.berlin;
+
+  const displayTemp = unit === 'C' ? data.temperature.value : Math.round(celsiusToFahrenheit(data.temperature.value));
+  const displayFeelsLike = unit === 'C' ? data.temperature.feelsLike : Math.round(celsiusToFahrenheit(data.temperature.feelsLike));
 
   const getAQIColor = (aqi: number) => {
     if (aqi <= 50) return 'text-green-400';
@@ -114,11 +121,11 @@ export default function WeatherInfoPage() {
             </CardHeader>
             <CardContent className="flex-1 flex flex-col items-center justify-center">
               <div className="text-8xl font-bold">
-                {data.temperature.value}
-                {data.temperature.unit}
+                {displayTemp}
+                °{unit}
               </div>
               <p className="text-xs text-muted-foreground">
-                Feels like {data.temperature.feelsLike}°C
+                Feels like {displayFeelsLike}°{unit}
               </p>
             </CardContent>
           </Card>
