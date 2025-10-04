@@ -14,13 +14,13 @@ import {
   CardContent,
 } from '@/components/ui/card';
 import {
-  AreaChart,
-  Area,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
+  CartesianGrid,
   ResponsiveContainer,
   Tooltip,
-  Legend
 } from 'recharts';
 import { DateRange } from 'react-day-picker';
 import { Calendar } from '@/components/ui/calendar';
@@ -75,7 +75,7 @@ export default function PastAirDataPage() {
   const [visiblePollutants, setVisiblePollutants] = useState<VisiblePollutants>({
     PM25: true,
     O3: true,
-    NO2: true,
+    NO2: false,
   });
 
   const handleDateChange = (newDate: DateRange | undefined) => {
@@ -91,9 +91,9 @@ export default function PastAirDataPage() {
   }
 
   const pollutantConfig = {
-    PM25: { name: 'PM2.5', color: 'hsl(var(--chart-1))', fill: 'url(#colorPM25)' },
-    O3: { name: 'Ozone', color: 'hsl(var(--chart-2))', fill: 'url(#colorO3)' },
-    NO2: { name: 'Nitrogen Dioxide', color: 'hsl(var(--chart-3))', fill: 'url(#colorNO2)' },
+    PM25: { name: 'PM2.5', color: 'hsl(var(--chart-1))' },
+    O3: { name: 'Ozone', color: 'hsl(var(--chart-2))' },
+    NO2: { name: 'Nitrogen Dioxide', color: 'hsl(var(--chart-3))' },
   };
 
   return (
@@ -113,7 +113,7 @@ export default function PastAirDataPage() {
                         onCheckedChange={() => handlePollutantVisibilityChange(key)}
                         style={{borderColor: pollutantConfig[key].color, backgroundColor: visiblePollutants[key] ? pollutantConfig[key].color : 'transparent'}}
                       />
-                      <Label htmlFor={key} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                      <Label htmlFor={key} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style={{color: pollutantConfig[key].color}}>
                         {pollutantConfig[key].name}
                       </Label>
                     </div>
@@ -161,36 +161,23 @@ export default function PastAirDataPage() {
           <CardContent>
             <div className="h-96">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={data}>
-                   <defs>
-                    <linearGradient id="colorPM25" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="hsl(var(--chart-1))" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="hsl(var(--chart-1))" stopOpacity={0}/>
-                    </linearGradient>
-                     <linearGradient id="colorO3" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="hsl(var(--chart-2))" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="hsl(var(--chart-2))" stopOpacity={0}/>
-                    </linearGradient>
-                     <linearGradient id="colorNO2" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="hsl(var(--chart-3))" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="hsl(var(--chart-3))" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                  <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} label={{ value: 'µg/m³', angle: -90, position: 'insideLeft', fill: 'hsl(var(--foreground))' }} />
+                <LineChart data={data}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                  <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                  <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'µg/m³', angle: -90, position: 'insideLeft', fill: 'hsl(var(--foreground))' }} />
                   <Tooltip
                      contentStyle={{
-                      backgroundColor: 'hsl(var(--card))',
+                      backgroundColor: 'hsl(var(--card) / 0.5)',
                       borderColor: 'hsl(var(--border))',
                       borderRadius: '1rem',
+                      backdropFilter: 'blur(4px)',
                     }}
                   />
-                  <Legend wrapperStyle={{ paddingTop: '20px' }}/>
                   
-                  {visiblePollutants.PM25 && <Area type="monotone" dataKey="PM25" name="PM2.5" stroke={pollutantConfig.PM25.color} fillOpacity={1} fill={pollutantConfig.PM25.fill} />}
-                  {visiblePollutants.O3 && <Area type="monotone" dataKey="O3" name="Ozone" stroke={pollutantConfig.O3.color} fillOpacity={1} fill={pollutantConfig.O3.fill} />}
-                  {visiblePollutants.NO2 && <Area type="monotone" dataKey="NO2" name="Nitrogen Dioxide" stroke={pollutantConfig.NO2.color} fillOpacity={1} fill={pollutantConfig.NO2.fill} />}
-                </AreaChart>
+                  {visiblePollutants.PM25 && <Line type="monotone" dataKey="PM25" name="PM2.5" stroke={pollutantConfig.PM25.color} strokeWidth={2} dot={false} />}
+                  {visiblePollutants.O3 && <Line type="monotone" dataKey="O3" name="Ozone" stroke={pollutantConfig.O3.color} strokeWidth={2} dot={false} />}
+                  {visiblePollutants.NO2 && <Line type="monotone" dataKey="NO2" name="Nitrogen Dioxide" stroke={pollutantConfig.NO2.color} strokeWidth={2} dot={false} />}
+                </LineChart>
               </ResponsiveContainer>
             </div>
           </CardContent>
