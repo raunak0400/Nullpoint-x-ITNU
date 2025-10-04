@@ -24,6 +24,7 @@ import {
 import { PageWrapper } from '@/components/layout/page-wrapper';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
+import { WindCompass } from '@/components/wind-compass';
 
 
 const Card = ({
@@ -160,13 +161,13 @@ export default function WeatherInfoPage() {
               <Wind className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">
-                {data.wind.speed}
-                <span className="text-xl ml-1">{data.wind.unit}</span>
+              <div className="flex items-center justify-center h-full">
+                <WindCompass
+                  speed={data.wind.speed}
+                  unit={data.wind.unit}
+                  direction={data.wind.direction}
+                />
               </div>
-              <p className="text-xs text-muted-foreground">
-                Direction: {data.wind.direction}
-              </p>
             </CardContent>
           </Card>
         </motion.div>
