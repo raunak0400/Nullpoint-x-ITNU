@@ -49,8 +49,6 @@ type SharedState = {
   setIs24Hour: (is24Hour: boolean) => void;
   selectedLocation: typeof locations[0];
   setSelectedLocation: (location: typeof locations[0]) => void;
-  isMapLoaded: boolean;
-  mapLoadError?: Error;
 };
 
 export const SharedStateContext = createContext<SharedState | null>(null);

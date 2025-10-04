@@ -614,7 +614,12 @@ const mapStyles = [
 
 
 function MapView() {
-  const { isMapLoaded, mapLoadError } = useSharedState();
+  const { isLoaded, loadError } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
+    libraries: ['maps']
+  });
+
   const [map, setMap] = useState(null);
   
   const onLoad = useCallback(function callback(map: any) {
@@ -625,7 +630,7 @@ function MapView() {
     setMap(null);
   }, []);
 
-  if (mapLoadError) {
+  if (loadError) {
     return <p className='text-red-500'>Error loading map</p>;
   }
   
@@ -634,7 +639,7 @@ function MapView() {
      return <p className='text-red-500'>Google Maps API key is missing.</p>;
   }
 
-  return isMapLoaded ? (
+  return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
       center={center}
