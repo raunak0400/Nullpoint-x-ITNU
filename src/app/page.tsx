@@ -350,7 +350,7 @@ function Overview() {
       </div>
       <div className="flex-1 h-full">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={processedData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+          <AreaChart data={processedData} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}>
             <defs>
               <linearGradient id="colorPast" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor={activeDataSet.color} stopOpacity={0.3} />
