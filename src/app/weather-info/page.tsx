@@ -21,6 +21,7 @@ import {
   CardTitle,
   CardContent,
 } from '@/components/ui/card';
+import { PageWrapper } from '@/components/layout/page-wrapper';
 
 const Card = ({
   children,
@@ -92,18 +93,7 @@ export default function WeatherInfoPage() {
   };
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 text-foreground min-h-screen">
-      <header className="flex items-center gap-4 mb-8">
-        <Link href="/">
-          <Button variant="ghost" size="icon">
-            <ArrowLeft />
-          </Button>
-        </Link>
-        <div>
-          <h1 className="text-3xl font-bold">Weather Info</h1>
-          <p className="text-muted-foreground">Detailed view for Berlin, Germany</p>
-        </div>
-      </header>
+    <PageWrapper>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.1 }}>
           <Card>
@@ -241,6 +231,6 @@ export default function WeatherInfoPage() {
           </Card>
         </motion.div>
       </div>
-    </div>
+    </PageWrapper>
   );
 }

@@ -26,6 +26,7 @@ import { DateRange } from 'react-day-picker';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
+import { PageWrapper } from '@/components/layout/page-wrapper';
 
 const Card = ({
   children,
@@ -70,19 +71,7 @@ export default function PastAirDataPage() {
   }
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 text-foreground min-h-screen">
-      <header className="flex items-center gap-4 mb-8">
-        <Link href="/">
-          <Button variant="ghost" size="icon">
-            <ArrowLeft />
-          </Button>
-        </Link>
-        <div>
-          <h1 className="text-3xl font-bold">Past Air Data</h1>
-          <p className="text-muted-foreground">Historical pollutant levels in Berlin</p>
-        </div>
-      </header>
-
+    <PageWrapper>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
         <Card className="max-w-6xl mx-auto">
           <CardHeader className="flex flex-row items-center justify-between">
@@ -161,6 +150,6 @@ export default function PastAirDataPage() {
           </CardContent>
         </Card>
       </motion.div>
-    </div>
+    </PageWrapper>
   );
 }

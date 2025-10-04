@@ -21,6 +21,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
+import { PageWrapper } from '@/components/layout/page-wrapper';
 
 const Card = ({
   children,
@@ -62,19 +63,7 @@ export default function FutureAirPredictionPage() {
   };
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 text-foreground min-h-screen">
-      <header className="flex items-center gap-4 mb-8">
-        <Link href="/">
-          <Button variant="ghost" size="icon">
-            <ArrowLeft />
-          </Button>
-        </Link>
-        <div>
-          <h1 className="text-3xl font-bold">Future Air Prediction</h1>
-          <p className="text-muted-foreground">AI-powered 24-hour AQI forecast</p>
-        </div>
-      </header>
-
+    <PageWrapper>
       <Card className="max-w-4xl mx-auto">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -133,6 +122,6 @@ export default function FutureAirPredictionPage() {
           )}
         </CardContent>
       </Card>
-    </div>
+    </PageWrapper>
   );
 }

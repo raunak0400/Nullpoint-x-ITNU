@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { motion, AnimatePresence } from 'framer-motion';
+import { PageWrapper } from '@/components/layout/page-wrapper';
 
 const containerStyle = {
   width: '100%',
@@ -312,76 +313,64 @@ export default function MapViewPage() {
 
 
   return (
-    <div className="h-screen w-screen flex flex-col">
-       <header className="absolute top-0 left-0 right-0 z-10 p-4 flex items-center justify-between bg-gradient-to-b from-background/80 to-transparent">
-        <div className="flex items-center gap-4">
-          <Link href="/">
-            <Button variant="ghost" size="icon" className="bg-card/50 backdrop-blur-sm">
-              <ArrowLeft />
-            </Button>
-          </Link>
-          <div>
-            <h1 className="text-xl font-bold text-foreground">Interactive Map View</h1>
-            <p className="text-sm text-muted-foreground">
-              Data layers for Berlin
-            </p>
-          </div>
+    <PageWrapper>
+      <div className="h-full w-full flex flex-col relative rounded-2xl overflow-hidden">
+        <div className="absolute top-4 right-4 z-10">
+          <Button variant="ghost" size="icon" className="bg-card/50 backdrop-blur-sm" onClick={() => setShowFilters(!showFilters)}>
+            <Layers />
+          </Button>
         </div>
-        <Button variant="ghost" size="icon" className="bg-card/50 backdrop-blur-sm" onClick={() => setShowFilters(!showFilters)}>
-          <Layers />
-        </Button>
-      </header>
 
-      <div className="flex-1 relative">
-        {!apiKey && <div className="absolute inset-0 flex items-center justify-center bg-destructive/50 text-destructive-foreground z-20">Please add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to your .env file.</div>}
-        {isLoaded && apiKey ? (
-          <GoogleMap
-            mapContainerStyle={containerStyle}
-            center={center}
-            zoom={11}
-            onLoad={onLoad}
-            onUnmount={onUnmount}
-            options={{ styles: mapStyles, disableDefaultUI: true, zoomControl: true, streetViewControl: false, mapTypeControl: false, fullscreenControl: false }}
-          >
-            {activeLayers.pollution && <HeatmapLayer data={pollutionData} options={{ gradient: getGradient('pollution'), radius: 40 }} />}
-            {activeLayers.temperature && <HeatmapLayer data={tempData} options={{ gradient: getGradient('temperature'), radius: 50 }} />}
-            {activeLayers.wind && <HeatmapLayer data={windData} options={{ gradient: getGradient('wind'), radius: 30 }} />}
-          </GoogleMap>
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-background">
-            Loading Map...
-          </div>
-        )}
-
-        <AnimatePresence>
-          {showFilters && (
-            <motion.div
-              initial={{ opacity: 0, x: 100 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 100 }}
-              className="absolute top-20 right-4 bg-card/70 backdrop-blur-md border border-white/10 rounded-2xl p-4 w-64 z-10"
+        <div className="flex-1 relative">
+          {!apiKey && <div className="absolute inset-0 flex items-center justify-center bg-destructive/50 text-destructive-foreground z-20">Please add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to your .env file.</div>}
+          {isLoaded && apiKey ? (
+            <GoogleMap
+              mapContainerStyle={containerStyle}
+              center={center}
+              zoom={11}
+              onLoad={onLoad}
+              onUnmount={onUnmount}
+              options={{ styles: mapStyles, disableDefaultUI: true, zoomControl: true, streetViewControl: false, mapTypeControl: false, fullscreenControl: false }}
             >
-              <h3 className="font-semibold mb-4">Map Layers</h3>
-              <div className="space-y-4">
-                <div className="flex items-center space-x-2">
-                  <Checkbox id="pollution" checked={activeLayers.pollution} onCheckedChange={() => handleLayerChange('pollution')} />
-                  <Label htmlFor="pollution" className="flex items-center gap-2"><Layers size={16} className="text-primary"/> Air Pollution</Label>
-                </div>
-                 <div className="flex items-center space-x-2">
-                  <Checkbox id="temperature" checked={activeLayers.temperature} onCheckedChange={() => handleLayerChange('temperature')} />
-                  <Label htmlFor="temperature" className="flex items-center gap-2"><Thermometer size={16} className="text-red-400"/> Temperature</Label>
-                </div>
-                 <div className="flex items-center space-x-2">
-                  <Checkbox id="wind" checked={activeLayers.wind} onCheckedChange={() => handleLayerChange('wind')} />
-                  <Label htmlFor="wind" className="flex items-center gap-2"><Wind size={16} className="text-blue-300"/> Wind Speed</Label>
-                </div>
-              </div>
-            </motion.div>
+              {activeLayers.pollution && <HeatmapLayer data={pollutionData} options={{ gradient: getGradient('pollution'), radius: 40 }} />}
+              {activeLayers.temperature && <HeatmapLayer data={tempData} options={{ gradient: getGradient('temperature'), radius: 50 }} />}
+              {activeLayers.wind && <HeatmapLayer data={windData} options={{ gradient: getGradient('wind'), radius: 30 }} />}
+            </GoogleMap>
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-background">
+              Loading Map...
+            </div>
           )}
-        </AnimatePresence>
-      </div>
 
-      {loadError && apiKey && <div className="absolute inset-0 flex items-center justify-center bg-red-900/50 text-white">Error loading map. Please check your API key and network connection.</div>}
-    </div>
+          <AnimatePresence>
+            {showFilters && (
+              <motion.div
+                initial={{ opacity: 0, x: 100 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 100 }}
+                className="absolute top-20 right-4 bg-card/70 backdrop-blur-md border border-white/10 rounded-2xl p-4 w-64 z-10"
+              >
+                <h3 className="font-semibold mb-4">Map Layers</h3>
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox id="pollution" checked={activeLayers.pollution} onCheckedChange={() => handleLayerChange('pollution')} />
+                    <Label htmlFor="pollution" className="flex items-center gap-2"><Layers size={16} className="text-primary"/> Air Pollution</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox id="temperature" checked={activeLayers.temperature} onCheckedChange={() => handleLayerChange('temperature')} />
+                    <Label htmlFor="temperature" className="flex items-center gap-2"><Thermometer size={16} className="text-red-400"/> Temperature</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox id="wind" checked={activeLayers.wind} onCheckedChange={() => handleLayerChange('wind')} />
+                    <Label htmlFor="wind" className="flex items-center gap-2"><Wind size={16} className="text-blue-300"/> Wind Speed</Label>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+        {loadError && apiKey && <div className="absolute inset-0 flex items-center justify-center bg-red-900/50 text-white">Error loading map. Please check your API key and network connection.</div>}
+      </div>
+    </PageWrapper>
   );
 }

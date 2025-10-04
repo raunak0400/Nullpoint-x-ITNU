@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Link from 'next/link';
@@ -20,6 +21,7 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { PageWrapper } from '@/components/layout/page-wrapper';
 
 
 const Card = ({
@@ -96,21 +98,7 @@ const severityConfig = {
 
 export default function AirAlertsPage() {
   return (
-    <div className="p-4 md:p-6 lg:p-8 text-foreground min-h-screen">
-      <header className="flex items-center gap-4 mb-8">
-        <Link href="/">
-          <Button variant="ghost" size="icon">
-            <ArrowLeft />
-          </Button>
-        </Link>
-        <div>
-          <h1 className="text-3xl font-bold">Air Alerts</h1>
-          <p className="text-muted-foreground">
-            Current advisories for Berlin, Germany
-          </p>
-        </div>
-      </header>
-
+    <PageWrapper>
       <div className="max-w-3xl mx-auto space-y-6">
         {alerts.map((alert, index) => {
           const config =
@@ -141,6 +129,6 @@ export default function AirAlertsPage() {
           );
         })}
       </div>
-    </div>
+    </PageWrapper>
   );
 }

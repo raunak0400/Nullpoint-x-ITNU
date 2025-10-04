@@ -1,3 +1,4 @@
+
 'use client';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
@@ -57,6 +58,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { explainForecastFactors } from '@/ai/flows/explain-forecast-factors';
+import { useSharedState } from '@/components/layout/sidebar';
+import { PageWrapper } from '@/components/layout/page-wrapper';
 
 const overviewDataSets = {
   Humidity: {
@@ -108,14 +111,6 @@ const generateHourlyForecast = (is24Hour: boolean) => {
     return forecast;
 };
 
-const locations = [
-  { name: 'Berlin', country: 'Germany' },
-  { name: 'New York', country: 'USA' },
-  { name: 'Tokyo', country: 'Japan' },
-  { name: 'London', country: 'UK' },
-  { name: 'Paris', country: 'France' },
-];
-
 type TempUnit = 'C' | 'F';
 
 function Card({ children, className }: { children: React.ReactNode, className?: string }) {
@@ -129,342 +124,27 @@ function Card({ children, className }: { children: React.ReactNode, className?: 
 const celsiusToFahrenheit = (c: number) => (c * 9/5) + 32;
 
 export default function Home() {
-  const [unit, setUnit] = useState<TempUnit>('C');
-  const [is24Hour, setIs24Hour] = useState(true);
-  const [selectedLocation, setSelectedLocation] = useState(locations[0]);
+  const { unit, is24Hour, selectedLocation } = useSharedState();
 
   return (
-    <div className="h-screen flex font-body overflow-hidden">
-      <Sidebar is24Hour={is24Hour} setIs24Hour={setIs24Hour} />
-      <main className="flex-1 flex flex-col p-4 md:p-6 lg:p-8 gap-6">
-        <Header unit={unit} setUnit={setUnit} is24Hour={is24Hour} selectedLocation={selectedLocation} setSelectedLocation={setSelectedLocation} />
-        <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 grid-rows-3 lg:grid-rows-2 gap-6">
-          <div className="lg:col-span-2 row-span-1">
-            <CurrentWeather unit={unit} is24Hour={is24Hour} location={selectedLocation} />
-          </div>
-          <div className="row-span-1">
-            <InteractiveMap />
-          </div>
-          <div className="lg:col-span-1 row-span-1">
-             <SmartTips location={selectedLocation} />
-          </div>
-          <div className="lg:col-span-2 row-span-1">
-            <Overview />
-          </div>
+    <PageWrapper>
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 grid-rows-3 lg:grid-rows-2 gap-6">
+        <div className="lg:col-span-2 row-span-1">
+          <CurrentWeather unit={unit} is24Hour={is24Hour} location={selectedLocation} />
         </div>
-      </main>
-    </div>
-  );
-}
-
-function Sidebar({ is24Hour, setIs24Hour }: { is24Hour: boolean; setIs24Hour: (is24Hour: boolean) => void; }) {
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const pathname = usePathname();
-  
-  const navItems = [
-    { icon: <Gauge />, label: 'Live Air Quality', href: '/' },
-    { icon: <CloudSun />, label: 'Weather Info', href: '/weather-info' },
-    { icon: <Brain />, label: 'Future Air Prediction', href: '/future-air-prediction' },
-    { icon: <Siren />, label: 'Air Alerts', href: '/air-alerts' },
-    { icon: <MapIcon />, label: 'Easy Map View', href: '/map-view' },
-    { icon: <History />, label: 'Past Air Data', href: '/past-air-data' },
-  ];
-
-  const bottomNavItems = [
-    { icon: <HelpCircle />, label: 'Help', action: () => {} },
-    { icon: <Settings />, label: 'Settings', action: () => setIsSettingsOpen(true) },
-    { icon: <AppWindow />, label: 'App', action: () => {} },
-  ];
-
-  return (
-    <>
-      <aside className="w-64 bg-card/50 backdrop-blur-sm border-r border-white/10 p-6 flex flex-col justify-between rounded-r-[2rem]">
-        <div>
-          <div className="flex items-center gap-2 mb-12">
-            <GlobeIcon className="text-primary" size={32} />
-            <h1 className="text-2xl font-bold">AuroraAir</h1>
-          </div>
-          <nav className="space-y-2">
-            {navItems.map((item) => (
-              <Link key={item.label} href={item.href} passHref>
-                <Button 
-                  variant="ghost" 
-                  className="w-full justify-start text-muted-foreground hover:text-foreground data-[active=true]:text-foreground data-[active=true]:bg-primary/10 text-base py-6" 
-                  data-active={pathname === item.href}
-                  title={item.label}
-                >
-                  {item.icon}
-                  <span>{item.label}</span>
-                </Button>
-              </Link>
-            ))}
-          </nav>
+        <div className="row-span-1">
+          <InteractiveMap />
         </div>
-        <div className="space-y-2">
-            {bottomNavItems.map((item, index) => (
-              <Button key={index} variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground text-base py-6" title={item.label} onClick={item.action}>
-                {item.icon}
-                <span>{item.label}</span>
-              </Button>
-            ))}
+        <div className="lg:col-span-1 row-span-1">
+           <SmartTips location={selectedLocation} />
         </div>
-      </aside>
-      <SettingsDialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen} is24Hour={is24Hour} setIs24Hour={setIs24Hour} />
-    </>
-  );
-}
-
-function SettingsDialog({ open, onOpenChange, is24Hour, setIs24Hour }: { open: boolean, onOpenChange: (open: boolean) => void, is24Hour: boolean, setIs24Hour: (is24Hour: boolean) => void }) {
-  const { theme, setTheme } = useTheme();
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Settings</DialogTitle>
-          <DialogDescription>
-            Customize your experience.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="py-4 space-y-6">
-          <div>
-            <Label className="text-base">Appearance</Label>
-            <RadioGroup
-              defaultValue={theme}
-              onValueChange={setTheme}
-              className="grid max-w-md grid-cols-3 gap-8 pt-2"
-            >
-              <Label className="[&:has([data-state=checked])>div]:border-primary">
-                <RadioGroupItem value="light" className="sr-only" />
-                <div className="items-center rounded-md border-2 border-muted p-1 hover:border-accent">
-                  <div className="space-y-2 rounded-sm bg-[#ecedef] p-2">
-                    <div className="space-y-2 rounded-md bg-white p-2 shadow-sm">
-                      <div className="h-2 w-[80px] rounded-lg bg-[#ecedef]" />
-                      <div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
-                    </div>
-                    <div className="flex items-center space-x-2 rounded-md bg-white p-2 shadow-sm">
-                      <div className="h-4 w-4 rounded-full bg-[#ecedef]" />
-                      <div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
-                    </div>
-                    <div className="flex items-center space-x-2 rounded-md bg-white p-2 shadow-sm">
-                      <div className="h-4 w-4 rounded-full bg-[#ecedef]" />
-                      <div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
-                    </div>
-                  </div>
-                </div>
-                <span className="block w-full p-2 text-center font-normal">
-                  Light
-                </span>
-              </Label>
-              <Label className="[&:has([data-state=checked])>div]:border-primary">
-                <RadioGroupItem value="dark" className="sr-only" />
-                <div className="items-center rounded-md border-2 border-muted bg-popover p-1 hover:border-accent">
-                  <div className="space-y-2 rounded-sm bg-slate-950 p-2">
-                    <div className="space-y-2 rounded-md bg-slate-800 p-2 shadow-sm">
-                      <div className="h-2 w-[80px] rounded-lg bg-slate-400" />
-                      <div className="h-2 w-[100px] rounded-lg bg-slate-400" />
-                    </div>
-                    <div className="flex items-center space-x-2 rounded-md bg-slate-800 p-2 shadow-sm">
-                      <div className="h-4 w-4 rounded-full bg-slate-400" />
-                      <div className="h-2 w-[100px] rounded-lg bg-slate-400" />
-                    </div>
-                    <div className="flex items-center space-x-2 rounded-md bg-slate-800 p-2 shadow-sm">
-                      <div className="h-4 w-4 rounded-full bg-slate-400" />
-                      <div className="h-2 w-[100px] rounded-lg bg-slate-400" />
-                    </div>
-                  </div>
-                </div>
-                <span className="block w-full p-2 text-center font-normal">
-                  Dark
-                </span>
-              </Label>
-               <Label className="[&:has([data-state=checked])>div]:border-primary">
-                <RadioGroupItem value="default" className="sr-only" />
-                <div className="items-center rounded-md border-2 border-muted bg-popover p-1 hover:border-accent">
-                  <div className="space-y-2 rounded-sm bg-[#0D0F13] p-2">
-                    <div className="space-y-2 rounded-md bg-[#212326] p-2 shadow-sm">
-                      <div className="h-2 w-[80px] rounded-lg bg-muted" />
-                      <div className="h-2 w-[100px] rounded-lg bg-muted" />
-                    </div>
-                    <div className="flex items-center space-x-2 rounded-md bg-[#212326] p-2 shadow-sm">
-                      <div className="h-4 w-4 rounded-full bg-muted" />
-                      <div className="h-2 w-[100px] rounded-lg bg-muted" />
-                    </div>
-                    <div className="flex items-center space-x-2 rounded-md bg-[#212326] p-2 shadow-sm">
-                      <div className="h-4 w-4 rounded-full bg-muted" />
-                      <div className="h-2 w-[100px] rounded-lg bg-muted" />
-                    </div>
-                  </div>
-                </div>
-                <span className="block w-full p-2 text-center font-normal">
-                  Default
-                </span>
-              </Label>
-            </RadioGroup>
-          </div>
-          <Separator />
-          <div className="flex items-center justify-between">
-            <Label htmlFor="time-format" className="flex flex-col gap-1">
-              <span>24-Hour Time</span>
-              <span className="font-normal text-muted-foreground">
-                Display time in 24-hour format.
-              </span>
-            </Label>
-            <Switch
-              id="time-format"
-              checked={is24Hour}
-              onCheckedChange={setIs24Hour}
-            />
-          </div>
+        <div className="lg:col-span-2 row-span-1">
+          <Overview />
         </div>
-      </DialogContent>
-    </Dialog>
-  )
-}
-
-const TemperatureSwitch = ({ unit, setUnit }: { unit: TempUnit; setUnit: (unit: TempUnit) => void }) => {
-  return (
-    <div className="relative flex w-[72px] h-10 cursor-pointer items-center rounded-full bg-card/50 p-1 backdrop-blur-sm border border-white/10">
-      <div
-        className={cn(
-          'absolute h-8 w-8 rounded-full bg-primary transition-transform duration-300 ease-in-out',
-          unit === 'C' ? 'translate-x-[2px]' : 'translate-x-[34px]'
-        )}
-      />
-      <button
-        onClick={() => setUnit('C')}
-        className={cn(
-          'z-10 flex-1 h-8 text-center font-medium transition-colors',
-          unit === 'C' ? 'text-primary-foreground' : 'text-muted-foreground'
-        )}
-      >
-        °C
-      </button>
-      <button
-        onClick={() => setUnit('F')}
-        className={cn(
-          'z-10 flex-1 h-8 text-center font-medium transition-colors',
-          unit === 'F' ? 'text-primary-foreground' : 'text-muted-foreground'
-        )}
-      >
-        °F
-      </button>
-    </div>
-  );
-};
-
-
-function Header({ unit, setUnit, is24Hour, selectedLocation, setSelectedLocation }: { unit: TempUnit; setUnit: (unit: TempUnit) => void; is24Hour: boolean, selectedLocation: any, setSelectedLocation: (location: any) => void }) {
-  const [now, setNow] = useState<Date | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-
-  useEffect(() => {
-    setNow(new Date());
-    const timer = setInterval(() => {
-      setNow(new Date());
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  useEffect(() => {
-    if (searchQuery.length > 1) {
-      setIsSearchOpen(true);
-      setSearchResults(locations.filter(loc => loc.name.toLowerCase().includes(searchQuery.toLowerCase())));
-    } else {
-      setIsSearchOpen(false);
-      setSearchResults([]);
-    }
-  }, [searchQuery]);
-  
-  if (!now) {
-    return (
-     <header className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold">Hi, Nullpoint</h1>
-          <p className="text-muted-foreground flex items-center">
-            <span>Loading...</span>
-          </p>
-        </div>
-     </header>
-    );
-  }
-
-  const formattedDate = new Intl.DateTimeFormat('en-GB', {
-    weekday: 'short',
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  }).format(now);
-  
-  const formattedTime = new Intl.DateTimeFormat('en-GB', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: !is24Hour,
-  }).format(now);
-
-  const [timePart, ampmPart] = formattedTime.split(' ');
-  const [hours, minutes] = timePart.split(':');
-
-  const handleSelectLocation = (location: any) => {
-    setSelectedLocation(location);
-    setSearchQuery('');
-    setIsSearchOpen(false);
-  }
-
-  return (
-    <header className="flex flex-wrap items-center justify-between gap-4">
-      <div>
-        <h1 className="text-2xl font-semibold">Hi, Nullpoint</h1>
-        <p className="text-muted-foreground flex items-center" suppressHydrationWarning>
-          <span>{formattedDate}</span>
-          <span className="mx-2">|</span>
-          <span>
-            {hours}
-            <span className="animate-colon-pulse">:</span>
-            {minutes}
-          </span>
-          {ampmPart && <span className='ml-1'>{ampmPart}</span>}
-        </p>
       </div>
-      <div className="flex items-center gap-2 md:gap-4 flex-wrap">
-        <div className="relative flex items-center">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground z-10" size={20} />
-          <Input 
-            placeholder="Search city or postcode" 
-            className="bg-card/50 backdrop-blur-sm border-white/10 pl-10 w-48 md:w-64 rounded-full" 
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          {isSearchOpen && searchResults.length > 0 && (
-            <motion.div 
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="absolute top-full mt-2 w-full bg-card/80 backdrop-blur-sm border border-white/10 rounded-2xl z-20 overflow-hidden"
-            >
-              <ul>
-                {searchResults.map(loc => (
-                  <li key={loc.name}>
-                    <button onClick={() => handleSelectLocation(loc)} className="w-full text-left px-4 py-2 hover:bg-primary/10">
-                      {loc.name}, {loc.country}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-          )}
-        </div>
-        <TemperatureSwitch unit={unit} setUnit={setUnit} />
-        <Avatar className="rounded-full">
-          <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" />
-          <AvatarFallback>U</AvatarFallback>
-        </Avatar>
-      </div>
-    </header>
+    </PageWrapper>
   );
 }
-
 
 function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour: boolean, location: { name: string, country: string } }) {
     const [hourlyForecast, setHourlyForecast] = useState<any[]>([]);
