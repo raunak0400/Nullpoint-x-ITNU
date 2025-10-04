@@ -558,28 +558,33 @@ function Overview() {
       <g>
         <style>
           {`
-            @keyframes pulse {
+            @keyframes ripple {
               0% {
-                transform: scale(0.95);
-                box-shadow: 0 0 0 0 rgba(0, 178, 255, 0.7);
-              }
-              70% {
                 transform: scale(1);
-                box-shadow: 0 0 0 10px rgba(0, 178, 255, 0);
+                opacity: 1;
               }
               100% {
-                transform: scale(0.95);
-                box-shadow: 0 0 0 0 rgba(0, 178, 255, 0);
+                transform: scale(3.5);
+                opacity: 0;
               }
             }
-            .pulse-dot {
-              animation: pulse 2s infinite;
+            .ripple-circle {
+              animation: ripple 1.5s infinite;
               transform-origin: center;
               transform-box: fill-box;
             }
           `}
         </style>
-        <circle cx={cx} cy={cy} r="6" fill="hsl(var(--primary))" stroke="white" strokeWidth="2" className="pulse-dot" />
+        <circle cx={cx} cy={cy} r="6" fill="hsl(var(--primary))" stroke="white" strokeWidth="2" />
+        <circle
+          className="ripple-circle"
+          cx={cx}
+          cy={cy}
+          r="6"
+          fill="transparent"
+          stroke="hsl(var(--primary))"
+          strokeWidth="2"
+        />
       </g>
     );
   };
