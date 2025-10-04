@@ -4,19 +4,19 @@
 
 @layer base {
   :root {
-    --background: 220 13% 10%; /* #1A1C1E */
+    --background: 220 13% 6%; /* #0D0F13 */
     --foreground: 210 40% 98%;
     
     --card: 220 13% 14%; /* #212326 */
     --card-foreground: 210 40% 98%;
     
-    --popover: 220 13% 10%;
+    --popover: 220 13% 6%;
     --popover-foreground: 210 40% 98%;
     
-    --primary: 210 100% 50%; /* A bright blue */
+    --primary: 198 100% 50%; /* #00B2FF - Azure */
     --primary-foreground: 220 13% 10%;
     
-    --secondary: 217.2 32.6% 17.5%;
+    --secondary: 326 100% 65%; /* #FF4DA6 - Magenta */
     --secondary-foreground: 210 40% 98%;
     
     --muted: 217.2 32.6% 17.5%;
@@ -30,30 +30,30 @@
     
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --ring: 198 100% 50%;
     --radius: 0.75rem;
 
-    --chart-1: 210 100% 50%;
-    --chart-2: 160 100% 40%;
+    --chart-1: 198 100% 50%;
+    --chart-2: 326 100% 65%;
     --chart-3: 40 100% 50%;
     --chart-4: 0 100% 50%;
-    --chart-5: 320 100% 50%;
+    --chart-5: 260 100% 50%;
   }
 
   .dark {
-    --background: 220 13% 10%; /* #1A1C1E */
+    --background: 220 13% 6%; /* #0D0F13 */
     --foreground: 210 40% 98%;
     
     --card: 220 13% 14%; /* #212326 */
     --card-foreground: 210 40% 98%;
     
-    --popover: 220 13% 10%;
+    --popover: 220 13% 6%;
     --popover-foreground: 210 40% 98%;
     
-    --primary: 210 100% 50%; /* A bright blue */
+    --primary: 198 100% 50%; /* #00B2FF - Azure */
     --primary-foreground: 220 13% 10%;
     
-    --secondary: 217.2 32.6% 17.5%;
+    --secondary: 326 100% 65%; /* #FF4DA6 - Magenta */
     --secondary-foreground: 210 40% 98%;
     
     --muted: 217.2 32.6% 17.5%;
@@ -67,7 +67,7 @@
     
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --ring: 198 100% 50%;
   }
 }
  
