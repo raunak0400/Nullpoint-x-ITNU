@@ -1,4 +1,3 @@
-
 'use client';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
@@ -124,10 +123,17 @@ function Card({ children, className }: { children: React.ReactNode, className?: 
 const celsiusToFahrenheit = (c: number) => (c * 9/5) + 32;
 
 export default function Home() {
+  return (
+    <PageWrapper>
+      <DashboardContent />
+    </PageWrapper>
+  );
+}
+
+function DashboardContent() {
   const { unit, is24Hour, selectedLocation } = useSharedState();
 
   return (
-    <PageWrapper>
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 grid-rows-3 lg:grid-rows-2 gap-6">
         <div className="lg:col-span-2 row-span-1">
           <CurrentWeather unit={unit} is24Hour={is24Hour} location={selectedLocation} />
@@ -142,7 +148,6 @@ export default function Home() {
           <Overview />
         </div>
       </div>
-    </PageWrapper>
   );
 }
 

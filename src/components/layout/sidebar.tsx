@@ -17,6 +17,7 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 import {
   AppWindow,
@@ -60,57 +61,79 @@ export const useSharedState = () => {
   return context;
 }
 
+const NavItem = ({ item, pathname }: { item: { href: string; label: string; icon: React.ReactNode }; pathname: string }) => (
+  <TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Link href={item.href} passHref>
+          <Button 
+            variant="ghost" 
+            className="w-full justify-center text-muted-foreground hover:text-foreground data-[active=true]:text-foreground data-[active=true]:bg-primary/10 text-base h-16" 
+            data-active={pathname === item.href}
+            title={item.label}
+          >
+            {item.icon}
+          </Button>
+        </Link>
+      </TooltipTrigger>
+      <TooltipContent side="right">
+        <p>{item.label}</p>
+      </TooltipContent>
+    </Tooltip>
+  </TooltipProvider>
+);
+
+const BottomNavItem = ({ item }: { item: { label: string; icon: React.ReactNode; action: () => void } }) => (
+  <TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button variant="ghost" className="w-full justify-center text-muted-foreground hover:text-foreground text-base h-16" title={item.label} onClick={item.action}>
+          {item.icon}
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent side="right">
+        <p>{item.label}</p>
+      </TooltipContent>
+    </Tooltip>
+  </TooltipProvider>
+);
+
 export function Sidebar() {
   const { setIs24Hour, is24Hour } = useSharedState();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const pathname = usePathname();
   
   const navItems = [
-    { icon: <Gauge />, label: 'Live Air Quality', href: '/' },
-    { icon: <CloudSun />, label: 'Weather Info', href: '/weather-info' },
-    { icon: <Brain />, label: 'Future Air Prediction', href: '/future-air-prediction' },
-    { icon: <Siren />, label: 'Air Alerts', href: '/air-alerts' },
-    { icon: <MapIcon />, label: 'Easy Map View', href: '/map-view' },
-    { icon: <History />, label: 'Past Air Data', href: '/past-air-data' },
+    { icon: <Gauge size={28} />, label: 'Live Air Quality', href: '/' },
+    { icon: <CloudSun size={28} />, label: 'Weather Info', href: '/weather-info' },
+    { icon: <Brain size={28} />, label: 'Future Air Prediction', href: '/future-air-prediction' },
+    { icon: <Siren size={28} />, label: 'Air Alerts', href: '/air-alerts' },
+    { icon: <MapIcon size={28} />, label: 'Easy Map View', href: '/map-view' },
+    { icon: <History size={28} />, label: 'Past Air Data', href: '/past-air-data' },
   ];
 
   const bottomNavItems = [
-    { icon: <HelpCircle />, label: 'Help', action: () => {} },
-    { icon: <Settings />, label: 'Settings', action: () => setIsSettingsOpen(true) },
-    { icon: <AppWindow />, label: 'App', action: () => {} },
+    { icon: <HelpCircle size={28} />, label: 'Help', action: () => {} },
+    { icon: <Settings size={28} />, label: 'Settings', action: () => setIsSettingsOpen(true) },
+    { icon: <AppWindow size={28} />, label: 'App', action: () => {} },
   ];
   
-
   return (
     <>
-      <aside className="w-64 bg-card/50 backdrop-blur-sm border-r border-white/10 p-6 flex flex-col justify-between rounded-r-[2rem]">
+      <aside className="w-24 bg-card/50 backdrop-blur-sm border-r border-white/10 p-4 flex flex-col justify-between rounded-r-[2rem]">
         <div>
-          <div className="flex items-center gap-2 mb-12">
+          <div className="flex items-center justify-center mb-12 h-10">
             <GlobeIcon className="text-primary" size={32} />
-            <h1 className="text-2xl font-bold">AuroraAir</h1>
           </div>
           <nav className="space-y-2">
             {navItems.map((item) => (
-              <Link key={item.label} href={item.href} passHref>
-                <Button 
-                  variant="ghost" 
-                  className="w-full justify-start text-muted-foreground hover:text-foreground data-[active=true]:text-foreground data-[active=true]:bg-primary/10 text-base py-6" 
-                  data-active={pathname === item.href}
-                  title={item.label}
-                >
-                  {item.icon}
-                  <span>{item.label}</span>
-                </Button>
-              </Link>
+              <NavItem key={item.label} item={item} pathname={pathname} />
             ))}
           </nav>
         </div>
         <div className="space-y-2">
-            {bottomNavItems.map((item, index) => (
-              <Button key={index} variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground text-base py-6" title={item.label} onClick={item.action}>
-                {item.icon}
-                <span>{item.label}</span>
-              </Button>
+            {bottomNavItems.map((item) => (
+              <BottomNavItem key={item.label} item={item} />
             ))}
         </div>
       </aside>
