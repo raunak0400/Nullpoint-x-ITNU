@@ -158,7 +158,7 @@ function WeatherInfoDashboard() {
                 </div>
                 <p className="text-lg text-muted-foreground mb-4">{data.aqi.quality}</p>
                 <div className="w-full px-4">
-                  <Progress value={data.aqi.value} max={300} indicatorClassName={getAQIProgressColor(data.aqi.value)} className="w-full" />
+                  <Progress value={data.aqi.value} max={300} indicatorClassName={getAQIProgressColor(data.aqi.value)} />
                 </div>
             </CardContent>
           </Card>
