@@ -245,13 +245,24 @@ function Overview() {
   const handleSetMetric = (metric: OverviewMetric) => {
     setActiveMetric(metric);
   };
-  
+
   const activeDataSet = overviewDataSets[activeMetric];
   const tabs = (Object.keys(overviewDataSets) as OverviewMetric[]);
-  const currentHourX = currentHour !== null ? `${currentHour}:00` : undefined;
-  const currentHourData = currentHourX ? activeDataSet.data.find(d => d.hour === currentHourX) : undefined;
-  const currentHourY = currentHourData?.value;
+  
+  const processedData = activeDataSet.data.map(d => {
+    const hour = parseInt(d.hour.split(':')[0]);
+    if (currentHour === null || hour > currentHour) {
+      return { ...d, future: d.value };
+    } else if (hour < currentHour) {
+      return { ...d, past: d.value };
+    } else {
+      return { ...d, past: d.value, future: d.value };
+    }
+  });
 
+  const currentHourX = currentHour !== null ? `${currentHour}:00` : undefined;
+  const currentHourData = currentHourX ? processedData.find(d => d.hour === currentHourX) : undefined;
+  const currentHourY = currentHourData?.past;
 
   const PulsatingDot = ({ cx, cy }: { cx?: number, cy?: number }) => {
     if (cx === undefined || cy === undefined) return null;
@@ -290,7 +301,6 @@ function Overview() {
     );
   };
 
-
   return (
     <Card className="h-full flex flex-col p-6">
       <div className="flex justify-between items-center mb-4">
@@ -308,7 +318,7 @@ function Overview() {
               {metric}
             </button>
           ))}
-           <motion.span
+          <motion.span
             layoutId="overview-active-tab"
             className="absolute h-8 rounded-full bg-primary z-0"
             style={{
@@ -324,10 +334,14 @@ function Overview() {
       </div>
       <div className="flex-1 h-full">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={activeDataSet.data} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+          <AreaChart data={processedData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
             <defs>
-              <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="colorPast" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+              </linearGradient>
+              <linearGradient id="colorFuture" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.1} />
                 <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
               </linearGradient>
             </defs>
@@ -343,17 +357,27 @@ function Overview() {
                 border: '1px solid hsla(0, 0%, 100%, 0.1)'
               }}
               labelClassName="font-bold"
-              formatter={(value: number) => [`${value}${activeDataSet.unit}`, activeMetric]}
+              formatter={(value: number, name: string) => [`${value}${activeDataSet.unit}`, name === 'past' ? activeMetric : `${activeMetric} (Future)`]}
             />
             <Area
               type="monotone"
-              dataKey="value"
+              dataKey="past"
+              name={activeMetric}
               stroke="hsl(var(--primary))"
               strokeWidth={2}
-              fill="url(#colorValue)"
+              fill="url(#colorPast)"
+            />
+            <Area
+              type="monotone"
+              dataKey="future"
+              name={activeMetric}
+              stroke="hsl(var(--primary))"
+              strokeWidth={2}
+              strokeDasharray="4 4"
+              fill="url(#colorFuture)"
             />
             {currentHourX && currentHourY !== undefined && (
-               <ReferenceDot
+              <ReferenceDot
                 x={currentHourX}
                 y={currentHourY}
                 ifOverflow="extendDomain"
