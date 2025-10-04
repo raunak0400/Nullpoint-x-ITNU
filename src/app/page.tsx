@@ -28,6 +28,7 @@ import {
   User,
   Wind,
   Gauge,
+  Lightbulb,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -105,6 +106,7 @@ export default function Home() {
           </div>
           <div className="space-y-6">
             <Map />
+            <SmartTips />
             <Forecasts />
             <Subscribe />
           </div>
@@ -122,7 +124,6 @@ function Sidebar() {
     { icon: <Siren />, label: 'Air Alerts' },
     { icon: <MapIcon />, label: 'Easy Map View' },
     { icon: <History />, label: 'Past Air Data' },
-    { icon: <Brain />, label: 'Smart Tips' },
   ];
 
   const bottomNavItems = [
@@ -302,6 +303,30 @@ function Map() {
             <p className="text-sm">20° mostly cloudy</p>
             <p className="text-sm">24% humidity</p>
         </div>
+      </div>
+    </Card>
+  );
+}
+
+function SmartTips() {
+  return (
+    <Card>
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-xl font-semibold flex items-center gap-2">
+          <Lightbulb className="text-primary" />
+          Smart Tips
+        </h3>
+        <Button variant="ghost" size="sm">More</Button>
+      </div>
+      <div className="space-y-3">
+        <p className="text-muted-foreground">
+          Air quality is poor. It's recommended to stay indoors and use an air purifier if available.
+        </p>
+        <ul className="list-disc list-inside text-muted-foreground space-y-1">
+          <li>Avoid outdoor exercise.</li>
+          <li>Keep windows closed.</li>
+          <li>Wear a mask if you go outside.</li>
+        </ul>
       </div>
     </Card>
   );
