@@ -23,6 +23,8 @@ import {
 } from '@/components/ui/card';
 import { PageWrapper } from '@/components/layout/page-wrapper';
 import { Progress } from '@/components/ui/progress';
+import { cn } from '@/lib/utils';
+
 
 const Card = ({
   children,
@@ -32,7 +34,7 @@ const Card = ({
   className?: string;
 }) => (
   <UICard
-    className={`bg-card/50 backdrop-blur-sm border border-white/10 rounded-[2rem] ${className}`}
+    className={cn(`bg-card/50 backdrop-blur-sm border border-white/10 rounded-[2rem]`, className)}
   >
     {children}
   </UICard>
@@ -138,7 +140,7 @@ export default function WeatherInfoPage() {
         </motion.div>
 
         <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.3 }}>
-          <Card>
+          <Card className="min-h-[170px]">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">UV Index</CardTitle>
               <Sun className="h-4 w-4 text-muted-foreground" />
@@ -146,13 +148,13 @@ export default function WeatherInfoPage() {
             <CardContent>
               <div className="text-5xl font-bold">{data.uvIndex.value}</div>
               <p className="text-xs text-muted-foreground mb-2">{data.uvIndex.level}</p>
-              <Progress value={data.uvIndex.value * 10} indicatorClassName="bg-gradient-to-r from-green-400 via-yellow-400 to-red-500" />
+              <Progress value={data.uvIndex.value * 10} indicatorClassName="bg-gradient-to-r from-green-400 via-yellow-400 to-red-500" className="w-full" />
             </CardContent>
           </Card>
         </motion.div>
 
         <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.4 }}>
-          <Card>
+          <Card className="min-h-[170px]">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Wind</CardTitle>
               <Wind className="h-4 w-4 text-muted-foreground" />
@@ -170,7 +172,7 @@ export default function WeatherInfoPage() {
         </motion.div>
 
         <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.5 }}>
-          <Card>
+          <Card className="min-h-[170px]">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Humidity</CardTitle>
               <Droplets className="h-4 w-4 text-muted-foreground" />
@@ -188,7 +190,7 @@ export default function WeatherInfoPage() {
         </motion.div>
 
         <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.6 }}>
-          <Card>
+          <Card className="min-h-[170px]">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Visibility</CardTitle>
               <Eye className="h-4 w-4 text-muted-foreground" />
@@ -206,7 +208,7 @@ export default function WeatherInfoPage() {
         </motion.div>
         
         <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.7 }}>
-          <Card>
+          <Card className="min-h-[170px]">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Pressure</CardTitle>
               <Gauge className="h-4 w-4 text-muted-foreground" />
@@ -224,7 +226,7 @@ export default function WeatherInfoPage() {
         </motion.div>
 
         <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.8 }}>
-          <Card>
+          <Card className="min-h-[170px]">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Precipitation</CardTitle>
               <Cloud className="h-4 w-4 text-muted-foreground" />
