@@ -104,12 +104,12 @@ export default function WeatherInfoPage() {
     <PageWrapper>
       <div className="grid grid-cols-1 md:grid-cols-2 md:grid-flow-row-dense gap-6">
         <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.1 }} className="md:row-span-2">
-          <Card className="h-full">
+          <Card className="h-full flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Temperature</CardTitle>
               <Thermometer className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent className="pb-4 flex flex-col justify-center h-full">
+            <CardContent className="flex-1 flex flex-col items-center justify-center">
               <div className="text-8xl font-bold">
                 {data.temperature.value}
                 {data.temperature.unit}
@@ -122,17 +122,17 @@ export default function WeatherInfoPage() {
         </motion.div>
 
         <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.2 }} className="md:row-span-2">
-          <Card className="h-full">
+          <Card className="h-full flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Air Quality (AQI)</CardTitle>
               <Gauge className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent className="pb-4 flex flex-col justify-center h-full">
+            <CardContent className="flex-1 flex flex-col items-center justify-center">
                 <div className={`text-8xl font-bold ${getAQIColor(data.aqi.value)}`}>
                   {data.aqi.value}
                 </div>
                 <p className="text-lg text-muted-foreground mb-4">{data.aqi.quality}</p>
-                <Progress value={data.aqi.value} indicatorClassName={getAQIProgressColor(data.aqi.value)} />
+                <Progress value={data.aqi.value} indicatorClassName={getAQIProgressColor(data.aqi.value)} className="w-full" />
             </CardContent>
           </Card>
         </motion.div>
@@ -143,7 +143,7 @@ export default function WeatherInfoPage() {
               <CardTitle className="text-sm font-medium">UV Index</CardTitle>
               <Sun className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent className="pb-4">
+            <CardContent>
               <div className="text-5xl font-bold">{data.uvIndex.value}</div>
               <p className="text-xs text-muted-foreground mb-2">{data.uvIndex.level}</p>
               <Progress value={data.uvIndex.value * 10} indicatorClassName="bg-gradient-to-r from-green-400 via-yellow-400 to-red-500" />
