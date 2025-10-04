@@ -201,7 +201,7 @@ function CurrentWeather() {
                 </div>
             </div>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-card/50 to-transparent pointer-events-none z-10 rounded-l-[2rem]"></div>
+              <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-card to-transparent pointer-events-none z-10 rounded-l-[2rem]"></div>
               <div className="flex overflow-x-auto gap-2 pb-2 -mx-2 px-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                   {hourlyForecast.map((hour, i) => (
                       <div key={i} className="flex flex-col items-center justify-between p-3 rounded-3xl bg-card/70 backdrop-blur-sm border border-white/10 min-w-[60px] h-32">
@@ -211,7 +211,7 @@ function CurrentWeather() {
                       </div>
                   ))}
               </div>
-              <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-card/50 to-transparent pointer-events-none z-10 rounded-r-[2rem]"></div>
+              <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-card to-transparent pointer-events-none z-10 rounded-r-[2rem]"></div>
             </div>
         </Card>
     );
@@ -352,4 +352,3 @@ function Subscribe() {
         </Card>
     );
 }
-
