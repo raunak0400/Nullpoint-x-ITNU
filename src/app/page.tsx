@@ -321,15 +321,29 @@ const TemperatureSwitch = ({ unit, setUnit }: { unit: TempUnit; setUnit: (unit: 
 
 
 function Header({ unit, setUnit, is24Hour }: { unit: TempUnit; setUnit: (unit: TempUnit) => void; is24Hour: boolean }) {
-  const [now, setNow] = useState(new Date());
+  const [now, setNow] = useState<Date | null>(null);
 
   useEffect(() => {
+    setNow(new Date());
     const timer = setInterval(() => {
       setNow(new Date());
     }, 1000);
     return () => clearInterval(timer);
   }, []);
   
+  if (!now) {
+    return (
+     <header className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-semibold">Hi, Nullpoint</h1>
+          <p className="text-muted-foreground flex items-center">
+            <span>Loading...</span>
+          </p>
+        </div>
+     </header>
+    );
+  }
+
   const formattedDate = new Intl.DateTimeFormat('en-GB', {
     weekday: 'short',
     day: 'numeric',
@@ -380,9 +394,23 @@ function Header({ unit, setUnit, is24Hour }: { unit: TempUnit; setUnit: (unit: T
 
 
 function CurrentWeather({ unit, is24Hour }: { unit: TempUnit; is24Hour: boolean }) {
+    const [hourlyForecast, setHourlyForecast] = useState<ReturnType<typeof generateHourlyForecast> | null>(null);
+
+    useEffect(() => {
+        setHourlyForecast(generateHourlyForecast(is24Hour));
+    }, [is24Hour]);
+
+
     const currentTemp = 20;
     const displayTemp = unit === 'C' ? currentTemp : celsiusToFahrenheit(currentTemp);
-    const hourlyForecast = generateHourlyForecast(is24Hour);
+
+    if (!hourlyForecast) {
+        return (
+            <Card className="p-6 h-full flex flex-col relative overflow-hidden">
+                <div className="flex items-center justify-center h-full">Loading forecast...</div>
+            </Card>
+        );
+    }
 
     return (
         <Card className="p-6 h-full flex flex-col relative overflow-hidden">
@@ -675,5 +703,7 @@ function SmartTips() {
     </Card>
   );
 }
+
+    
 
     
