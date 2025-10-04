@@ -611,9 +611,6 @@ export function Map({ showFilters: initialShowFilters = false }: { showFilters?:
     styles: getMapStyle(),
     disableDefaultUI: true,
     zoomControl: false,
-    streetViewControl: false,
-    mapTypeControl: false,
-    fullscreenControl: false,
   };
 
   return (
