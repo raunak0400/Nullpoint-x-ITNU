@@ -4,32 +4,21 @@
 import {
   AppWindow,
   ArrowRight,
-  BarChart2,
   Brain,
-  Calendar,
   Cloud,
   CloudSun,
-  Droplets,
   Globe,
-  Grip,
   HelpCircle,
   History,
+  Lightbulb,
   Map as MapIcon,
-  MapPin,
   Moon,
   Search,
   Settings,
   Siren,
   Smile,
   Sun,
-  Sunrise,
-  Sunset,
-  Thermometer,
-  TrendingUp,
-  User,
-  Wind,
   Gauge,
-  Lightbulb,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -87,7 +76,7 @@ const worldForecasts = [
 
 function Card({ children, className }: { children: React.ReactNode, className?: string }) {
   return (
-    <div className={`bg-card/50 backdrop-blur-sm border border-white/10 rounded-2xl p-6 ${className}`}>
+    <div className={`bg-card/50 backdrop-blur-sm border border-white/10 rounded-[2rem] p-6 ${className}`}>
       {children}
     </div>
   );
@@ -134,12 +123,12 @@ function Sidebar() {
   ];
 
   return (
-    <aside className="w-20 bg-card/50 backdrop-blur-sm border-r border-white/10 p-4 flex flex-col items-center justify-between">
+    <aside className="w-20 bg-card/50 backdrop-blur-sm border-r border-white/10 p-4 flex flex-col items-center justify-between rounded-r-[2rem]">
       <div className="space-y-8">
         <div className="text-primary font-bold text-2xl">g.</div>
         <nav className="space-y-6">
           {navItems.map((item, index) => (
-            <Button key={index} variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground data-[active=true]:text-foreground data-[active=true]:bg-primary/10 w-12 h-12" data-active={index === 0} title={item.label}>
+            <Button key={index} variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground data-[active=true]:text-foreground data-[active=true]:bg-primary/10 w-12 h-12 rounded-2xl" data-active={index === 0} title={item.label}>
               {item.icon}
             </Button>
           ))}
@@ -147,7 +136,7 @@ function Sidebar() {
       </div>
       <div className="space-y-6">
           {bottomNavItems.map((item, index) => (
-            <Button key={index} variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground w-12 h-12" title={item.label}>
+            <Button key={index} variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground w-12 h-12 rounded-2xl" title={item.label}>
               {item.icon}
             </Button>
           ))}
@@ -166,14 +155,14 @@ function Header() {
       <div className="flex items-center gap-2 md:gap-4 flex-wrap">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
-          <Input placeholder="Search city or postcode" className="bg-card/50 backdrop-blur-sm border-white/10 pl-10 w-48 md:w-64" />
+          <Input placeholder="Search city or postcode" className="bg-card/50 backdrop-blur-sm border-white/10 pl-10 w-48 md:w-64 rounded-full" />
         </div>
         <Button variant="ghost">ENG</Button>
         <div className="flex items-center bg-card/50 backdrop-blur-sm border border-white/10 rounded-full">
             <Button variant="ghost" className="rounded-full bg-primary text-primary-foreground">°C</Button>
             <Button variant="ghost" className="rounded-full">°F</Button>
         </div>
-        <Avatar>
+        <Avatar className="rounded-full">
           <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" />
           <AvatarFallback>U</AvatarFallback>
         </Avatar>
@@ -218,7 +207,7 @@ function CurrentWeather() {
             </div>
             <div className="flex overflow-x-auto gap-2 pb-2 -mx-2 px-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                 {hourlyForecast.map((hour, i) => (
-                    <div key={i} className="flex flex-col items-center justify-between p-3 rounded-lg bg-background/50 border border-white/10 min-w-[60px] h-32">
+                    <div key={i} className="flex flex-col items-center justify-between p-3 rounded-3xl bg-background/50 border border-white/10 min-w-[60px] h-32">
                         <p className="text-sm text-muted-foreground">{hour.time}</p>
                         <div className="text-primary">{hour.icon}</div>
                         <p className="text-lg font-bold">{hour.temp}°</p>
@@ -259,7 +248,7 @@ function Overview() {
               contentStyle={{
                 backgroundColor: 'hsl(var(--card))',
                 borderColor: 'hsl(var(--border))',
-                borderRadius: 'var(--radius-sm)',
+                borderRadius: '1rem',
                 background: 'hsla(var(--card), 0.5)',
                 backdropFilter: 'blur(4px)',
                 border: '1px solid hsla(0, 0%, 100%, 0.1)'
@@ -299,14 +288,14 @@ function WorldForecast() {
 function Map() {
   return (
     <Card className="relative h-64 bg-cover bg-center p-0 border-0" style={{backgroundImage: "url('https://picsum.photos/seed/map/600/400')"}} data-ai-hint="world map dark">
-      <div className="absolute inset-0 bg-black/50 rounded-2xl"></div>
+      <div className="absolute inset-0 bg-black/50 rounded-[2rem]"></div>
       <div className="absolute top-4 right-4">
-          <Button size="icon" variant="ghost" className="bg-black/30 backdrop-blur-sm hover:bg-black/50 text-white rounded-lg">
+          <Button size="icon" variant="ghost" className="bg-black/30 backdrop-blur-sm hover:bg-black/50 text-white rounded-xl">
             <Globe size={20}/>
           </Button>
       </div>
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        <div className="bg-black/50 backdrop-blur-sm p-3 rounded-lg text-center text-white border border-white/10">
+        <div className="bg-black/50 backdrop-blur-sm p-3 rounded-2xl text-center text-white border border-white/10">
             <p className="font-semibold">Berlin, Germany</p>
             <p className="text-sm">20° mostly cloudy</p>
             <p className="text-sm">24% humidity</p>
@@ -324,7 +313,7 @@ function SmartTips() {
           <Lightbulb className="text-primary" />
           Smart Tips
         </h3>
-        <Button variant="ghost" size="sm">More</Button>
+        <Button variant="ghost" size="sm" className="rounded-full">More</Button>
       </div>
       <div className="space-y-3">
         <p className="text-muted-foreground">
@@ -352,7 +341,7 @@ function Forecasts() {
       </div>
       <div className="space-y-3">
         {dailyForecasts.map((day, i) => (
-          <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-background/50 border border-white/10">
+          <div key={i} className="flex items-center justify-between p-3 rounded-2xl bg-background/50 border border-white/10">
             <div className="flex items-center gap-3">
               <div className="text-primary">{day.icon}</div>
               <p className="font-semibold">+{day.high}°<span className="text-muted-foreground">/{day.low}°</span></p>
@@ -368,20 +357,20 @@ function Forecasts() {
 function Subscribe() {
     return (
         <Card className="p-0 text-center bg-cover bg-center relative overflow-hidden" data-ai-hint="abstract wave texture">
-             <div className="absolute inset-0 bg-cover bg-center" style={{backgroundImage: "url('https://picsum.photos/seed/subscribe/600/400')"}}></div>
+             <div className="absolute inset-0 bg-cover bg-center rounded-[2rem]" style={{backgroundImage: "url('https://picsum.photos/seed/subscribe/600/400')"}}></div>
             <div className="relative z-10 p-6">
                 <h3 className="text-2xl font-bold">Subscribe!</h3>
                 <p className="text-sm text-white/80 mt-2 mb-4">
                     Stay ahead of the weather with our daily forecasts and updates! Get ready to embrace the elements and make the most of your day.
                 </p>
-                <Button className="w-full">
+                <Button className="w-full rounded-xl">
                     Subscribe
                     <span className="ml-2 bg-primary-foreground/20 rounded-full p-1">
                         <ArrowRight className="text-primary-foreground" size={16}/>
                     </span>
                 </Button>
             </div>
-             <div className="absolute inset-0 bg-gradient-to-t from-card/80 via-card/70 to-transparent"></div>
+             <div className="absolute inset-0 bg-gradient-to-t from-card/80 via-card/70 to-transparent rounded-[2rem]"></div>
         </Card>
     );
 }
