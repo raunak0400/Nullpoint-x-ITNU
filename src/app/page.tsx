@@ -960,6 +960,7 @@ function ExpandedMap({ setIsExpanded }: { setIsExpanded: (isExpanded: boolean) =
     <motion.div
       layoutId="map-card"
       className="fixed inset-0 bg-card/80 backdrop-blur-lg z-50"
+      style={{ borderRadius: '2rem' }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="w-full h-full" style={{ borderRadius: 'inherit' }}>
