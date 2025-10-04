@@ -201,17 +201,17 @@ function CurrentWeather() {
                 </div>
             </div>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-card/50 to-transparent pointer-events-none z-10 rounded-l-[2rem]"></div>
+              <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-card to-transparent pointer-events-none z-10"></div>
               <div className="flex overflow-x-auto gap-2 pb-2 -mx-2 px-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                   {hourlyForecast.map((hour, i) => (
-                      <div key={i} className="flex flex-col items-center justify-between p-3 rounded-3xl bg-card/70 backdrop-blur-sm border border-white/10 min-w-[60px] h-32">
+                      <div key={i} className="flex flex-col items-center justify-between p-3 rounded-3xl bg-background/50 backdrop-blur-sm border border-white/10 min-w-[60px] h-32">
                           <p className="text-sm text-muted-foreground">{hour.time}</p>
                           <div className="text-muted-foreground">{hour.icon}</div>
                           <p className="text-lg font-bold">{hour.temp}°</p>
                       </div>
                   ))}
               </div>
-              <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-card/50 to-transparent pointer-events-none z-10 rounded-r-[2rem]"></div>
+              <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-card to-transparent pointer-events-none z-10"></div>
             </div>
         </Card>
     );
@@ -266,6 +266,7 @@ function Overview() {
 const containerStyle = {
   width: '100%',
   height: '100%',
+  borderRadius: '2rem',
 };
 
 const center = {
@@ -372,11 +373,11 @@ function InteractiveMap() {
   }, [])
 
   if (loadError) {
-    return <Card className="h-64 flex items-center justify-center p-0 border-0 overflow-hidden"><p className='text-red-500'>Error loading map</p></Card>;
+    return <Card className="h-64 flex items-center justify-center p-0 overflow-hidden"><p className='text-red-500'>Error loading map</p></Card>;
   }
 
   return (
-    <Card className="relative h-64 p-0 border-0 overflow-hidden">
+    <Card className="relative h-64 p-0 overflow-hidden">
       {isLoaded ? (
         <GoogleMap
           mapContainerStyle={containerStyle}
