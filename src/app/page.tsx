@@ -1,6 +1,7 @@
 
 'use client';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import * as THREE from 'three';
 
 import {
   AppWindow,
@@ -8,7 +9,7 @@ import {
   Brain,
   Cloud,
   CloudSun,
-  Globe,
+  Globe as GlobeIcon,
   HelpCircle,
   History,
   Lightbulb,
@@ -201,7 +202,7 @@ function CurrentWeather() {
                 </div>
             </div>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-card to-transparent pointer-events-none z-10 rounded-l-[2rem]"></div>
+              <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-card/50 to-transparent pointer-events-none z-10 rounded-l-[2rem]"></div>
               <div className="flex overflow-x-auto gap-2 pb-2 -mx-2 px-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                   {hourlyForecast.map((hour, i) => (
                       <div key={i} className="flex flex-col items-center justify-between p-3 rounded-3xl bg-card/70 backdrop-blur-sm border border-white/10 min-w-[60px] h-32">
@@ -211,7 +212,7 @@ function CurrentWeather() {
                       </div>
                   ))}
               </div>
-              <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-card to-transparent pointer-events-none z-10 rounded-r-[2rem]"></div>
+              <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-card/50 to-transparent pointer-events-none z-10 rounded-r-[2rem]"></div>
             </div>
         </Card>
     );
@@ -263,13 +264,80 @@ function Overview() {
   );
 }
 
+function Globe() {
+  const mountRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!mountRef.current) return;
+
+    // Scene
+    const scene = new THREE.Scene();
+
+    // Camera
+    const camera = new THREE.PerspectiveCamera(75, mountRef.current.clientWidth / mountRef.current.clientHeight, 0.1, 1000);
+    camera.position.z = 2;
+
+    // Renderer
+    const renderer = new THREE.WebGLRenderer({ alpha: true });
+    renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
+    mountRef.current.appendChild(renderer.domElement);
+    renderer.setClearColor(0x000000, 0); 
+
+    // Globe
+    const geometry = new THREE.SphereGeometry(1, 64, 64);
+    const textureLoader = new THREE.TextureLoader();
+    const texture = textureLoader.load('https://images.unsplash.com/photo-1564053489984-317bbd824340?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    const material = new THREE.MeshStandardMaterial({ map: texture, metalness: 0.3, roughness: 0.7 });
+    const globe = new THREE.Mesh(geometry, material);
+    scene.add(globe);
+
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
+    const pointLight = new THREE.PointLight(0xffffff, 1);
+    pointLight.position.set(5, 5, 5);
+    scene.add(pointLight);
+
+    // Animation loop
+    const animate = () => {
+      requestAnimationFrame(animate);
+      globe.rotation.y += 0.001;
+      renderer.render(scene, camera);
+    };
+    animate();
+
+    // Handle resize
+    const handleResize = () => {
+      if (mountRef.current) {
+        camera.aspect = mountRef.current.clientWidth / mountRef.current.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (mountRef.current) {
+        mountRef.current.removeChild(renderer.domElement);
+      }
+    };
+  }, []);
+
+  return <div ref={mountRef} className="w-full h-full" />;
+}
+
+
 function Map() {
   return (
-    <Card className="relative h-64 bg-cover bg-center p-0 border-0" style={{backgroundImage: "url('https://picsum.photos/seed/map/600/400')"}} data-ai-hint="world map dark">
-      <div className="absolute inset-0 bg-black/50 rounded-[2rem]"></div>
+    <Card className="relative h-64 p-0 border-0 overflow-hidden">
+      <div className="absolute inset-0">
+        <Globe />
+      </div>
       <div className="absolute top-4 right-4">
           <Button size="icon" variant="ghost" className="bg-black/30 backdrop-blur-sm hover:bg-black/50 text-white rounded-xl">
-            <Globe size={20}/>
+            <GlobeIcon size={20}/>
           </Button>
       </div>
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
