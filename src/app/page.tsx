@@ -67,13 +67,6 @@ const dailyForecasts = [
   { day: 'Thu', date: '18 May', high: 25, low: 19, icon: <Sun size={20} /> },
 ];
 
-const worldForecasts = [
-  { city: 'Lisbon', country: 'Portugal', temp: 23, low: 15, icon: <Sun size={24}/> },
-  { city: 'Kyoto', country: 'Japan', temp: 29, low: 16, icon: <CloudSun size={24}/> },
-  { city: 'Antalya', country: 'Türkiye', temp: 30, low: 19, icon: <Sun size={24}/> },
-  { city: 'Karachi', country: 'Pakistan', temp: 28, low: 22, icon: <Cloud size={24}/> },
-];
-
 function Card({ children, className }: { children: React.ReactNode, className?: string }) {
   return (
     <div className={`bg-card/50 backdrop-blur-sm border border-white/10 rounded-[2rem] p-6 ${className}`}>
@@ -92,7 +85,6 @@ export default function Home() {
           <div className="lg:col-span-2 space-y-6">
             <CurrentWeather />
             <Overview />
-            <WorldForecast />
           </div>
           <div className="space-y-6">
             <Map />
@@ -263,27 +255,6 @@ function Overview() {
     </Card>
   );
 }
-
-function WorldForecast() {
-  return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-        <Card className="flex flex-col items-center justify-center text-center p-4">
-            <Button size="icon" className="w-12 h-12 rounded-full bg-primary text-primary-foreground mb-2">+</Button>
-            <h4 className="font-semibold">World forecast</h4>
-            <p className="text-xs text-muted-foreground mt-1">Add the cities you are interested in</p>
-        </Card>
-        {worldForecasts.map(city => (
-            <Card key={city.city} className="flex flex-col items-center justify-center text-center p-4">
-                 <div className="text-primary mb-2">{city.icon}</div>
-                <h4 className="font-semibold">{city.city}</h4>
-                <p className="text-xs text-muted-foreground">{city.country}</p>
-                <p className="text-2xl font-bold mt-2">{city.temp}°<span className="text-base font-normal text-muted-foreground">/{city.low}°</span></p>
-            </Card>
-        ))}
-    </div>
-  );
-}
-
 
 function Map() {
   return (
