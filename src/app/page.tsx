@@ -637,10 +637,11 @@ function Overview() {
               </linearGradient>
               <clipPath id={`clip-path-${animationKey}`}>
                 <motion.rect
-                  initial={{ width: 0 }}
-                  animate={{ width: '100%' }}
-                  transition={{ duration: 0.8, ease: 'easeInOut' }}
+                  width="100%"
                   height="100%"
+                  initial={{ transform: "translateX(-100%)" }}
+                  animate={{ transform: "translateX(0%)" }}
+                  transition={{ duration: 0.8, ease: "easeInOut" }}
                 />
               </clipPath>
             </defs>
@@ -659,22 +660,21 @@ function Overview() {
               formatter={(value: number) => [`${value}${activeDataSet.unit}`, activeMetric]}
             />
             <g clipPath={`url(#clip-path-${animationKey})`}>
-              <Area 
+              <Area
                 key={animationKey}
-                type="monotone" 
-                dataKey="value" 
-                stroke="hsl(var(--primary))" 
-                strokeWidth={2} 
+                type="monotone"
+                dataKey="value"
+                stroke="hsl(var(--primary))"
+                strokeWidth={2}
                 fill="url(#colorValue)"
               />
             </g>
-
             {currentHourX && currentHourY !== undefined && (
-               <ReferenceDot 
-                x={currentHourX} 
-                y={currentHourY} 
-                ifOverflow="extendDomain" 
-                shape={<PulsatingDot />} 
+               <ReferenceDot
+                x={currentHourX}
+                y={currentHourY}
+                ifOverflow="extendDomain"
+                shape={<PulsatingDot />}
               />
             )}
           </AreaChart>
