@@ -1,4 +1,3 @@
-
 'use client';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
@@ -78,6 +77,8 @@ const dailyForecasts = [
   { day: 'Thu', date: '18 May', high: 25, low: 19, icon: <Sun size={20} /> },
 ];
 
+type TempUnit = 'C' | 'F';
+
 function Card({ children, className }: { children: React.ReactNode, className?: string }) {
   return (
     <div className={`bg-card/50 backdrop-blur-sm border border-white/10 rounded-[2rem] ${className}`}>
@@ -86,15 +87,19 @@ function Card({ children, className }: { children: React.ReactNode, className?: 
   );
 }
 
+const celsiusToFahrenheit = (c: number) => (c * 9/5) + 32;
+
 export default function Home() {
+  const [unit, setUnit] = useState<TempUnit>('C');
+
   return (
     <div className="h-screen flex font-body overflow-hidden">
       <Sidebar />
       <main className="flex-1 flex flex-col p-4 md:p-6 lg:p-8 gap-6">
-        <Header />
+        <Header unit={unit} setUnit={setUnit} />
         <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 grid-rows-3 lg:grid-rows-2 gap-6">
           <div className="lg:col-span-2 row-span-1">
-            <CurrentWeather />
+            <CurrentWeather unit={unit} />
           </div>
           <div className="row-span-1">
             <InteractiveMap />
@@ -150,9 +155,7 @@ function Sidebar() {
   );
 }
 
-function Header() {
-  const [unit, setUnit] = useState<'C' | 'F'>('C');
-
+function Header({ unit, setUnit }: { unit: TempUnit; setUnit: (unit: TempUnit) => void }) {
   return (
     <header className="flex flex-wrap items-center justify-between gap-4">
       <div>
@@ -178,7 +181,10 @@ function Header() {
 }
 
 
-function CurrentWeather() {
+function CurrentWeather({ unit }: { unit: TempUnit }) {
+    const currentTemp = 20;
+    const displayTemp = unit === 'C' ? currentTemp : celsiusToFahrenheit(currentTemp);
+
     return (
         <Card className="p-6 h-full flex flex-col relative overflow-hidden">
             <Image
@@ -205,7 +211,7 @@ function CurrentWeather() {
                         </div>
                     </div>
                     <div className="text-left">
-                        <p className="font-semibold text-sm">+20°</p>
+                        <p className="font-semibold text-sm">+{Math.round(displayTemp)}°</p>
                         <p className="text-xs text-muted-foreground">Temp</p>
                     </div>
                     <div className="text-left">
@@ -229,7 +235,7 @@ function CurrentWeather() {
                         <div key={i} className="flex flex-col items-center justify-between p-3 rounded-2xl bg-background/30 backdrop-blur-sm border border-white/10 min-w-[60px] h-32">
                             <p className="text-sm text-muted-foreground">{hour.time}</p>
                             <div className="text-muted-foreground">{hour.icon}</div>
-                            <p className="text-lg font-bold">{hour.temp}°</p>
+                            <p className="text-lg font-bold">{Math.round(unit === 'C' ? hour.temp : celsiusToFahrenheit(hour.temp))}°</p>
                         </div>
                     ))}
                   </div>
@@ -470,7 +476,3 @@ function SmartTips() {
     </Card>
   );
 }
-
-    
-
-    
