@@ -20,6 +20,7 @@ import {
   Search,
   Settings,
   Siren,
+  Smile,
   Sun,
   Sunrise,
   Sunset,
@@ -120,7 +121,7 @@ function Sidebar() {
   const navItems = [
     { icon: <Gauge />, label: 'Live Air Quality' },
     { icon: <CloudSun />, label: 'Weather Info' },
-    { icon: <TrendingUp />, label: 'Future Air Prediction' },
+    { icon: <Brain />, label: 'Future Air Prediction' },
     { icon: <Siren />, label: 'Air Alerts' },
     { icon: <MapIcon />, label: 'Easy Map View' },
     { icon: <History />, label: 'Past Air Data' },
@@ -193,7 +194,14 @@ function CurrentWeather() {
                         <p className="text-muted-foreground">Germany</p>
                     </div>
                 </div>
-                <div className="flex gap-x-6 gap-y-2 mt-4 sm:mt-0 flex-wrap">
+                <div className="flex gap-x-6 gap-y-2 mt-4 sm:mt-0 flex-wrap items-center">
+                    <div className="flex items-center gap-2 text-green-400">
+                        <Smile size={48} />
+                        <div>
+                            <p className="text-2xl font-bold">Good</p>
+                            <p className="text-sm">Air Mood</p>
+                        </div>
+                    </div>
                     <div className="text-center sm:text-left">
                         <p className="text-4xl font-bold">+20°</p>
                         <p className="text-muted-foreground">Temperature</p>
