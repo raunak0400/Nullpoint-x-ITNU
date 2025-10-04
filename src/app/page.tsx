@@ -66,7 +66,7 @@ const overviewDataSets = {
     data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: Math.floor(Math.random() * 40) + 30 })),
     unit: '%',
     average: 52,
-    color: "hsl(var(--chart-2))"
+    color: "hsl(var(--chart-1))"
   },
   'UV Index': {
     data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: Math.max(0, Math.round(5 * Math.sin((i / 24) * Math.PI * 2 - Math.PI / 2) + 1)) })),
@@ -78,13 +78,13 @@ const overviewDataSets = {
     data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: Math.max(0, Math.floor(Math.random() * 5) - 3) })),
     unit: 'mm',
     average: 1,
-    color: "hsl(var(--chart-1))"
+    color: "hsl(var(--chart-5))"
   },
   Pressure: {
     data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: 1012 + Math.floor(Math.random() * 10) - 5 })),
     unit: 'hPa',
     average: 1012,
-    color: "hsl(var(--chart-5))"
+    color: "hsl(var(--chart-4))"
   },
 };
 
