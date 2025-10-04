@@ -62,29 +62,33 @@ import { PageWrapper } from '@/components/layout/page-wrapper';
 import { Map } from '@/components/map';
 
 const overviewDataSets = {
-  Humidity: {
-    data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: Math.floor(Math.random() * 40) + 30 })),
-    unit: '%',
-    average: 52,
-    color: "hsl(var(--chart-1))"
+  'NO₂': {
+    data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: Math.floor(Math.random() * 30) + 5 })),
+    unit: 'µg/m³',
+    average: 20,
+    color: "hsl(var(--chart-1))",
+    label: 'Nitrogen dioxide'
   },
-  'UV Index': {
-    data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: Math.max(0, Math.round(5 * Math.sin((i / 24) * Math.PI * 2 - Math.PI / 2) + 1)) })),
-    unit: '',
-    average: 2,
-    color: "hsl(var(--chart-3))"
+  'CH₂O': {
+    data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: Math.floor(Math.random() * 15) + 2 })),
+    unit: 'µg/m³',
+    average: 8,
+    color: "hsl(var(--chart-3))",
+    label: 'Formaldehyde'
   },
-  Rainfall: {
-    data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: Math.max(0, Math.floor(Math.random() * 5) - 3) })),
-    unit: 'mm',
-    average: 1,
-    color: "hsl(var(--chart-5))"
+  'Aerosol': {
+    data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: Math.floor(Math.random() * 10) / 10 })),
+    unit: 'index',
+    average: 0.5,
+    color: "hsl(var(--chart-4))",
+    label: 'Aerosol Index'
   },
-  Pressure: {
-    data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: 1012 + Math.floor(Math.random() * 10) - 5 })),
-    unit: 'hPa',
-    average: 1012,
-    color: "hsl(var(--chart-4))"
+  'PM': {
+    data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: Math.floor(Math.random() * 50) + 10 })),
+    unit: 'µg/m³',
+    average: 25,
+    color: "hsl(var(--chart-5))",
+    label: 'Particulate matter'
   },
 };
 
@@ -238,7 +242,7 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
 }
 
 function Overview() {
-  const [activeMetric, setActiveMetric] = useState<OverviewMetric>('Humidity');
+  const [activeMetric, setActiveMetric] = useState<OverviewMetric>('NO₂');
   const [currentHour, setCurrentHour] = useState<number | null>(null);
 
   useEffect(() => {
@@ -369,12 +373,12 @@ function Overview() {
                 border: '1px solid hsla(0, 0%, 100%, 0.1)'
               }}
               labelClassName="font-bold"
-              formatter={(value: number, name: string, props) => [`${value}${activeDataSet.unit}`, props.dataKey === 'past' ? activeMetric : `${activeMetric} (Future)`]}
+              formatter={(value: number, name: string, props) => [`${value}${activeDataSet.unit}`, props.dataKey === 'past' ? activeDataSet.label : `${activeDataSet.label} (Future)`]}
             />
             <Area
               type="monotone"
               dataKey="past"
-              name={activeMetric}
+              name={activeDataSet.label}
               stroke={activeDataSet.color}
               strokeWidth={2}
               fill="url(#colorPast)"
@@ -382,7 +386,7 @@ function Overview() {
             <Area
               type="monotone"
               dataKey="future"
-              name={activeMetric}
+              name={activeDataSet.label}
               stroke={activeDataSet.color}
               strokeWidth={2}
               strokeDasharray="4 4"
