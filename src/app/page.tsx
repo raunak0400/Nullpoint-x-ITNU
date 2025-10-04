@@ -1,3 +1,4 @@
+
 'use client';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
@@ -613,9 +614,10 @@ const mapStyles = [
 
 
 function MapView() {
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: "YOUR_API_KEY",
+    googleMapsApiKey: apiKey,
     libraries: ['maps']
   });
 
@@ -629,15 +631,21 @@ function MapView() {
     setMap(null);
   }, []);
 
-  if (loadError) {
-    return <p className='text-red-500'>Error loading map</p>;
-  }
-  
-  const apiKey = "YOUR_API_KEY";
   if (!apiKey) {
-     return <p className='text-red-500'>Google Maps API key is missing.</p>;
+     return (
+      <div className="flex items-center justify-center h-full text-center text-muted-foreground p-4">
+        <div>
+          <p>Google Maps API key is missing.</p>
+          <p className="text-xs">Please add <code className="bg-muted/50 p-1 rounded-sm">NEXT_PUBLIC_GOOGLE_MAPS_API_KEY</code> to your <code className="bg-muted/50 p-1 rounded-sm">.env.local</code> file.</p>
+        </div>
+      </div>
+     );
   }
 
+  if (loadError) {
+    return <p className='flex items-center justify-center h-full text-red-500'>Error loading map. Check the API key.</p>;
+  }
+  
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}

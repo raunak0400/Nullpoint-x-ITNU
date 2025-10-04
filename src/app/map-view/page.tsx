@@ -257,7 +257,7 @@ const mapStyles = [
 
 const generateHeatmapData = (intensity: number) => {
   const data = [];
-  if (typeof window.google === 'undefined' || !window.google.maps.LatLng) return data;
+  if (typeof window === 'undefined' || typeof window.google === 'undefined' || !window.google.maps.LatLng) return data;
   for (let i = 0; i < 100; i++) {
     const lat = 52.52 + (Math.random() - 0.5) * 0.5;
     const lng = 13.40 + (Math.random() - 0.5) * 1.0;
@@ -273,7 +273,7 @@ let windData: any[] = [];
 const libraries = ['visualization'] as const;
 
 export default function MapViewPage() {
-  const apiKey = "YOUR_API_KEY";
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script-full',
     googleMapsApiKey: apiKey,
@@ -323,7 +323,14 @@ export default function MapViewPage() {
         </div>
 
         <div className="flex-1 relative">
-          {!apiKey && <div className="absolute inset-0 flex items-center justify-center bg-destructive/50 text-destructive-foreground z-20">Please add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to your .env file.</div>}
+           {!apiKey && (
+            <div className="absolute inset-0 flex items-center justify-center bg-background/80 z-20 text-center p-4">
+              <div>
+                <p>Google Maps API key is missing.</p>
+                <p className="text-xs text-muted-foreground">Please add <code className="bg-muted/50 p-1 rounded-sm">NEXT_PUBLIC_GOOGLE_MAPS_API_KEY</code> to your <code className="bg-muted/50 p-1 rounded-sm">.env.local</code> file.</p>
+              </div>
+            </div>
+          )}
           {isLoaded && apiKey ? (
             <GoogleMap
               mapContainerStyle={containerStyle}
@@ -337,11 +344,11 @@ export default function MapViewPage() {
               {activeLayers.temperature && <HeatmapLayer data={tempData} options={{ gradient: getGradient('temperature'), radius: 50 }} />}
               {activeLayers.wind && <HeatmapLayer data={windData} options={{ gradient: getGradient('wind'), radius: 30 }} />}
             </GoogleMap>
-          ) : (
+          ) : apiKey ? (
             <div className="w-full h-full flex items-center justify-center bg-background">
               Loading Map...
             </div>
-          )}
+          ) : null}
 
           <AnimatePresence>
             {showFilters && (
