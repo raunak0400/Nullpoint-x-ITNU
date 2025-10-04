@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -43,8 +44,8 @@ Current Air Quality Data:
 - Aerosol Index: {{aerosol}}
 - Particulate Matter (PM): {{pm}} µg/m³
 
-Explanation (3-4 sentences, focus on the most significant pollutants):
-Recommendations (1-2 bullet points based on the data):`,
+Your explanation should be 3-4 sentences and focus on the most significant pollutants.
+Your recommendations should be 1-2 bullet points based on the data.`,
 });
 
 const explainForecastFactorsFlow = ai.defineFlow(
