@@ -3,6 +3,7 @@ import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from '@/components/theme-provider';
+import { AnimatedLayout } from '@/components/animated-layout';
 
 export const metadata: Metadata = {
   title: 'AuroraAir',
@@ -25,7 +26,7 @@ export default function RootLayout({
         <body className="font-body antialiased bg-cover bg-center bg-fixed" style={{backgroundImage: "url('/globe-bg.jpg')"}}>
           <div className="absolute inset-0 bg-background/50 backdrop-blur-sm" />
           <main className="relative z-10">
-            {children}
+            <AnimatedLayout>{children}</AnimatedLayout>
           </main>
           <Toaster />
         </body>

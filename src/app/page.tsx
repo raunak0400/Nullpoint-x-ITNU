@@ -1,6 +1,6 @@
 
 'use client';
-import { useState, useRef, useEffect, useCallback, useContext } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import {
@@ -37,6 +37,7 @@ import {
   Gauge,
   Expand,
   X,
+  ChevronDown,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -52,21 +53,55 @@ import {
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { useTheme } from '@/components/theme-provider';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { motion } from 'framer-motion';
+import { explainForecastFactors } from '@/ai/flows/explain-forecast-factors';
 
-const overviewData = [
-  { month: 'Jan', value: 20 },
-  { month: 'Feb', value: 30 },
-  { month: 'Mar', value: 45 },
-  { month: 'Apr', value: 40 },
-  { month: 'May', value: 60 },
-  { month: 'Jun', value: 80 },
-  { month: 'Jul', value: 75 },
-  { month: 'Aug', value: 70 },
-  { month: 'Sep', value: 55 },
-  { month: 'Oct', value: 45 },
-  { month: 'Nov', value: 30 },
-  { month: 'Dec', value: 25 },
-];
+const overviewDataSets = {
+  Humidity: {
+    data: [
+      { month: 'Jan', value: 20 }, { month: 'Feb', value: 30 }, { month: 'Mar', value: 45 },
+      { month: 'Apr', value: 40 }, { month: 'May', value: 60 }, { month: 'Jun', value: 80 },
+      { month: 'Jul', value: 75 }, { month: 'Aug', value: 70 }, { month: 'Sep', value: 55 },
+      { month: 'Oct', value: 45 }, { month: 'Nov', value: 30 }, { month: 'Dec', value: 25 },
+    ],
+    unit: '%',
+    average: 52
+  },
+  'UV Index': {
+    data: [
+      { month: 'Jan', value: 1 }, { month: 'Feb', value: 2 }, { month: 'Mar', value: 3 },
+      { month: 'Apr', value: 5 }, { month: 'May', value: 7 }, { month: 'Jun', value: 9 },
+      { month: 'Jul', value: 8 }, { month: 'Aug', value: 7 }, { month: 'Sep', value: 5 },
+      { month: 'Oct', value: 3 }, { month: 'Nov', value: 2 }, { month: 'Dec', value: 1 },
+    ],
+    unit: '',
+    average: 4
+  },
+  Rainfall: {
+    data: [
+      { month: 'Jan', value: 40 }, { month: 'Feb', value: 35 }, { month: 'Mar', value: 50 },
+      { month: 'Apr', value: 60 }, { month: 'May', value: 55 }, { month: 'Jun', value: 70 },
+      { month: 'Jul', value: 80 }, { month: 'Aug', value: 75 }, { month: 'Sep', value: 65 },
+      { month: 'Oct', value: 50 }, { month: 'Nov', value: 45 }, { month: 'Dec', value: 40 },
+    ],
+    unit: 'mm',
+    average: 55
+  },
+  Pressure: {
+    data: [
+      { month: 'Jan', value: 1012 }, { month: 'Feb', value: 1010 }, { month: 'Mar', value: 1008 },
+      { month: 'Apr', value: 1006 }, { month: 'May', value: 1004 }, { month: 'Jun', value: 1002 },
+      { month: 'Jul', value: 1000 }, { month: 'Aug', value: 1002 }, { month: 'Sep', value: 1004 },
+      { month: 'Oct', value: 1006 }, { month: 'Nov', value: 1008 }, { month: 'Dec', value: 1010 },
+    ],
+    unit: 'hPa',
+    average: 1006
+  },
+};
+
+type OverviewMetric = keyof typeof overviewDataSets;
 
 const getIconForHour = (hour: number) => {
     if (hour >= 6 && hour < 12) return <CloudSun size={24} />;
@@ -90,10 +125,12 @@ const generateHourlyForecast = (is24Hour: boolean) => {
     return forecast;
 };
 
-const dailyForecasts = [
-  { day: 'Tue', date: '16 May', high: 22, low: 17, icon: <CloudSun size={20} /> },
-  { day: 'Wed', date: '17 May', high: 20, low: 18, icon: <Cloud size={20} /> },
-  { day: 'Thu', date: '18 May', high: 25, low: 19, icon: <Sun size={20} /> },
+const locations = [
+  { name: 'Berlin', country: 'Germany' },
+  { name: 'New York', country: 'USA' },
+  { name: 'Tokyo', country: 'Japan' },
+  { name: 'London', country: 'UK' },
+  { name: 'Paris', country: 'France' },
 ];
 
 type TempUnit = 'C' | 'F';
@@ -111,21 +148,22 @@ const celsiusToFahrenheit = (c: number) => (c * 9/5) + 32;
 export default function Home() {
   const [unit, setUnit] = useState<TempUnit>('C');
   const [is24Hour, setIs24Hour] = useState(true);
+  const [selectedLocation, setSelectedLocation] = useState(locations[0]);
 
   return (
     <div className="h-screen flex font-body overflow-hidden">
       <Sidebar is24Hour={is24Hour} setIs24Hour={setIs24Hour} />
       <main className="flex-1 flex flex-col p-4 md:p-6 lg:p-8 gap-6">
-        <Header unit={unit} setUnit={setUnit} is24Hour={is24Hour} />
+        <Header unit={unit} setUnit={setUnit} is24Hour={is24Hour} selectedLocation={selectedLocation} setSelectedLocation={setSelectedLocation} />
         <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 grid-rows-3 lg:grid-rows-2 gap-6">
           <div className="lg:col-span-2 row-span-1">
-            <CurrentWeather unit={unit} is24Hour={is24Hour} />
+            <CurrentWeather unit={unit} is24Hour={is24Hour} location={selectedLocation} />
           </div>
           <div className="row-span-1">
             <InteractiveMap />
           </div>
           <div className="lg:col-span-1 row-span-1">
-             <SmartTips />
+             <SmartTips location={selectedLocation} />
           </div>
           <div className="lg:col-span-2 row-span-1">
             <Overview />
@@ -138,14 +176,15 @@ export default function Home() {
 
 function Sidebar({ is24Hour, setIs24Hour }: { is24Hour: boolean; setIs24Hour: (is24Hour: boolean) => void; }) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const pathname = usePathname();
   
   const navItems = [
-    { icon: <Gauge />, label: 'Live Air Quality' },
-    { icon: <CloudSun />, label: 'Weather Info' },
-    { icon: <Brain />, label: 'Future Air Prediction' },
-    { icon: <Siren />, label: 'Air Alerts' },
-    { icon: <MapIcon />, label: 'Easy Map View' },
-    { icon: <History />, label: 'Past Air Data' },
+    { icon: <Gauge />, label: 'Live Air Quality', href: '/' },
+    { icon: <CloudSun />, label: 'Weather Info', href: '/weather-info' },
+    { icon: <Brain />, label: 'Future Air Prediction', href: '/future-air-prediction' },
+    { icon: <Siren />, label: 'Air Alerts', href: '/air-alerts' },
+    { icon: <MapIcon />, label: 'Easy Map View', href: '/map-view' },
+    { icon: <History />, label: 'Past Air Data', href: '/past-air-data' },
   ];
 
   const bottomNavItems = [
@@ -160,10 +199,12 @@ function Sidebar({ is24Hour, setIs24Hour }: { is24Hour: boolean; setIs24Hour: (i
         <div className="space-y-8">
           
           <nav className="space-y-6">
-            {navItems.map((item, index) => (
-              <Button key={index} variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground data-[active=true]:text-foreground data-[active=true]:bg-primary/10 w-12 h-12 rounded-2xl" data-active={index === 0} title={item.label}>
-                {item.icon}
-              </Button>
+            {navItems.map((item) => (
+              <Link key={item.label} href={item.href} passHref>
+                <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground data-[active=true]:text-foreground data-[active=true]:bg-primary/10 w-12 h-12 rounded-2xl" data-active={pathname === item.href} title={item.label}>
+                  {item.icon}
+                </Button>
+              </Link>
             ))}
           </nav>
         </div>
@@ -320,8 +361,11 @@ const TemperatureSwitch = ({ unit, setUnit }: { unit: TempUnit; setUnit: (unit: 
 };
 
 
-function Header({ unit, setUnit, is24Hour }: { unit: TempUnit; setUnit: (unit: TempUnit) => void; is24Hour: boolean }) {
+function Header({ unit, setUnit, is24Hour, selectedLocation, setSelectedLocation }: { unit: TempUnit; setUnit: (unit: TempUnit) => void; is24Hour: boolean, selectedLocation: any, setSelectedLocation: (location: any) => void }) {
   const [now, setNow] = useState<Date | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   useEffect(() => {
     setNow(new Date());
@@ -330,6 +374,16 @@ function Header({ unit, setUnit, is24Hour }: { unit: TempUnit; setUnit: (unit: T
     }, 1000);
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    if (searchQuery.length > 1) {
+      setIsSearchOpen(true);
+      setSearchResults(locations.filter(loc => loc.name.toLowerCase().includes(searchQuery.toLowerCase())));
+    } else {
+      setIsSearchOpen(false);
+      setSearchResults([]);
+    }
+  }, [searchQuery]);
   
   if (!now) {
     return (
@@ -362,6 +416,12 @@ function Header({ unit, setUnit, is24Hour }: { unit: TempUnit; setUnit: (unit: T
   const [timePart, ampmPart] = formattedTime.split(' ');
   const [hours, minutes] = timePart.split(':');
 
+  const handleSelectLocation = (location: any) => {
+    setSelectedLocation(location);
+    setSearchQuery('');
+    setIsSearchOpen(false);
+  }
+
   return (
     <header className="flex flex-wrap items-center justify-between gap-4">
       <div>
@@ -380,7 +440,29 @@ function Header({ unit, setUnit, is24Hour }: { unit: TempUnit; setUnit: (unit: T
       <div className="flex items-center gap-2 md:gap-4 flex-wrap">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
-          <Input placeholder="Search city or postcode" className="bg-card/50 backdrop-blur-sm border-white/10 pl-10 w-48 md:w-64 rounded-full" />
+          <Input 
+            placeholder="Search city or postcode" 
+            className="bg-card/50 backdrop-blur-sm border-white/10 pl-10 w-48 md:w-64 rounded-full" 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          {isSearchOpen && searchResults.length > 0 && (
+            <motion.div 
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="absolute top-full mt-2 w-full bg-card/80 backdrop-blur-sm border border-white/10 rounded-2xl z-20 overflow-hidden"
+            >
+              <ul>
+                {searchResults.map(loc => (
+                  <li key={loc.name}>
+                    <button onClick={() => handleSelectLocation(loc)} className="w-full text-left px-4 py-2 hover:bg-primary/10">
+                      {loc.name}, {loc.country}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          )}
         </div>
         <TemperatureSwitch unit={unit} setUnit={setUnit} />
         <Avatar className="rounded-full">
@@ -393,7 +475,7 @@ function Header({ unit, setUnit, is24Hour }: { unit: TempUnit; setUnit: (unit: T
 }
 
 
-function CurrentWeather({ unit, is24Hour }: { unit: TempUnit; is24Hour: boolean }) {
+function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour: boolean, location: { name: string, country: string } }) {
     const [hourlyForecast, setHourlyForecast] = useState<ReturnType<typeof generateHourlyForecast> | null>(null);
 
     useEffect(() => {
@@ -425,8 +507,8 @@ function CurrentWeather({ unit, is24Hour }: { unit: TempUnit; is24Hour: boolean 
                 <div className="flex items-center gap-4">
                     <CloudSun size={64} className="text-primary" />
                     <div>
-                        <h2 className="text-4xl font-bold">Berlin</h2>
-                        <p className="text-muted-foreground">Germany</p>
+                        <h2 className="text-4xl font-bold">{location.name}</h2>
+                        <p className="text-muted-foreground">{location.country}</p>
                     </div>
                 </div>
                 <div className="flex gap-x-4 gap-y-2 mt-4 sm:mt-0 flex-wrap items-center">
@@ -473,23 +555,34 @@ function CurrentWeather({ unit, is24Hour }: { unit: TempUnit; is24Hour: boolean 
 }
 
 function Overview() {
+  const [activeMetric, setActiveMetric] = useState<OverviewMetric>('Humidity');
+  const activeDataSet = overviewDataSets[activeMetric];
+
   return (
     <Card className="h-full flex flex-col p-6">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-xl font-semibold">Overview</h3>
         <div className="flex items-center gap-1 bg-card/50 backdrop-blur-sm border border-white/10 rounded-full p-1 text-sm">
-          <Button variant="ghost" size="sm" className="rounded-full bg-primary text-primary-foreground h-8 px-4">Humidity</Button>
-          <Button variant="ghost" size="sm" className="rounded-full h-8 px-4">UV Index</Button>
-          <Button variant="ghost" size="sm" className="rounded-full h-8 px-4">Rainfall</Button>
-          <Button variant="ghost" size="sm" className="rounded-full h-8 px-4">Pressure</Button>
+          {(Object.keys(overviewDataSets) as OverviewMetric[]).map((metric) => (
+            <Button 
+              key={metric}
+              variant="ghost" 
+              size="sm" 
+              className="rounded-full h-8 px-4 data-[active=true]:bg-primary data-[active=true]:text-primary-foreground"
+              data-active={activeMetric === metric}
+              onClick={() => setActiveMetric(metric)}
+            >
+              {metric}
+            </Button>
+          ))}
         </div>
       </div>
       <div className="text-right mb-2">
-        <span className="text-sm bg-primary/10 text-primary py-1 px-3 rounded-full">Average 65%</span>
+        <span className="text-sm bg-primary/10 text-primary py-1 px-3 rounded-full">Average {activeDataSet.average}{activeDataSet.unit}</span>
       </div>
       <div className="flex-1 h-full">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={overviewData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+          <AreaChart data={activeDataSet.data} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
             <defs>
               <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
@@ -497,7 +590,7 @@ function Overview() {
               </linearGradient>
             </defs>
             <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-            <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}%`} />
+            <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}${activeDataSet.unit}`} />
             <Tooltip
               contentStyle={{
                 backgroundColor: 'hsl(var(--card))',
@@ -508,7 +601,7 @@ function Overview() {
                 border: '1px solid hsla(0, 0%, 100%, 0.1)'
               }}
               labelClassName="font-bold"
-              formatter={(value: number) => [`${value}%`, 'Humidity']}
+              formatter={(value: number) => [`${value}${activeDataSet.unit}`, activeMetric]}
             />
             <Area type="monotone" dataKey="value" stroke="hsl(var(--primary))" strokeWidth={2} fill="url(#colorValue)" />
           </AreaChart>
@@ -832,7 +925,31 @@ function InteractiveMap() {
   );
 }
 
-function SmartTips() {
+function SmartTips({ location }: { location: { name: string }}) {
+  const [tips, setTips] = useState({ explanation: 'Loading...', recommendations: 'Loading...' });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const getTips = async () => {
+      setLoading(true);
+      try {
+        const result = await explainForecastFactors({
+          city: location.name,
+          dateTime: new Date().toISOString(),
+        });
+        setTips(result);
+      } catch (error) {
+        console.error("Error fetching smart tips:", error);
+        setTips({
+          explanation: 'Could not load tips at this time.',
+          recommendations: 'Please try again later.'
+        });
+      }
+      setLoading(false);
+    };
+    getTips();
+  }, [location]);
+
   return (
     <Card className="h-full flex flex-col p-6">
       <div className="flex justify-between items-center mb-4">
@@ -842,18 +959,23 @@ function SmartTips() {
         </h3>
         <Button variant="ghost" size="sm" className="rounded-full">More</Button>
       </div>
-      <div className="space-y-3 flex-1">
-        <p className="text-muted-foreground">
-          Air quality is poor. It's recommended to stay indoors and use an air purifier if available.
-        </p>
-        <ul className="list-disc list-inside text-muted-foreground space-y-1">
-          <li>Avoid outdoor exercise.</li>
-          <li>Keep windows closed.</li>
-          <li>Wear a mask if you go outside.</li>
-        </ul>
-      </div>
+      {loading ? (
+        <div className="space-y-4">
+          <div className="h-4 bg-muted/50 rounded w-5/6" />
+          <div className="h-4 bg-muted/50 rounded w-full" />
+          <div className="h-4 bg-muted/50 rounded w-4/6" />
+          <div className="h-4 bg-muted/50 rounded w-1/2 mt-4" />
+        </div>
+      ) : (
+        <div className="space-y-3 flex-1">
+          <p className="text-muted-foreground">{tips.explanation}</p>
+          <ul className="list-disc list-inside text-muted-foreground space-y-1">
+            {tips.recommendations.split('- ').filter(r => r.trim()).map((rec, i) => (
+              <li key={i}>{rec}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </Card>
   );
 }
-
-    
