@@ -130,7 +130,7 @@ function Sidebar() {
   return (
     <aside className="w-20 bg-card/50 backdrop-blur-sm border-r border-white/10 p-4 flex flex-col items-center justify-between rounded-r-[2rem]">
       <div className="space-y-8">
-        <div className="text-primary font-bold text-2xl">g.</div>
+        
         <nav className="space-y-6">
           {navItems.map((item, index) => (
             <Button key={index} variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground data-[active=true]:text-foreground data-[active=true]:bg-primary/10 w-12 h-12 rounded-2xl" data-active={index === 0} title={item.label}>
