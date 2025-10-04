@@ -55,7 +55,7 @@ import { format } from 'date-fns';
 import { useTheme } from '@/components/theme-provider';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { explainForecastFactors } from '@/ai/flows/explain-forecast-factors';
 
 const overviewDataSets = {
@@ -403,14 +403,12 @@ function Header({ unit, setUnit, is24Hour, selectedLocation, setSelectedLocation
     day: 'numeric',
     month: 'short',
     year: 'numeric',
-    timeZone: 'Asia/Kolkata',
   }).format(now);
   
   const formattedTime = new Intl.DateTimeFormat('en-GB', {
     hour: '2-digit',
     minute: '2-digit',
     hour12: !is24Hour,
-    timeZone: 'Asia/Kolkata',
   }).format(now);
 
   const [timePart, ampmPart] = formattedTime.split(' ');
@@ -476,7 +474,7 @@ function Header({ unit, setUnit, is24Hour, selectedLocation, setSelectedLocation
 
 
 function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour: boolean, location: { name: string, country: string } }) {
-    const [hourlyForecast, setHourlyForecast] = useState<ReturnType<typeof generateHourlyForecast> | null>(null);
+    const [hourlyForecast, setHourlyForecast] = useState<any[]>([]);
 
     useEffect(() => {
         setHourlyForecast(generateHourlyForecast(is24Hour));
@@ -486,7 +484,7 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
     const currentTemp = 20;
     const displayTemp = unit === 'C' ? currentTemp : celsiusToFahrenheit(currentTemp);
 
-    if (!hourlyForecast) {
+    if (hourlyForecast.length === 0) {
         return (
             <Card className="p-6 h-full flex flex-col relative overflow-hidden">
                 <div className="flex items-center justify-center h-full">Loading forecast...</div>
@@ -614,7 +612,7 @@ function Overview() {
 const containerStyle = {
   width: '100%',
   height: '100%',
-  borderRadius: '2rem',
+  borderRadius: 'inherit',
 };
 
 const center = {
@@ -857,7 +855,7 @@ const mapStyles = [
 ];
 
 
-function MapView({ isExpanded }: { isExpanded: boolean }) {
+function MapView() {
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""
@@ -879,11 +877,7 @@ function MapView({ isExpanded }: { isExpanded: boolean }) {
 
   return isLoaded ? (
     <GoogleMap
-      mapContainerStyle={{
-        width: '100%',
-        height: '100%',
-        borderRadius: isExpanded ? '0' : '2rem',
-      }}
+      mapContainerStyle={containerStyle}
       center={center}
       zoom={10}
       onLoad={onLoad}
@@ -902,26 +896,54 @@ function MapView({ isExpanded }: { isExpanded: boolean }) {
 
 function InteractiveMap() {
   const [isExpanded, setIsExpanded] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const cardVariants = {
+    initial: {
+      borderRadius: '2rem',
+    },
+    expanded: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100vw',
+      height: '100vh',
+      borderRadius: '0px',
+      zIndex: 50,
+    },
+    collapsed: {
+      position: 'relative',
+      width: '100%',
+      height: '100%',
+      borderRadius: '2rem',
+      zIndex: 1,
+    }
+  };
 
   return (
-    <Card className="relative h-full p-0 overflow-hidden">
-      <MapView isExpanded={false} />
-      <Dialog open={isExpanded} onOpenChange={setIsExpanded}>
-        <DialogTrigger asChild>
-          <Button size="icon" variant="ghost" className="absolute top-4 right-4 bg-black/30 backdrop-blur-sm hover:bg-black/50 text-white rounded-xl">
-            <Expand size={20} />
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="p-0 border-0 max-w-none w-screen h-screen">
-          <MapView isExpanded={true} />
-          <DialogClose asChild>
-            <Button size="icon" variant="ghost" className="absolute top-4 right-4 bg-black/30 backdrop-blur-sm hover:bg-black/50 text-white rounded-xl">
-              <X size={20}/>
-            </Button>
-          </DialogClose>
-        </DialogContent>
-      </Dialog>
-    </Card>
+      <motion.div
+        ref={cardRef}
+        className={cn(
+          "bg-card/50 backdrop-blur-sm border border-white/10",
+          !isExpanded && "rounded-[2rem] p-0 relative h-full overflow-hidden"
+        )}
+        variants={cardVariants}
+        animate={isExpanded ? "expanded" : "collapsed"}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        style={!isExpanded ? { position: 'relative', width: '100%', height: '100%' } : {}}
+      >
+        <div style={{ borderRadius: 'inherit', width: '100%', height: '100%', overflow: 'hidden' }}>
+          <MapView />
+        </div>
+        <Button 
+          size="icon" 
+          variant="ghost" 
+          className="absolute top-4 right-4 bg-black/30 backdrop-blur-sm hover:bg-black/50 text-white rounded-xl z-50"
+          onClick={() => setIsExpanded(!isExpanded)}
+        >
+          {isExpanded ? <X size={20}/> : <Expand size={20} />}
+        </Button>
+      </motion.div>
   );
 }
 
@@ -979,7 +1001,3 @@ function SmartTips({ location }: { location: { name: string }}) {
     </Card>
   );
 }
-
-    
-
-    
