@@ -147,7 +147,7 @@ function WeatherInfoDashboard() {
                 </div>
                 <p className="text-lg text-muted-foreground mb-4">{data.aqi.quality}</p>
                 <div className="w-full px-4">
-                  <div className="h-2 w-full rounded-full bg-secondary">
+                  <div className="h-2 w-full rounded-full bg-muted/50">
                     <div
                       className="h-full rounded-full bg-green-400"
                       style={{ width: `${aqiPercentage}%`}}
