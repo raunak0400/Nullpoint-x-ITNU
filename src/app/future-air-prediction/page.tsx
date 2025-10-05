@@ -86,7 +86,7 @@ const generatePredictionData = () => {
   return sortedData;
 };
 
-export default function FutureAirPredictionPage() {
+function FutureAirPredictionDashboard() {
   const [predictionData, setPredictionData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const { selectedLocation } = useSharedState();
@@ -100,7 +100,6 @@ export default function FutureAirPredictionPage() {
   };
 
   return (
-    <PageWrapper>
       <Card className="max-w-4xl mx-auto">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -161,6 +160,13 @@ export default function FutureAirPredictionPage() {
           )}
         </CardContent>
       </Card>
+  );
+}
+
+export default function FutureAirPredictionPage() {
+  return (
+    <PageWrapper>
+      <FutureAirPredictionDashboard />
     </PageWrapper>
   );
 }
