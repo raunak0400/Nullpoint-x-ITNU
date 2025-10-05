@@ -174,7 +174,7 @@ function DashboardContent() {
   );
 }
 
-function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour: boolean, location: { name: string, country: string } }) {
+function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour: boolean, location: { name: string, country: string } | null }) {
     const [hourlyForecast, setHourlyForecast] = useState<any[]>([]);
 
     useEffect(() => {
@@ -183,6 +183,15 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
 
     const currentTemp = 20;
     const displayTemp = unit === 'C' ? currentTemp : celsiusToFahrenheit(currentTemp);
+
+    if (!location) {
+      return (
+        <Card className="p-6 h-full flex flex-col items-center justify-center text-center">
+            <h2 className="text-2xl font-semibold">Welcome to AuroraAir</h2>
+            <p className="text-muted-foreground">Search for a city to get started.</p>
+        </Card>
+      );
+    }
 
     if (hourlyForecast.length === 0) {
         return (
@@ -507,38 +516,19 @@ function MapView() {
 }
 
 
-function SmartTips({ location }: { location: { name: string }}) {
-  const [tips, setTips] = useState({ explanation: 'Loading...', recommendations: 'Loading...' });
-  const [loading, setLoading] = useState(true);
-  const { dataSources } = useSharedState();
+function SmartTips({ location }: { location: { name: string } | null }) {
+  const mockTips = {
+    explanation: 'High levels of PM2.5 are currently affecting air quality due to increased traffic.',
+    recommendations: 'Consider wearing a mask if you are sensitive. Try to use public transport to help reduce emissions.'
+  };
 
-  const overviewDataSets = generateOverviewData(dataSources.satellite, dataSources.ground);
-
-
-  useEffect(() => {
-    const getTips = async () => {
-      setLoading(true);
-      try {
-        const result = await explainForecastFactors({
-          city: location.name,
-          dateTime: new Date().toISOString(),
-          no2: overviewDataSets['NO₂'].average,
-          ch2o: overviewDataSets['CH₂O'].average,
-          aerosol: overviewDataSets['Aerosol'].average,
-          pm: overviewDataSets['PM'].average,
-        });
-        setTips(result);
-      } catch (error) {
-        console.error("Error fetching smart tips:", error);
-        setTips({
-          explanation: 'Could not load tips at this time.',
-          recommendations: 'Please try again later.'
-        });
-      }
-      setLoading(false);
-    };
-    getTips();
-  }, [location, dataSources]);
+  if (!location) {
+    return (
+      <Card className="h-full flex flex-col p-6 items-center justify-center">
+         <p className="text-muted-foreground text-center">Select a location to see smart tips.</p>
+      </Card>
+    );
+  }
 
   return (
     <Card className="h-full flex flex-col p-6">
@@ -549,27 +539,20 @@ function SmartTips({ location }: { location: { name: string }}) {
         </h3>
         <Button variant="ghost" size="sm" className="rounded-full">More</Button>
       </div>
-      {loading ? (
-        <div className="space-y-4">
-          <div className="h-4 bg-muted/50 rounded w-5/6 animate-pulse" />
-          <div className="h-4 bg-muted/50 rounded w-full animate-pulse" />
-          <div className="h-4 bg-muted/50 rounded w-4/6 animate-pulse" />
-          <div className="h-4 bg-muted/50 rounded w-1/2 mt-4 animate-pulse" />
-        </div>
-      ) : (
-        <div className="space-y-3 flex-1">
-          <p className="text-muted-foreground">{tips.explanation}</p>
-          <ul className="list-disc list-inside text-muted-foreground space-y-1">
-            {tips.recommendations.split('- ').filter(r => r.trim()).map((rec, i) => (
-              <li key={i}>{rec}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <div className="space-y-3 flex-1">
+        <p className="text-muted-foreground">{mockTips.explanation}</p>
+        <ul className="list-disc list-inside text-muted-foreground space-y-1">
+          {mockTips.recommendations.split('. ').filter(r => r.trim()).map((rec, i) => (
+            <li key={i}>{rec}</li>
+          ))}
+        </ul>
+      </div>
     </Card>
   );
 }
 
 
+
+    
 
     
