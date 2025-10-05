@@ -26,7 +26,7 @@ import { PageWrapper } from '@/components/layout/page-wrapper';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import { WindCompass } from '@/components/wind-compass';
-import { useSharedState } from '@/components/layout/sidebar';
+import { useSharedState } from '@/components/layout/shared-state';
 
 
 const Card = ({
@@ -169,13 +169,13 @@ function WeatherInfoDashboard() {
           </Card>
         </motion.div>
 
-        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.3 }}>
-          <Card>
+        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.3 }} className="flex flex-col">
+          <Card className="flex-1 flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">UV Index</CardTitle>
               <Sun className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent className="flex flex-col justify-center items-center pt-6">
+            <CardContent className="flex flex-1 flex-col justify-center items-center pt-6">
               <div className="text-5xl font-bold">{data.uvIndex.value}</div>
               <p className="text-xs text-muted-foreground mb-2">{data.uvIndex.level}</p>
               <Progress value={data.uvIndex.value} max={11} indicatorClassName="bg-gradient-to-r from-green-400 via-yellow-400 to-red-500" className="w-full" />
