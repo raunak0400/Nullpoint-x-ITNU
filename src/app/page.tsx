@@ -213,13 +213,15 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
             />
             <div className="relative z-10 flex flex-col justify-between h-full">
               <div className="flex flex-col sm:flex-row justify-between items-start">
-                  <div className="flex items-start gap-4">
+                  <div>
+                    <div className="flex items-start gap-4">
                       <CloudSun size={64} className="text-primary" />
                       <div>
                           <h2 className="text-4xl font-bold">{location.country}</h2>
                           <p className="text-muted-foreground">{location.name}</p>
-                          <p className="text-6xl font-bold mt-2">{Math.round(displayTemp)}°</p>
                       </div>
+                    </div>
+                    <p className="text-6xl font-bold mt-2">{Math.round(displayTemp)}°</p>
                   </div>
                   <div className="flex items-center gap-x-6">
                       <div className="flex gap-x-4 gap-y-2 mt-4 sm:mt-0 flex-wrap items-center">
@@ -558,4 +560,5 @@ function SmartTips({ location }: { location: { name: string } | null }) {
     
 
     
+
 
