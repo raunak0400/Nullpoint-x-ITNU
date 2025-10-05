@@ -157,7 +157,7 @@ function DashboardContent() {
   const { unit, is24Hour, selectedLocation } = useSharedState();
 
   return (
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 grid-rows-[auto_auto_auto] lg:grid-rows-[minmax(0,_1.6fr)_minmax(0,_1fr)] gap-6">
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 grid-rows-[auto_auto_auto] lg:grid-rows-[minmax(0,_1.8fr)_minmax(0,_1fr)] gap-6">
         <div className="lg:col-span-2 row-span-1">
           <CurrentWeather unit={unit} is24Hour={is24Hour} location={selectedLocation} />
         </div>
@@ -203,7 +203,7 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
 
     return (
       <Link href="/weather-info" className="block h-full group">
-        <div className="p-6 h-full flex flex-col relative overflow-hidden bg-black/20 backdrop-blur-xl border border-white/10 rounded-[2rem] group-hover:border-white/20 transition-all duration-300">
+        <div className="p-6 h-full flex flex-col justify-between relative overflow-hidden bg-black/20 backdrop-blur-xl border border-white/10 rounded-[2rem] group-hover:border-white/20 transition-all duration-300">
             <Image
                 src="https://images.unsplash.com/photo-1500740516770-92bd004b996e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjbG91ZHl8ZW58MHx8fHwxNzU5NjA0OTc3fDA&ixlib=rb-4.1.0&q=80&w=1080"
                 alt="Weather background"
@@ -212,7 +212,7 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
                 data-ai-hint="India gate"
             />
             <div className="relative z-10 flex flex-col justify-between h-full">
-              <div>
+              <div className='flex flex-col gap-4'>
                   <div className="flex items-start gap-4">
                     <CloudSun size={64} className="text-primary" />
                     <div>
@@ -220,7 +220,7 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
                         <p className="text-muted-foreground">{location.name}</p>
                     </div>
                   </div>
-                  <p className="text-6xl font-bold mt-2">{Math.round(displayTemp)}°</p>
+                  <p className="text-6xl font-bold">{Math.round(displayTemp)}°</p>
               </div>
               <div className="relative mt-auto">
                 <div className="overflow-x-auto -mx-6 px-6 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
@@ -539,6 +539,7 @@ function SmartTips({ location }: { location: { name: string } | null }) {
     
 
     
+
 
 
 
