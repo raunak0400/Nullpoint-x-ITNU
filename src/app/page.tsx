@@ -341,18 +341,16 @@ function Overview() {
   return (
     <Card className="h-full flex flex-col p-6">
       <div className="flex justify-between items-start mb-4">
-        <div>
-          <div className="flex items-center gap-x-6">
-            <h3 className="text-xl font-semibold">Overview</h3>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center space-x-2">
-                <Checkbox id="satellite" checked={dataSources.satellite} onCheckedChange={(checked) => setDataSources({ ...dataSources, satellite: !!checked })} />
-                <Label htmlFor="satellite" className="flex items-center gap-2 text-sm"><Satellite size={16} /> Satellite</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox id="ground" checked={dataSources.ground} onCheckedChange={(checked) => setDataSources({ ...dataSources, ground: !!checked })}/>
-                <Label htmlFor="ground" className="flex items-center gap-2 text-sm"><Baseline size={16} /> Ground</Label>
-              </div>
+        <div className="flex items-center gap-x-6">
+          <h3 className="text-xl font-semibold">Overview</h3>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center space-x-2">
+              <Checkbox id="satellite" checked={dataSources.satellite} onCheckedChange={(checked) => setDataSources({ ...dataSources, satellite: !!checked })} />
+              <Label htmlFor="satellite" className="flex items-center gap-2 text-sm"><Satellite size={16} /> Satellite</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox id="ground" checked={dataSources.ground} onCheckedChange={(checked) => setDataSources({ ...dataSources, ground: !!checked })}/>
+              <Label htmlFor="ground" className="flex items-center gap-2 text-sm"><Baseline size={16} /> Ground</Label>
             </div>
           </div>
         </div>
@@ -382,15 +380,15 @@ function Overview() {
           />
         </div>
       </div>
-      <div className="text-right mb-2">
-        <span 
-          className="text-sm py-1 px-3 rounded-full text-primary-foreground"
-          style={{ backgroundColor: activeDataSet.color }}
-        >
-          Average {activeDataSet.average}{activeDataSet.unit}
-        </span>
-      </div>
-      <div className="flex-1 h-full">
+      <div className="flex-1 h-full relative">
+        <div className="absolute top-0 right-0 z-10">
+            <span 
+              className="text-sm py-1 px-3 rounded-full text-primary-foreground"
+              style={{ backgroundColor: activeDataSet.color }}
+            >
+              Average {activeDataSet.average}{activeDataSet.unit}
+            </span>
+        </div>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={processedData} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}>
             <defs>
@@ -571,3 +569,4 @@ function SmartTips({ location }: { location: { name: string }}) {
     </Card>
   );
 }
+
