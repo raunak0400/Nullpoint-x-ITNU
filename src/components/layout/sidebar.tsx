@@ -42,6 +42,11 @@ export const locations = [
   { name: 'Chennai', country: 'India' },
 ];
 
+type DataSources = {
+  satellite: boolean;
+  ground: boolean;
+};
+
 type SharedState = {
   unit: TempUnit;
   setUnit: (unit: TempUnit) => void;
@@ -49,6 +54,8 @@ type SharedState = {
   setIs24Hour: (is24Hour: boolean) => void;
   selectedLocation: typeof locations[0];
   setSelectedLocation: (location: typeof locations[0]) => void;
+  dataSources: DataSources;
+  setDataSources: (sources: DataSources) => void;
 };
 
 export const SharedStateContext = createContext<SharedState | null>(null);

@@ -5,11 +5,19 @@ import { useState, useEffect } from 'react';
 import { SharedStateContext, locations } from './sidebar';
 
 type TempUnit = 'C' | 'F';
+type DataSources = {
+  satellite: boolean;
+  ground: boolean;
+};
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [unit, setUnit] = useState<TempUnit>('C');
   const [is24Hour, setIs24Hour] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState(locations[0]);
+  const [dataSources, setDataSources] = useState<DataSources>({
+    satellite: true,
+    ground: false,
+  });
 
   useEffect(() => {
     const savedIs24Hour = localStorage.getItem('is24Hour');
@@ -31,6 +39,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
       setIs24Hour: handleSetIs24Hour,
       selectedLocation,
       setSelectedLocation,
+      dataSources,
+      setDataSources,
     }}>
       {children}
     </SharedStateContext.Provider>

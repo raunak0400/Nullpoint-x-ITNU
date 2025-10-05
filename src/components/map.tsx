@@ -3,12 +3,14 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { GoogleMap, HeatmapLayer, useJsApiLoader } from '@react-google-maps/api';
-import { Layers, Beaker, CloudCog, Sigma, Waves } from 'lucide-react';
+import { Layers, Beaker, CloudCog, Sigma, Waves, Satellite, Baseline } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/components/theme-provider';
+import { useSharedState } from '@/components/layout/sidebar';
+import { Separator } from '@/components/ui/separator';
 
 const containerStyle = {
   width: '100%',
@@ -555,6 +557,8 @@ export function Map({ showFilters: initialShowFilters = false }: { showFilters?:
     pm: false,
     o3: false,
   });
+  const { dataSources, setDataSources } = useSharedState();
+  const [currentHeatmapData, setCurrentHeatmapData] = useState<any[]>([]);
 
   useEffect(() => {
     if (isLoaded) {
@@ -565,6 +569,29 @@ export function Map({ showFilters: initialShowFilters = false }: { showFilters?:
       heatmapData.o3 = generateHeatmapData(1.0);
     }
   }, [isLoaded]);
+
+  useEffect(() => {
+    if (isLoaded) {
+        const getMultiplier = () => {
+            if (dataSources.satellite && dataSources.ground) return 1.2;
+            if (dataSources.satellite) return 1;
+            if (dataSources.ground) return 0.8;
+            return 0.5;
+        };
+        const multiplier = getMultiplier();
+        const newHeatmapData:any[] = [];
+        Object.keys(activeLayers).forEach(keyStr => {
+            const key = keyStr as LayerName;
+            if (activeLayers[key]) {
+                const baseData = generateHeatmapData(1.5 * Math.random());
+                baseData.forEach(point => {
+                    newHeatmapData.push({location: point.location, weight: point.weight * multiplier});
+                });
+            }
+        });
+        setCurrentHeatmapData(newHeatmapData);
+    }
+  }, [isLoaded, activeLayers, dataSources]);
 
   const onLoad = useCallback(function callback(map: any) {
     setMap(map);
@@ -643,13 +670,8 @@ export function Map({ showFilters: initialShowFilters = false }: { showFilters?:
             onUnmount={onUnmount}
             options={mapOptions}
           >
-            {Object.keys(activeLayers).map((key) => {
-                const layerKey = key as LayerName;
-                if (activeLayers[layerKey] && heatmapData[layerKey].length > 0) {
-                    return <HeatmapLayer key={layerKey} data={heatmapData[layerKey]} options={{ gradient: getGradient(layerKey), radius: 40 }} />
-                }
-                return null;
-            })}
+            {currentHeatmapData.length > 0 && <HeatmapLayer data={currentHeatmapData} options={{ radius: 40 }} />}
+
           </GoogleMap>
         ) : apiKey ? (
           <div className="w-full h-full flex items-center justify-center">
@@ -665,7 +687,21 @@ export function Map({ showFilters: initialShowFilters = false }: { showFilters?:
               exit={{ opacity: 0, x: 100 }}
               className="absolute top-20 right-4 bg-card/70 backdrop-blur-md border border-white/10 rounded-2xl p-4 w-64 z-10"
             >
-              <h3 className="font-semibold mb-4">Satellite Data Layers</h3>
+              <h3 className="font-semibold mb-4">Data Sources</h3>
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
+                    <Checkbox id="satellite-map" checked={dataSources.satellite} onCheckedChange={(checked) => setDataSources({ ...dataSources, satellite: !!checked })} />
+                    <Label htmlFor="satellite-map" className="flex items-center gap-2"><Satellite size={16} /> Satellite Data</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                    <Checkbox id="ground-map" checked={dataSources.ground} onCheckedChange={(checked) => setDataSources({ ...dataSources, ground: !!checked })}/>
+                    <Label htmlFor="ground-map" className="flex items-center gap-2"><Baseline size={16} /> Ground Data</Label>
+                </div>
+              </div>
+              
+              <Separator className="my-4" />
+
+              <h3 className="font-semibold mb-4">Pollutant Layers</h3>
               <div className="space-y-4">
                 {layerConfig.map(({ id, label, icon, colorClass }) => (
                   <div key={id} className="flex items-center space-x-2">
@@ -681,5 +717,3 @@ export function Map({ showFilters: initialShowFilters = false }: { showFilters?:
     </div>
   );
 }
-
-    

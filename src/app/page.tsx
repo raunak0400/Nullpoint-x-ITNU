@@ -37,6 +37,8 @@ import {
   Expand,
   X,
   ChevronDown,
+  Satellite,
+  Baseline,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -60,39 +62,51 @@ import { explainForecastFactors } from '@/ai/flows/explain-forecast-factors';
 import { useSharedState } from '@/components/layout/sidebar';
 import { PageWrapper } from '@/components/layout/page-wrapper';
 import { Map } from '@/components/map';
+import { Checkbox } from '@/components/ui/checkbox';
 
-const overviewDataSets = {
-  'NO₂': {
-    data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: Math.floor(Math.random() * 30) + 5 })),
-    unit: 'µg/m³',
-    average: 20,
-    color: "hsl(var(--chart-1))",
-    label: 'Nitrogen dioxide'
-  },
-  'CH₂O': {
-    data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: Math.floor(Math.random() * 15) + 2 })),
-    unit: 'µg/m³',
-    average: 8,
-    color: "hsl(var(--chart-3))",
-    label: 'Formaldehyde'
-  },
-  'Aerosol': {
-    data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: Math.floor(Math.random() * 10) / 10 })),
-    unit: 'index',
-    average: 0.5,
-    color: "hsl(var(--chart-4))",
-    label: 'Aerosol Index'
-  },
-  'PM': {
-    data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: Math.floor(Math.random() * 50) + 10 })),
-    unit: 'µg/m³',
-    average: 25,
-    color: "hsl(var(--chart-5))",
-    label: 'Particulate matter'
-  },
+
+const generateOverviewData = (satellite: boolean, ground: boolean) => {
+  const getMultiplier = () => {
+    if (satellite && ground) return 1.2;
+    if (satellite) return 1;
+    if (ground) return 0.8;
+    return 0.5;
+  };
+  const multiplier = getMultiplier();
+  
+  return {
+    'NO₂': {
+      data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: Math.floor((Math.random() * 30) + 5) * multiplier })),
+      unit: 'µg/m³',
+      average: Math.round(20 * multiplier),
+      color: "hsl(var(--chart-1))",
+      label: 'Nitrogen dioxide'
+    },
+    'CH₂O': {
+      data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: Math.floor((Math.random() * 15) + 2) * multiplier })),
+      unit: 'µg/m³',
+      average: Math.round(8 * multiplier),
+      color: "hsl(var(--chart-3))",
+      label: 'Formaldehyde'
+    },
+    'Aerosol': {
+      data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: (Math.random() * 0.1) * multiplier })),
+      unit: 'index',
+      average: Math.round(0.5 * multiplier * 10)/10,
+      color: "hsl(var(--chart-4))",
+      label: 'Aerosol Index'
+    },
+    'PM': {
+      data: Array.from({ length: 24 }, (_, i) => ({ hour: `${i}:00`, value: Math.floor((Math.random() * 50) + 10) * multiplier })),
+      unit: 'µg/m³',
+      average: Math.round(25 * multiplier),
+      color: "hsl(var(--chart-5))",
+      label: 'Particulate matter'
+    },
+  };
 };
 
-type OverviewMetric = keyof typeof overviewDataSets;
+type OverviewMetric = keyof ReturnType<typeof generateOverviewData>;
 
 const getIconForHour = (hour: number) => {
     if (hour >= 6 && hour < 12) return <CloudSun size={24} />;
@@ -242,8 +256,15 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
 }
 
 function Overview() {
+  const { dataSources, setDataSources } = useSharedState();
+  const [overviewDataSets, setOverviewDataSets] = useState(() => generateOverviewData(dataSources.satellite, dataSources.ground));
+
   const [activeMetric, setActiveMetric] = useState<OverviewMetric>('NO₂');
   const [currentHour, setCurrentHour] = useState<number | null>(null);
+
+  useEffect(() => {
+    setOverviewDataSets(generateOverviewData(dataSources.satellite, dataSources.ground));
+  }, [dataSources]);
 
   useEffect(() => {
     const updateHour = () => {
@@ -319,8 +340,23 @@ function Overview() {
 
   return (
     <Card className="h-full flex flex-col p-6">
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-xl font-semibold">Overview</h3>
+      <div className="flex justify-between items-start mb-4">
+        <div>
+          <div className="flex items-center gap-x-6">
+            <h3 className="text-xl font-semibold">Overview</h3>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center space-x-2">
+                <Checkbox id="satellite" checked={dataSources.satellite} onCheckedChange={(checked) => setDataSources({ ...dataSources, satellite: !!checked })} />
+                <Label htmlFor="satellite" className="flex items-center gap-2 text-sm"><Satellite size={16} /> Satellite</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox id="ground" checked={dataSources.ground} onCheckedChange={(checked) => setDataSources({ ...dataSources, ground: !!checked })}/>
+                <Label htmlFor="ground" className="flex items-center gap-2 text-sm"><Baseline size={16} /> Ground</Label>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="relative flex items-center gap-1 bg-card/50 backdrop-blur-sm border border-white/10 rounded-full p-1 text-sm">
           {tabs.map((metric) => (
             <button
@@ -476,6 +512,10 @@ function MapView() {
 function SmartTips({ location }: { location: { name: string }}) {
   const [tips, setTips] = useState({ explanation: 'Loading...', recommendations: 'Loading...' });
   const [loading, setLoading] = useState(true);
+  const { dataSources } = useSharedState();
+
+  const overviewDataSets = generateOverviewData(dataSources.satellite, dataSources.ground);
+
 
   useEffect(() => {
     const getTips = async () => {
@@ -500,7 +540,7 @@ function SmartTips({ location }: { location: { name: string }}) {
       setLoading(false);
     };
     getTips();
-  }, [location]);
+  }, [location, dataSources]);
 
   return (
     <Card className="h-full flex flex-col p-6">
@@ -531,9 +571,3 @@ function SmartTips({ location }: { location: { name: string }}) {
     </Card>
   );
 }
-
-    
-
-    
-
-    
