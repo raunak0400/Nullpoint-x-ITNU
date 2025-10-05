@@ -39,6 +39,8 @@ import {
   ChevronDown,
   Satellite,
   Baseline,
+  Wind,
+  Droplets,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -174,6 +176,18 @@ function DashboardContent() {
   );
 }
 
+function WeatherInfoBlock({ icon, label, value }: { icon: React.ReactNode, label: string, value: string }) {
+    return (
+        <div className="flex items-center gap-2 text-sm">
+            {icon}
+            <div>
+                <p className="font-bold">{value}</p>
+                <p className="text-muted-foreground -mt-1">{label}</p>
+            </div>
+        </div>
+    );
+}
+
 function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour: boolean, location: { name: string, country: string } | null }) {
     const [hourlyForecast, setHourlyForecast] = useState<any[]>([]);
 
@@ -211,6 +225,12 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
                 className="object-cover opacity-20 group-hover:opacity-30 transition-opacity duration-300"
                 data-ai-hint="India gate"
             />
+            <div className="absolute top-6 right-6 z-20 flex items-center gap-4 text-sm">
+                <WeatherInfoBlock icon={<Smile size={24} className="text-green-400" />} label="Air Mood" value="Good" />
+                <WeatherInfoBlock icon={<Droplets size={24} />} label="Humidity" value="24%" />
+                <WeatherInfoBlock icon={<Wind size={24} />} label="Wind" value="13km/h" />
+            </div>
+
             <div className="relative z-10 flex flex-col justify-between h-full">
               <div className='flex flex-col gap-4'>
                   <div className="flex items-start gap-4">
@@ -539,6 +559,7 @@ function SmartTips({ location }: { location: { name: string } | null }) {
     
 
     
+
 
 
 
