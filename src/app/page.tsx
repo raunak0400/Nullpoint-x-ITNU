@@ -218,7 +218,7 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
                       <div>
                           <h2 className="text-4xl font-bold">{location.country}</h2>
                           <p className="text-muted-foreground">{location.name}</p>
-                          <p className="text-6xl font-bold mt-2">+{Math.round(displayTemp)}°</p>
+                          <p className="text-6xl font-bold mt-2">{Math.round(displayTemp)}°</p>
                       </div>
                   </div>
                   <div className="flex items-center gap-x-6">
@@ -558,3 +558,4 @@ function SmartTips({ location }: { location: { name: string } | null }) {
     
 
     
+
