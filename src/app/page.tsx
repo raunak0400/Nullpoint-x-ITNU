@@ -181,7 +181,6 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
         setHourlyForecast(generateHourlyForecast(is24Hour));
     }, [is24Hour]);
 
-
     const currentTemp = 20;
     const displayTemp = unit === 'C' ? currentTemp : celsiusToFahrenheit(currentTemp);
 
@@ -211,25 +210,26 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
                         <p className="text-muted-foreground">{location.name}</p>
                     </div>
                 </div>
-                <div className="flex gap-x-4 gap-y-2 mt-4 sm:mt-0 flex-wrap items-center">
-                    <div className="flex items-center gap-2 text-green-400">
-                        <Smile size={20} />
-                        <div>
-                            <p className="font-semibold text-sm">Good</p>
-                            <p className="text-xs text-muted-foreground">Air Mood</p>
+                <div className="flex items-center gap-x-6">
+                    <div className="flex gap-x-4 gap-y-2 mt-4 sm:mt-0 flex-wrap items-center">
+                        <div className="flex items-center gap-2 text-green-400">
+                            <Smile size={20} />
+                            <div>
+                                <p className="font-semibold text-sm">Good</p>
+                                <p className="text-xs text-muted-foreground">Air Mood</p>
+                            </div>
+                        </div>
+                        <div className="text-left">
+                            <p className="font-semibold text-sm">24%</p>
+                            <p className="text-xs text-muted-foreground">Humidity</p>
+                        </div>
+                        <div className="text-left">
+                            <p className="font-semibold text-sm">13<span className="text-xs">km/h</span></p>
+                            <p className="text-xs text-muted-foreground">Wind</p>
                         </div>
                     </div>
-                    <div className="text-left">
-                        <p className="font-semibold text-sm">+{Math.round(displayTemp)}°</p>
-                        <p className="text-xs text-muted-foreground">Temp</p>
-                    </div>
-                    <div className="text-left">
-                        <p className="font-semibold text-sm">24%</p>
-                        <p className="text-xs text-muted-foreground">Humidity</p>
-                    </div>
-                    <div className="text-left">
-                        <p className="font-semibold text-sm">13<span className="text-xs">km/h</span></p>
-                        <p className="text-xs text-muted-foreground">Wind</p>
+                    <div className="text-right">
+                        <p className="text-6xl font-bold">+{Math.round(displayTemp)}°</p>
                     </div>
                 </div>
             </div>
@@ -570,3 +570,6 @@ function SmartTips({ location }: { location: { name: string }}) {
   );
 }
 
+
+
+    
