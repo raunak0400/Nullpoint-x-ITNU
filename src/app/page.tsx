@@ -212,36 +212,15 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
                 data-ai-hint="India gate"
             />
             <div className="relative z-10 flex flex-col justify-between h-full">
-              <div className="flex flex-col sm:flex-row justify-between items-start">
-                  <div>
-                    <div className="flex items-start gap-4">
-                      <CloudSun size={64} className="text-primary" />
-                      <div>
-                          <h2 className="text-4xl font-bold">{location.country}</h2>
-                          <p className="text-muted-foreground">{location.name}</p>
-                      </div>
+              <div>
+                  <div className="flex items-start gap-4">
+                    <CloudSun size={64} className="text-primary" />
+                    <div>
+                        <h2 className="text-4xl font-bold">{location.country}</h2>
+                        <p className="text-muted-foreground">{location.name}</p>
                     </div>
-                    <p className="text-6xl font-bold mt-2">{Math.round(displayTemp)}°</p>
                   </div>
-                  <div className="flex items-center gap-x-6">
-                      <div className="flex gap-x-4 gap-y-2 mt-4 sm:mt-0 flex-wrap items-center">
-                          <div className="flex items-center gap-2 text-green-400">
-                              <Smile size={20} />
-                              <div>
-                                  <p className="font-semibold text-sm">Good</p>
-                                  <p className="text-xs text-muted-foreground">Air Mood</p>
-                              </div>
-                          </div>
-                          <div className="text-left">
-                              <p className="font-semibold text-sm">24%</p>
-                              <p className="text-xs text-muted-foreground">Humidity</p>
-                          </div>
-                          <div className="text-left">
-                              <p className="font-semibold text-sm">13<span className="text-xs">km/h</span></p>
-                              <p className="text-xs text-muted-foreground">Wind</p>
-                          </div>
-                      </div>
-                  </div>
+                  <p className="text-6xl font-bold mt-2">{Math.round(displayTemp)}°</p>
               </div>
               <div className="relative mt-auto">
                 <div className="overflow-x-auto -mx-6 px-6 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
@@ -560,5 +539,6 @@ function SmartTips({ location }: { location: { name: string } | null }) {
     
 
     
+
 
 

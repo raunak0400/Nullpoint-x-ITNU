@@ -14,6 +14,7 @@ import {
   Gauge,
   Cloud,
   HelpCircle,
+  Smile,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -127,8 +128,8 @@ function WeatherInfoDashboard() {
   const aqiPercentage = (data.aqi.value / 300) * 100;
 
   return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.1 }} whileHover={{ scale: 1.03, y: -5 }}>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.1 }} className="lg:col-span-1">
           <Card className="h-full flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Temperature</CardTitle>
@@ -146,7 +147,7 @@ function WeatherInfoDashboard() {
           </Card>
         </motion.div>
 
-        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.2 }} whileHover={{ scale: 1.03, y: -5 }}>
+        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.2 }} className="lg:col-span-1">
           <Card className="h-full flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Air Quality (AQI)</CardTitle>
@@ -169,8 +170,8 @@ function WeatherInfoDashboard() {
           </Card>
         </motion.div>
 
-        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.3 }} whileHover={{ scale: 1.03, y: -5 }} className="flex flex-col">
-          <Card className="flex-1 flex flex-col">
+        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.3 }} className="lg:col-span-1">
+          <Card className="h-full flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">UV Index</CardTitle>
               <Sun className="h-4 w-4 text-muted-foreground" />
@@ -183,29 +184,29 @@ function WeatherInfoDashboard() {
           </Card>
         </motion.div>
 
-        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.4 }} whileHover={{ scale: 1.03, y: -5 }} className="flex flex-col">
-          <Card className="flex-1 flex flex-col">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="flex items-center gap-2 text-sm font-medium"><Wind className="h-4 w-4 text-muted-foreground" />Wind</CardTitle>
-            </CardHeader>
-            <CardContent className="flex-1 flex flex-row items-center justify-center gap-4">
-              <WindCompass
-                speed={data.wind.speed}
-                unit={data.wind.unit}
-                direction={data.wind.direction}
-              />
-              <div className="text-left">
-                <p className="font-bold">{getWindInsight(data.wind.speed)}</p>
-                <p className="text-sm text-muted-foreground">
-                  {data.wind.speed} {data.wind.unit} {data.wind.direction}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <div className="md:col-span-2 grid grid-cols-2 lg:grid-cols-4 gap-6">
-            <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.5 }} whileHover={{ scale: 1.03, y: -5 }}>
+        <div className="md:col-span-2 lg:col-span-3 grid grid-cols-2 lg:grid-cols-4 gap-6">
+            <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.4 }} >
+              <Card className="aspect-square flex flex-col">
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="flex items-center gap-2 text-sm font-medium"><Wind className="h-4 w-4 text-muted-foreground" />Wind</CardTitle>
+                </CardHeader>
+                <CardContent className="flex-1 flex flex-row items-center justify-center gap-4">
+                  <WindCompass
+                    speed={data.wind.speed}
+                    unit={data.wind.unit}
+                    direction={data.wind.direction}
+                  />
+                  <div className="text-left">
+                    <p className="font-bold">{getWindInsight(data.wind.speed)}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {data.wind.speed} {data.wind.unit} {data.wind.direction}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+            
+            <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.5 }}>
             <Card className="aspect-square flex flex-col">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium">Humidity</CardTitle>
@@ -223,7 +224,7 @@ function WeatherInfoDashboard() {
             </Card>
             </motion.div>
 
-            <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.6 }} whileHover={{ scale: 1.03, y: -5 }}>
+            <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.6 }}>
             <Card className="aspect-square flex flex-col">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium">Visibility</CardTitle>
@@ -241,7 +242,7 @@ function WeatherInfoDashboard() {
             </Card>
             </motion.div>
         
-            <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.7 }} whileHover={{ scale: 1.03, y: -5 }}>
+            <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.7 }} >
             <Card className="aspect-square flex flex-col">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium">Pressure</CardTitle>
@@ -258,23 +259,40 @@ function WeatherInfoDashboard() {
                 </CardContent>
             </Card>
             </motion.div>
-
-            <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.8 }} whileHover={{ scale: 1.03, y: -5 }}>
-            <Card className="aspect-square flex flex-col">
+            
+            <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.8 }} >
+              <Card className="aspect-square flex flex-col">
+                  <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="text-sm font-medium">Precipitation</CardTitle>
+                  <Cloud className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent className="flex-1 flex flex-col items-center justify-center">
+                  <div className="text-3xl font-bold">
+                      {data.precipitation.value}
+                      <span className="text-xl ml-1">{data.precipitation.unit}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground text-center">
+                      {data.precipitation.description}
+                  </p>
+                  </CardContent>
+              </Card>
+            </motion.div>
+            
+            <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.9 }}>
+              <Card className="aspect-square flex flex-col">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">Precipitation</CardTitle>
-                <Cloud className="h-4 w-4 text-muted-foreground" />
+                  <CardTitle className="text-sm font-medium">Air Mood</CardTitle>
+                  <Smile className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent className="flex-1 flex flex-col items-center justify-center">
-                <div className="text-3xl font-bold">
-                    {data.precipitation.value}
-                    <span className="text-xl ml-1">{data.precipitation.unit}</span>
-                </div>
-                <p className="text-xs text-muted-foreground text-center">
-                    {data.precipitation.description}
-                </p>
+                  <div className="text-5xl font-bold text-green-400">
+                    Good
+                  </div>
+                  <p className="text-xs text-muted-foreground text-center">
+                    Enjoy your day!
+                  </p>
                 </CardContent>
-            </Card>
+              </Card>
             </motion.div>
         </div>
       </div>
