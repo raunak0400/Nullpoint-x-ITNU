@@ -157,7 +157,7 @@ function DashboardContent() {
   const { unit, is24Hour, selectedLocation } = useSharedState();
 
   return (
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 grid-rows-[auto_auto_auto] lg:grid-rows-[minmax(0,_1.2fr)_minmax(0,_1fr)] gap-6">
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 grid-rows-[auto_auto_auto] lg:grid-rows-[minmax(0,_1.6fr)_minmax(0,_1fr)] gap-6">
         <div className="lg:col-span-2 row-span-1">
           <CurrentWeather unit={unit} is24Hour={is24Hour} location={selectedLocation} />
         </div>
@@ -212,7 +212,7 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
                 data-ai-hint="India gate"
             />
             <div className="relative z-10 flex flex-col justify-between h-full">
-              <div className='flex flex-col'>
+              <div>
                   <div className="flex items-start gap-4">
                     <CloudSun size={64} className="text-primary" />
                     <div>
@@ -539,6 +539,7 @@ function SmartTips({ location }: { location: { name: string } | null }) {
     
 
     
+
 
 
 
