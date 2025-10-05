@@ -128,7 +128,7 @@ function WeatherInfoDashboard() {
 
   return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.1 }}>
+        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.1 }} whileHover={{ scale: 1.03, y: -5 }}>
           <Card className="h-full flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Temperature</CardTitle>
@@ -146,7 +146,7 @@ function WeatherInfoDashboard() {
           </Card>
         </motion.div>
 
-        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.2 }}>
+        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.2 }} whileHover={{ scale: 1.03, y: -5 }}>
           <Card className="h-full flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Air Quality (AQI)</CardTitle>
@@ -169,7 +169,7 @@ function WeatherInfoDashboard() {
           </Card>
         </motion.div>
 
-        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.3 }} className="flex flex-col">
+        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.3 }} whileHover={{ scale: 1.03, y: -5 }} className="flex flex-col">
           <Card className="flex-1 flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">UV Index</CardTitle>
@@ -183,7 +183,7 @@ function WeatherInfoDashboard() {
           </Card>
         </motion.div>
 
-        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.4 }} className="flex flex-col">
+        <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.4 }} whileHover={{ scale: 1.03, y: -5 }} className="flex flex-col">
           <Card className="flex-1 flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="flex items-center gap-2 text-sm font-medium"><Wind className="h-4 w-4 text-muted-foreground" />Wind</CardTitle>
@@ -205,7 +205,7 @@ function WeatherInfoDashboard() {
         </motion.div>
 
         <div className="md:col-span-2 grid grid-cols-2 lg:grid-cols-4 gap-6">
-            <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.5 }}>
+            <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.5 }} whileHover={{ scale: 1.03, y: -5 }}>
             <Card className="aspect-square flex flex-col">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium">Humidity</CardTitle>
@@ -223,7 +223,7 @@ function WeatherInfoDashboard() {
             </Card>
             </motion.div>
 
-            <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.6 }}>
+            <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.6 }} whileHover={{ scale: 1.03, y: -5 }}>
             <Card className="aspect-square flex flex-col">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium">Visibility</CardTitle>
@@ -241,7 +241,7 @@ function WeatherInfoDashboard() {
             </Card>
             </motion.div>
         
-            <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.7 }}>
+            <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.7 }} whileHover={{ scale: 1.03, y: -5 }}>
             <Card className="aspect-square flex flex-col">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium">Pressure</CardTitle>
@@ -259,7 +259,7 @@ function WeatherInfoDashboard() {
             </Card>
             </motion.div>
 
-            <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.8 }}>
+            <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.8 }} whileHover={{ scale: 1.03, y: -5 }}>
             <Card className="aspect-square flex flex-col">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium">Precipitation</CardTitle>
@@ -280,5 +280,3 @@ function WeatherInfoDashboard() {
       </div>
   );
 }
-
-    
