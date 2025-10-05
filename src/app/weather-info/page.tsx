@@ -26,7 +26,7 @@ import { PageWrapper } from '@/components/layout/page-wrapper';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import { WindCompass } from '@/components/wind-compass';
-import { useSharedState } from '@/components/layout/shared-state';
+import { useSharedState } from '@/components/layout/sidebar';
 
 
 const Card = ({
@@ -280,3 +280,5 @@ function WeatherInfoDashboard() {
       </div>
   );
 }
+
+    
