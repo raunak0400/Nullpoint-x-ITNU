@@ -211,52 +211,52 @@ function CurrentWeather({ unit, is24Hour, location }: { unit: TempUnit; is24Hour
                 className="object-cover opacity-20 group-hover:opacity-30 transition-opacity duration-300"
                 data-ai-hint="India gate"
             />
-            <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start mb-4">
-                <div className="flex items-center gap-4">
-                    <CloudSun size={64} className="text-primary" />
-                    <div>
-                        <h2 className="text-4xl font-bold">{location.country}</h2>
-                        <p className="text-muted-foreground">{location.name}</p>
-                    </div>
-                </div>
-                <div className="flex items-center gap-x-6">
-                    <div className="flex gap-x-4 gap-y-2 mt-4 sm:mt-0 flex-wrap items-center">
-                        <div className="flex items-center gap-2 text-green-400">
-                            <Smile size={20} />
-                            <div>
-                                <p className="font-semibold text-sm">Good</p>
-                                <p className="text-xs text-muted-foreground">Air Mood</p>
-                            </div>
-                        </div>
-                        <div className="text-left">
-                            <p className="font-semibold text-sm">24%</p>
-                            <p className="text-xs text-muted-foreground">Humidity</p>
-                        </div>
-                        <div className="text-left">
-                            <p className="font-semibold text-sm">13<span className="text-xs">km/h</span></p>
-                            <p className="text-xs text-muted-foreground">Wind</p>
-                        </div>
-                    </div>
-                    <div className="text-right">
-                        <p className="text-6xl font-bold">+{Math.round(displayTemp)}°</p>
-                    </div>
-                </div>
-            </div>
-            <div className="relative mt-auto z-10">
-              <div className="overflow-x-auto -mx-6 px-6 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
-                style={{
-                  maskImage: 'linear-gradient(to right, transparent, hsl(var(--card)) 5%, hsl(var(--card)) 95%, transparent)'
-                }}
-              >
-                  <div className="flex gap-2 pb-2">
-                    {hourlyForecast.map((hour, i) => (
-                        <div key={i} className="flex flex-col items-center justify-between p-3 rounded-2xl bg-background/30 backdrop-blur-lg border border-white/10 min-w-[70px] h-32">
-                            <p className="text-sm text-muted-foreground">{hour.time}</p>
-                            <div className="text-muted-foreground">{hour.icon}</div>
-                            <p className="text-lg font-bold">{Math.round(unit === 'C' ? hour.temp : celsiusToFahrenheit(hour.temp))}°</p>
-                        </div>
-                    ))}
+            <div className="relative z-10 flex flex-col justify-between h-full">
+              <div className="flex flex-col sm:flex-row justify-between items-start">
+                  <div className="flex items-center gap-4">
+                      <CloudSun size={64} className="text-primary" />
+                      <div>
+                          <h2 className="text-4xl font-bold">{location.country}</h2>
+                          <p className="text-muted-foreground">{location.name}</p>
+                          <p className="text-6xl font-bold mt-2">+{Math.round(displayTemp)}°</p>
+                      </div>
                   </div>
+                  <div className="flex items-center gap-x-6">
+                      <div className="flex gap-x-4 gap-y-2 mt-4 sm:mt-0 flex-wrap items-center">
+                          <div className="flex items-center gap-2 text-green-400">
+                              <Smile size={20} />
+                              <div>
+                                  <p className="font-semibold text-sm">Good</p>
+                                  <p className="text-xs text-muted-foreground">Air Mood</p>
+                              </div>
+                          </div>
+                          <div className="text-left">
+                              <p className="font-semibold text-sm">24%</p>
+                              <p className="text-xs text-muted-foreground">Humidity</p>
+                          </div>
+                          <div className="text-left">
+                              <p className="font-semibold text-sm">13<span className="text-xs">km/h</span></p>
+                              <p className="text-xs text-muted-foreground">Wind</p>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div className="relative mt-auto">
+                <div className="overflow-x-auto -mx-6 px-6 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+                  style={{
+                    maskImage: 'linear-gradient(to right, transparent, hsl(var(--card)) 5%, hsl(var(--card)) 95%, transparent)'
+                  }}
+                >
+                    <div className="flex gap-2 pb-2">
+                      {hourlyForecast.map((hour, i) => (
+                          <div key={i} className="flex flex-col items-center justify-between p-3 rounded-2xl bg-background/30 backdrop-blur-lg border border-white/10 min-w-[70px] h-32">
+                              <p className="text-sm text-muted-foreground">{hour.time}</p>
+                              <div className="text-muted-foreground">{hour.icon}</div>
+                              <p className="text-lg font-bold">{Math.round(unit === 'C' ? hour.temp : celsiusToFahrenheit(hour.temp))}°</p>
+                          </div>
+                      ))}
+                    </div>
+                </div>
               </div>
             </div>
         </div>
@@ -552,6 +552,8 @@ function SmartTips({ location }: { location: { name: string } | null }) {
 }
 
 
+
+    
 
     
 
