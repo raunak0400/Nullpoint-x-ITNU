@@ -506,8 +506,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **Issues**: [GitHub Issues](https://github.com/yourusername/null-point/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/yourusername/null-point/discussions)
-- **Email**: your.email@domain.com
-- **Twitter**: [@yourusername](https://twitter.com/yourusername)
+- **Email**: imraunak.dev
+- **Twitter**: [@raunak0400](https://twitter.com/raunak0400)
 
 ---
 
