@@ -66,6 +66,8 @@ graph TB
 ```
 
 ---
+### **Backend Workflow**
+![Backend Architecture](https://github.com/raunak0400/Nullpoint-x-ITNU/blob/bacd926ec549e960a48865e9181742aa2f186b5b/Backend.jpg?raw=true)
 
 ## 🚀 **Quick Start**
 
